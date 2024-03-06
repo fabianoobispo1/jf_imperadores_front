@@ -1,5 +1,3 @@
-'use client'
-
 import { demos, type Item } from '@lib/demos'
 import Link from 'next/link'
 import { useContext,  useState } from 'react'
