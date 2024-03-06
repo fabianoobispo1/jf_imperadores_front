@@ -2,7 +2,7 @@ import { Layout } from '@vercel/examples-ui'
 import { useRouter } from 'next/router'
 import { Page, Text, Code, Link, Button } from '@vercel/examples-ui'
 import { USER_TOKEN } from '@lib/constants'
-import { GlobalNav } from './components/global-nav'
+import  GlobalNav  from './components/global-nav'
 
 export default function Protected() {
   const { reload } = useRouter()

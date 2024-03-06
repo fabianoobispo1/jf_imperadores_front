@@ -1,4 +1,4 @@
-import { GlobalNav } from "./global-nav"
+import  GlobalNav  from "./global-nav"
 
 
 export default function Layout({ children }: any) {

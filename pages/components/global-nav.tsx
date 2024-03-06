@@ -1,13 +1,13 @@
 import { demos, type Item } from '@lib/demos'
 import Link from 'next/link'
 import { useContext,  useState } from 'react'
-import { Byline } from './byline'
+import  Byline from './byline'
 import { X, List, User } from 'phosphor-react'
 import clsx from 'clsx'
 
 import { useSelectedLayoutSegment } from 'next/navigation'
 
-export function GlobalNav() {
+export default function GlobalNav() {
 
 
   const [isOpen, setIsOpen] = useState(false)
