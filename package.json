@@ -16,6 +16,7 @@
     "jose": "^4.13.1",
     "nanoid": "^3.3.4",
     "next": "canary",
+    "phosphor-react": "^1.4.1",
     "react": "latest",
     "react-dom": "latest",
     "swr": "^1.3.0"

@@ -8,11 +8,29 @@ import {
   Snippet,
 } from '@vercel/examples-ui'
 import { USER_TOKEN } from '@lib/constants'
+import { useRouter } from 'next/navigation'
+ 
+
 
 export default function Index() {
+  const router = useRouter()
+  async function handle(){
+
+       const result =   await fetch('/api/auth', { method: 'POST' })
+    console.log(result)
+    router.push('/protected')
+
+  }
+
+
   return (
     <Page>
       <p>Em Breve</p>
+      <Button
+          onClick={handle}
+        >
+         Login 
+        </Button>
       {/* <Text variant="h1" className="mb-6">
         JWT Authentication
       </Text>
