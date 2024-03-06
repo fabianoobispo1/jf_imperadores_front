@@ -26,11 +26,12 @@ export default function Index() {
   return (
     <Page>
       <p>Em Breve</p>
-  {/*     <Button
+     <Button
           onClick={handle}
         >
          Login 
-        </Button> */}
+        </Button>
+  
       {/* <Text variant="h1" className="mb-6">
         JWT Authentication
       </Text>
