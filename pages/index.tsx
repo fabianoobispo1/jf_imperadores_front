@@ -12,7 +12,8 @@ import { USER_TOKEN } from '@lib/constants'
 export default function Index() {
   return (
     <Page>
-      <Text variant="h1" className="mb-6">
+      <p>Em Breve</p>
+      {/* <Text variant="h1" className="mb-6">
         JWT Authentication
       </Text>
       <Text className="mb-4">
@@ -51,7 +52,7 @@ export default function Index() {
       <Text>
         The HTTP status code would be <Code>401</Code> and <Code>200</Code>{' '}
         respectively.
-      </Text>
+      </Text> */}
     </Page>
   )
 }

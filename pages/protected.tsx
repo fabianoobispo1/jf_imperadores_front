@@ -8,7 +8,7 @@ export default function Protected() {
 
   return (
     <Page>
-      <Text variant="h1" className="mb-6">
+{/*       <Text variant="h1" className="mb-6">
         JWT Authentication (Protected page)
       </Text>
       <section className="space-y-4">
@@ -25,7 +25,7 @@ export default function Protected() {
         >
           Remove cookie and Reload
         </Button>
-      </section>
+      </section> */}
     </Page>
   )
 }
