@@ -14,8 +14,8 @@ export class AuthError extends Error {}
  * Verifies the user's JWT token and returns its payload if it's valid.
  */
 export async function verifyAuth(req: NextRequest) {
-  const token = req.cookies.get(USER_TOKEN)?.value
 
+  const token = req.cookies.get(USER_TOKEN)?.value
   if (!token) throw new AuthError('Missing user token')
 
   try {
@@ -23,6 +23,7 @@ export async function verifyAuth(req: NextRequest) {
       token,
       new TextEncoder().encode(getJwtSecretKey())
     )
+
     return verified.payload as UserJwtPayload
   } catch (err) {
     throw new AuthError('Your token has expired.')
@@ -31,18 +32,31 @@ export async function verifyAuth(req: NextRequest) {
 
 /**
  * Adds the user token cookie to a response.
+ * realiza ligacao com a API e recebe token
  */
-export async function setUserCookie(res: NextResponse) {
+export async function setUserCookie(email:string ,password:string, res: NextResponse) {
+
+  const result =  await fetch('http://vps51962.publiccloud.com.br:3331/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
+    email,
+    password
+  })})
+
+  if (result.status !== 200){
+    return res.status
+  }
+
+  const {token}  =  await result.json()
+/* 
   const token = await new SignJWT({})
     .setProtectedHeader({ alg: 'HS256' })
     .setJti(nanoid())
     .setIssuedAt()
     .setExpirationTime('2h')
-    .sign(new TextEncoder().encode(getJwtSecretKey()))
+    .sign(new TextEncoder().encode(getJwtSecretKey())) */
 
   res.cookies.set(USER_TOKEN, token, {
     httpOnly: true,
-    maxAge: 60 * 60 * 2, // 2 hours in seconds
+    maxAge: 60 * 60 * 1, // 2 hours in seconds
   })
 
   return res

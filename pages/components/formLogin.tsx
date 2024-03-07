@@ -5,6 +5,8 @@ import {
   Button,
     Input
 } from '@vercel/examples-ui'
+import router from "next/router";
+ 
  
 export default function FormLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -35,8 +37,8 @@ export default function FormLogin() {
         email,
         password
       })})
-      console.log(result)
-   /*  router.push('/protected') */
+      
+    router.push('/protected')
       
     } catch (error) {
    

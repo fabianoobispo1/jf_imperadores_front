@@ -7,14 +7,18 @@ export const config = {
 }
 
 export default async function auth(req: NextRequest) {
-  if (req.method !== 'POST') {
-    return jsonResponse(405, { error: { message: 'Method not allowed' } })
-  }
 
+  if (req.method !== 'POST') {
+    return jsonResponse(405, { error: { message: 'Método não permitido' } })
+  }
+ 
+   //recupera dados do login 
+  const {email, password } = await req.json();
+ 
   try {
-    return await setUserCookie(jsonResponse(200, { success: true }))
+    return await setUserCookie(email, password, jsonResponse(200, { success: true }))
   } catch (err) {
     console.error(err)
-    return jsonResponse(500, { error: { message: 'Authentication failed.' } })
+    return jsonResponse(500, { error: { message: 'Falha na autenticação.' } })
   }
 }
