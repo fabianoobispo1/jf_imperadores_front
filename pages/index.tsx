@@ -13,6 +13,8 @@ export default function Index() {
 
 
  
+
+  
   useEffect(() => {
     setIsLoading(false)
     router.push('/protected')

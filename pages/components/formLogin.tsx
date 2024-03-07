@@ -6,12 +6,23 @@ import {
     Input
 } from '@vercel/examples-ui'
 import router from "next/router";
+import { getApi_Endpoint_Prod } from "@lib/constants";
  
  
 export default function FormLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
+  async function testApi(){
+    console.log(getApi_Endpoint_Prod())
+    const result =  await fetch(getApi_Endpoint_Prod()+'/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
+      email: 'qqqq',
+      password:'qwqw'
+    })})
 
+    console.log(result)
+    console.log(result.status)
+  
+  }
 
 
   async function handleLogin(event: FormEvent<HTMLFormElement>){
@@ -52,7 +63,7 @@ export default function FormLogin() {
 
   }
   return(
-   
+    <>
     <form className="w-96 bg-white shadow-md rounded  px-8 pt-6 pb-8 mb-4" onSubmit={handleLogin}>
       <div className="mb-4 ">
         <label className="block text-gray-700 text-sm font-bold mb-2" >
@@ -79,8 +90,14 @@ export default function FormLogin() {
         </div>
        
       </div>
+
+      
     </form>
     
+    <Button onClick={testApi}  >
+    test
+  </Button>
+    </>
 
   )
 }
