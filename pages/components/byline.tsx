@@ -18,7 +18,7 @@ export default function Byline({ className }: { className: string }) {
         <div className="text-sm text-gray-400">
           <a
             className="underline decoration-dotted underline-offset-4 transition-colors hover:text-gray-300"
-            href="https://github.com/fabianoobispo1/fabianoobispo"
+            href="https://github.com/fabianoobispo1/jf_imperadores_front"
             target="_blank"
             rel="noreferrer"
           >
