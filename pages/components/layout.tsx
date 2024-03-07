@@ -6,11 +6,7 @@ export default function Layout({ children }: any) {
     <>
     
         <main >{children}</main>
-  
-
-
-
-  
+   
     </>
   )
 }

@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react"
 /* import type { LayoutProps } from '@vercel/examples-ui/layout'
 import { getLayout } from '@vercel/examples-ui' */
 import '@vercel/examples-ui/globals.css'
+import { Toaster } from "react-hot-toast";
 
 import Layout from './components/layout'
 
@@ -36,6 +37,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         }
       `}</style>
         <Layout>
+        <Toaster position="bottom-center" />   
      <Component {...pageProps} />
       <SpeedInsights />
       <Analytics />
