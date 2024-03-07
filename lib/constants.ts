@@ -11,9 +11,6 @@ export function getJwtSecretKey(): string {
   return JWT_SECRET_KEY
 }
 
-
-
-
 export function getApi_Endpoint_Prod(): string {
   if (!API_ENDPOINT_PROD || API_ENDPOINT_PROD.length === 0) {
     throw new Error('The environment variable API_ENDPOINT_PROD is not set.')

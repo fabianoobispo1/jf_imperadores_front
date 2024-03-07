@@ -14,7 +14,9 @@ export default function FormLogin() {
 
   async function testApi(){
     console.log(getApi_Endpoint_Prod())
-    const result =  await fetch(getApi_Endpoint_Prod()+'/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
+
+    
+    const result =  await fetch('http://vps51962.publiccloud.com.br:3331/'+'fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
       email: 'qqqq',
       password:'qwqw'
     })})
