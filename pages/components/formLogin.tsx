@@ -13,9 +13,7 @@ export default function FormLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   async function testApi(){
-    console.log(getApi_Endpoint_Prod())
 
-    
     const result =  await fetch('http://vps51962.publiccloud.com.br:3331/'+'fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
       email: 'qqqq',
       password:'qwqw'
