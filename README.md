@@ -1,69 +1,76 @@
----
-name: JWT Authentication
-slug: jwt-authentication
-description: Learn how to do JWT authentication at the edge.
-framework: Next.js
-useCase:
-  - Edge Functions
-  - Edge Middleware
-  - Documentation
-css: Tailwind
-deployUrl: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fedge-middleware%2Fjwt-authentication&env=JWT_SECRET_KEY&envDescription=Random%20secret%20that'll%20be%20used%20to%20sign%20JWTs&project-name=jwt-authentication&repo-name=jwt-authentication
-demoUrl: https://edge-functions-jwt-authentication.vercel.app
-relatedTemplates:
-  - nextjs-boilerplate
-  - blog-starter-kit
-  - platforms-starter-kit
----
+## 1.  JWT Authentication in Next.js 13 API Route Handlers
 
-# JWT Authentication
+In this article, we'll explore how to implement JWT authentication in Next.js 13 API route handlers. We'll cover the process of generating and verifying JWTs, handling authentication errors, and protecting sensitive API endpoints.
 
-The example shows how to do JWT authentication at the edge using Edge Middleware and Edge Functions.
+![JWT Authentication in Next.js 13 API Route Handlers](https://codevoweb.com/wp-content/uploads/2023/05/JWT-Authentication-in-Next.js-13-API-Route-Handlers.webp)
 
-## Demo
+### Topics Covered
 
-https://edge-functions-jwt-authentication.vercel.app
-
-Visit the demo to learn more about how it works!
-
-## How to Use
-
-You can choose from one of the following two methods to use this repository:
-
-### One-Click Deploy
-
-After [setting up your JWT secret](#set-up-environment-variables), deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fedge-middleware%2Fjwt-authentication&env=JWT_SECRET_KEY&envDescription=Random%20secret%20that'll%20be%20used%20to%20sign%20JWTs&project-name=jwt-authentication&repo-name=jwt-authentication)
-
-### Clone and Deploy
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-pnpm create next-app --example https://github.com/vercel/examples/tree/main/edge-middleware/jwt-authentication
-```
-
-#### Set up environment variables
-
-Rename [`.env.example`](.env.example) to `.env.local`:
-
-```bash
-cp .env.example .env.local
-```
-
-then, update `JWT_SECRET_KEY` with your a random secret that'll be used to sign JWTs.
-
-Next, run Next.js in development mode:
-
-```bash
-pnpm dev
-```
-
-The app should be up and running at http://localhost:3000.
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=edge-middleware-eap) ([Documentation](https://nextjs.org/docs/deployment)).
+- Running the Next.js 13 JWT API Project Locally
+- Setup the Next.js Project
+- Setup Prisma in the Next.js Project
+    - Define the Database Model and Run Migrations
+    - Instantiate the Prisma Client
+- Create the Request Validation Schemas
+- Create Some Utility Functions
+    - Function to Get an Environment Variable
+    - Function to Return a Next.js API Response
+- Function to Return a Next.js API Response
+    - Sign the JWT using HS256 Algorithm
+    - Create a Function to Verify the JWT
+- Create a Next.js Middleware to Protect Routes
+- Create API Route Handlers to Handle the JWT Authentication
+    - Account Registration API Route Handler
+    - Account Login API Route Handler
+    - Account Logout API Route Handler
+    - Fetch Authenticated User Route Handler
+- Test the JWT Authentication
+    - Register an Account
+    - Sign in to your Account
+    - Get your Account Credentials
+    - Logout from your Account
+- Conclusion
 
 
-teste de hospedagem no https://dashboard.render.com/
-postgres esta la tambem, e o gratuito e apagado em 3 meses 
+
+Read the entire article here: [https://codevoweb.com/jwt-authentication-in-nextjs-13-api-route-handlers/](https://codevoweb.com/jwt-authentication-in-nextjs-13-api-route-handlers/)
+
+## 2.  User Registration and Login in Next.js 13 App Directory
+
+In this article, you will learn how to build a frontend application within the new Next.js 13 app directory that covers various aspects of authentication such as user registration, login, logout, protected pages via middleware, protected pages via React Hooks, and more. 
+
+![User Registration and Login in Next.js 13 App Directory](https://codevoweb.com/wp-content/uploads/2023/05/User-Registration-and-Login-in-Next.js-13-App-Directory.webp)
+
+### Topics Covered
+
+- Running the Next.js 13 JWT Authentication Project
+- Install Packages and Configure Tailwind CSS
+- Create the TypeScript Types and API Request Functions
+    - API Response Types
+    - API Request Functions
+- Setup a Global Application State with Zustand
+- Implement the Authentication Logic
+    - Protect Page and API Routes in Next.js Middleware
+    - Create an Authentication Session Hook
+    - Create a Client-side JWT Protection Component
+- Create a Couple of Reusable Components
+    - Create a Spinner Component
+    - Create a Loading Button Component
+    - Create a Form Input Component
+    - Header Component with Logout Functionality
+- Create the Application Page Components
+    - Create an Error Handling Utility Function
+    - Account Registration Page
+    - Account Login Page
+    - Profile Page
+- Testing the User Registration and Login Flow
+    - Register an Account
+    - Log in to your Account
+    - View your Account Credentials
+- Conclusion
+
+
+Read the entire article here: [https://codevoweb.com/user-registration-login-in-nextjs-13-app-directory/](https://codevoweb.com/user-registration-login-in-nextjs-13-app-directory/)
+
+
+
