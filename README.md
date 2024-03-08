@@ -63,3 +63,7 @@ pnpm dev
 The app should be up and running at http://localhost:3000.
 
 Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=edge-middleware-eap) ([Documentation](https://nextjs.org/docs/deployment)).
+
+
+teste de hospedagem no https://dashboard.render.com/
+postgres esta la tambem, e o gratuito e apagado em 3 meses 
