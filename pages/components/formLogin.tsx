@@ -12,18 +12,7 @@ import router from "next/router";
 export default function FormLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  async function testApi(){
 
-
-    const result =  await fetch('https://fabianoobispoapi.onrender.com'+'/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
-      email: 'qqqq',
-      password:'qwqw'
-    })})
-
-    console.log(result)
-    console.log(result.status)
-  
-  }
 
 
   async function handleLogin(event: FormEvent<HTMLFormElement>){
@@ -64,7 +53,7 @@ export default function FormLogin() {
 
   }
   return(
-    <>
+    
     <form className="w-96 bg-white shadow-md rounded  px-8 pt-6 pb-8 mb-4" onSubmit={handleLogin}>
       <div className="mb-4 ">
         <label className="block text-gray-700 text-sm font-bold mb-2" >
@@ -95,10 +84,6 @@ export default function FormLogin() {
       
     </form>
     
-    <Button onClick={testApi}  >
-    test
-  </Button>
-    </>
 
   )
 }

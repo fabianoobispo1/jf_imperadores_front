@@ -57,20 +57,19 @@ export default function FormRegister() {
     //delay 3 segundos 
    // await new Promise(resolve => setTimeout(resolve, 3000))
 
-   console.log(nome)
-   console.log(email)
-   console.log(nasciemnto)
-   console.log(password)
-    setIsLoading(false)
-      
-/*     await api('/fausuario', {method: 'POST',headers:{"Content-Type": "application/json"}, body: JSON.stringify({
+
+
+    const result =  await fetch('https://fabianoobispoapi.onrender.com'+'/fausuario', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
       nome,
       data_nascimento:nasciemnto,
       email,
       password
-    })} ) */
-/*
-    revalidateTag('listartodo') */
+    })})
+
+      
+    console.log(result)
+
+     setIsLoading(false)
   }
 
   return(
