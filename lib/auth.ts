@@ -1,5 +1,4 @@
 import type { NextRequest, NextResponse } from 'next/server'
-import { nanoid } from 'nanoid'
 import { SignJWT, jwtVerify } from 'jose'
 import { USER_TOKEN, getJwtSecretKey, getApiEndpointProd } from './constants'
 
