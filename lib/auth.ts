@@ -1,7 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server'
 import { nanoid } from 'nanoid'
 import { SignJWT, jwtVerify } from 'jose'
-import { USER_TOKEN, getJwtSecretKey, getApi_Endpoint_Prod } from './constants'
+import { USER_TOKEN, getJwtSecretKey, getApiEndpointProd } from './constants'
 
 interface UserJwtPayload {
   jti: string
@@ -36,7 +36,7 @@ export async function verifyAuth(req: NextRequest) {
  */
 export async function setUserCookie(email:string ,password:string, res: NextResponse) {
 
-  const result =  await fetch(getApi_Endpoint_Prod()+'/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
+  const result =  await fetch(getApiEndpointProd()+'/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
     email,
     password
   })})

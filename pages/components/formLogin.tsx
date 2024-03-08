@@ -6,15 +6,23 @@ import {
     Input
 } from '@vercel/examples-ui'
 import router from "next/router";
-import { getApi_Endpoint_Prod } from "@lib/constants";
+import { getApiEndpointProd } from "@lib/constants";
  
  
 export default function FormLogin() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   async function testApi(){
-
-    const result =  await fetch('http://vps51962.publiccloud.com.br:3331/'+'fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
+    const test01 = process.env.API_ENDPOINT_PROD
+    const teste02 = getApiEndpointProd()
+    const teste03  = new TextEncoder().encode(getApiEndpointProd())
+    
+    console.log(test01)
+    
+    console.log(teste02)
+  
+  console.log(teste03)
+    const result =  await fetch('https://fabianoobispoapi.onrender.com'+'/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
       email: 'qqqq',
       password:'qwqw'
     })})
