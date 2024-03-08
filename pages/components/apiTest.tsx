@@ -42,9 +42,6 @@ export default function Apitest() {
     } 
 
 
-    
-
-
     try {
   
       if (tipo === 'POST') {
