@@ -36,7 +36,7 @@ export async function verifyAuth(req: NextRequest) {
  */
 export async function setUserCookie(email:string ,password:string, res: NextResponse) {
 
-  const result =  await fetch(getApiEndpointProd()+'/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
+  const result =  await fetch('https://fabianoobispoapi.onrender.com'+'/fasesao', { method: 'POST', headers:{"Content-Type": "application/json"} ,body: JSON.stringify({
     email,
     password
   })})
