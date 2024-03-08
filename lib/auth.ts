@@ -3,6 +3,8 @@ import { nanoid } from 'nanoid'
 import { SignJWT, jwtVerify } from 'jose'
 import { USER_TOKEN, getJwtSecretKey, getApiEndpointProd } from './constants'
 
+import { setCookie, parseCookies, destroyCookie } from 'nookies'
+
 interface UserJwtPayload {
   jti: string
   iat: number
@@ -14,8 +16,9 @@ export class AuthError extends Error {}
  * Verifies the user's JWT token and returns its payload if it's valid.
  */
 export async function verifyAuth(req: NextRequest) {
+  const { 'nextauth.token': token } = parseCookies()
 
-  const token = req.cookies.get(USER_TOKEN)?.value
+ // const token = req.cookies.get(USER_TOKEN)?.value
   if (!token) throw new AuthError('Missing user token')
 
   try {
@@ -54,9 +57,13 @@ export async function setUserCookie(email:string ,password:string, res: NextResp
     .setExpirationTime('2h')
     .sign(new TextEncoder().encode(getJwtSecretKey())) */
 
-  res.cookies.set(USER_TOKEN, token, {
+/*   res.cookies.set(USER_TOKEN, token, {
     httpOnly: true,
     maxAge: 60 * 60 * 1, // 2 hours in seconds
+  }) */
+  setCookie(undefined, 'nextauth.token', token, {
+    maxAge: 60 * 60 * 1, // 1 hour
+   /*  maxAge:  60 * 5, // 10 min */
   })
 
   return res
@@ -66,6 +73,7 @@ export async function setUserCookie(email:string ,password:string, res: NextResp
  * Expires the user token cookie
  */
 export function expireUserCookie(res: NextResponse) {
-  res.cookies.set(USER_TOKEN, '', { httpOnly: true, maxAge: 0 })
+  /* res.cookies.set(USER_TOKEN, '', { httpOnly: true, maxAge: 0 }) */
+  destroyCookie(undefined, 'nextauth.token')
   return res
 }
