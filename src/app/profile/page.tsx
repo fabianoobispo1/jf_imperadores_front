@@ -7,7 +7,6 @@ import { AuthPageInvisible } from "@/lib/protect-page";
 export default async function ProfilePage() {
   const cookieStore = cookies();
   const token = cookieStore.get("tokenjfimperadores");
-  console.log('pagina profile')
    const user = await apiGetAuthUser(token?.value); 
 
 
@@ -21,11 +20,11 @@ export default async function ProfilePage() {
               Pagina logada 
             </p>
             <div className="mt-8">
-              <p className="mb-3">Id: {user.id}</p>
+     {/*          <p className="mb-3">Id: {user.id}</p>
               <p className="mb-3">Name: {user.name}</p>
               <p className="mb-3">Email: {user.email}</p>
               <p className="mb-3">Role: {user.role}</p>
-              <p className="mb-3">Verified: {String(user.verified)}</p>
+              <p className="mb-3">Verified: {String(user.verified)}</p> */}
             </div>
           </div>
         </div>
