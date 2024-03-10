@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic' 
+
 import { getErrorResponse } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
 
