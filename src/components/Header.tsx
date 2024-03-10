@@ -24,7 +24,7 @@ const Header = () => {
   };
 
   const SERVER_ENDPOINT = process.env.VERCEL_URL || "http://localhost:3000";
-
+  process.env.NEXT_PUBLIC_API_BASE_URL
 
   return (
     <>
@@ -38,6 +38,7 @@ const Header = () => {
           <ul className="flex items-center gap-4">
             <li>
               <p>{SERVER_ENDPOINT}</p>
+              <p>{process.env.NEXT_PUBLIC_API_BASE_URL}</p>
               <Link href="/" className="text-ct-dark-600">
                 Inicio
               </Link>

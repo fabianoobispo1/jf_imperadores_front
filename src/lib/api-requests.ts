@@ -1,6 +1,6 @@
 import { FilteredUser, UserLoginResponse, UserResponse } from "./types";
 
-const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 async function handleResponse<T>(response: Response): Promise<T> {
   const contentType = response.headers.get("Content-Type") || "";
