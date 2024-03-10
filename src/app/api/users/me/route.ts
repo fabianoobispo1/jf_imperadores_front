@@ -2,7 +2,7 @@ import { getErrorResponse } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  console.log('ebtrou get')
+try {
   const userId = req.headers.get("X-USER-ID");
 
   if (!userId) {
@@ -40,4 +40,8 @@ export async function GET(req: NextRequest) {
     status: "success",
     data: { user: { ...user, password: undefined } },
   });
+
+   } catch (error:any) {
+  console.log(error)
+}
 }
