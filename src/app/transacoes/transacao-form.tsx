@@ -12,16 +12,17 @@ import useStore from "@/store";
 import { handleApiError } from "@/lib/helpers";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import store from "@/store";
 
-export default function LoginForm() {
-  const store = useStore();
-  const router = useRouter();
+export default function TransacaoForm() {
+/*   const store = useStore();
+  const router = useRouter(); */
 
   const methods = useForm<LoginUserInput>({
     resolver: zodResolver(LoginUserSchema),
   });
 
-  const {
+  /* const {
     reset,
     handleSubmit,
     formState: { isSubmitSuccessful },
@@ -38,8 +39,8 @@ export default function LoginForm() {
     store.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  async function LoginUserFunction(credentials: LoginUserInput) {
+ */
+/*   async function LoginUserFunction(credentials: LoginUserInput) {
     store.setRequestLoading(true);
     try {
       await apiLoginUser(JSON.stringify(credentials));
@@ -61,34 +62,25 @@ export default function LoginForm() {
 
   const onSubmitHandler: SubmitHandler<LoginUserInput> = (values) => {
     LoginUserFunction(values);
-  };
+  }; */
 
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={handleSubmit(onSubmitHandler)}
-        className="max-w-md w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-2xl p-8 space-y-5"
+        /* onSubmit={handleSubmit(onSubmitHandler)} */
+        className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-2xl p-8 space-y-5"
       >
-        <FormInput label="Email" name="email" type="email" />
-        <FormInput label="Senha" name="password" type="password" />
+        <FormInput label="campo 01" name="email" type="text" />
+        <FormInput label="campo 02" name="password" type="text" />
 
-        <div className="text-right">
-          <Link href="#" className="">
-            Esqueceu asenha?(breve)
-          </Link>
-        </div>
+
         <LoadingButton
-          loading={store.requestLoading}
+          loading={true}
           textColor="text-ct-blue-600"
         >
-          Entrar
+          Salvar
         </LoadingButton>
-        <span className="block">
-          Need an account?{" "}
-          <Link href="/register" className="text-ct-blue-600">
-            Registar aqui
-          </Link>
-        </span>
+  
       </form>
     </FormProvider>
   );

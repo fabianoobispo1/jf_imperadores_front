@@ -10,8 +10,8 @@ export const demos: { key: number; name: string; items: Item[] }[] = [
     name: 'itens',
     items: [
       {
-        name: 'Mega Sena',
-        slug: 'megasena',
+        name: 'Sub Iten 01',
+        slug: 'paginateste01',
         description: 'Descricao',
       },
     ],

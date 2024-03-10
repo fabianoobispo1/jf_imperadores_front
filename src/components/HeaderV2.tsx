@@ -14,7 +14,7 @@ import clsx from 'clsx'
 
 import { useSelectedLayoutSegment } from 'next/navigation'
 
-const Header = () => {
+const HeaderV2 = () => {
   const store = useStore();
   const user = useSession();
   const router = useRouter();
@@ -34,7 +34,7 @@ const Header = () => {
   };
   return (
     <>
-      <header className="bg-white h-20">
+      {/* <header className="bg-white h-20">
         <nav className="h-full flex justify-between container items-center">
           <div>
             <Link href="/" className="text-ct-dark-600 text-2xl font-semibold">
@@ -80,7 +80,7 @@ const Header = () => {
       <div className="pt-4 pl-2 bg-ct-blue-600 fixed">
         {store.requestLoading && <Spinner color="text-ct-yellow-600" />}
       </div>
-
+ */}
 
 
 
@@ -97,7 +97,7 @@ const Header = () => {
           </div>
 
           <h3 className="font-semibold tracking-wide text-gray-400 group-hover:text-gray-50">
-            Fabiano Bispo
+            {user?.name}
           </h3>
         </Link>
       </div>
@@ -181,4 +181,4 @@ function GlobalNavItem({
 }
 
 
-export default Header;
+export default HeaderV2;
