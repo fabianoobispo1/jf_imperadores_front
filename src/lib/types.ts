@@ -6,6 +6,7 @@ export interface FilteredUser {
   verified: boolean;
   createdAt: string;
   updatedAt: string;
+  administrador :boolean;
 }
 
 export interface FaUsuario {

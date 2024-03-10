@@ -36,6 +36,7 @@ try {
   user.verified  = false 
   user.createdAt  = user.faUsuario.created_at
   user.updatedAt  = user.faUsuario.created_at
+  user.administrador = user.faUsuario.administrador 
   
 
   return NextResponse.json({

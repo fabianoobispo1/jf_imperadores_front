@@ -20,11 +20,12 @@ export default async function ProfilePage() {
               Pagina logada 
             </p>
             <div className="mt-8">
-              <p className="mb-3">Id: {user.id}</p>
+             {/*  <p className="mb-3">Id: {user.id}</p> */}
               <p className="mb-3">Name: {user.name}</p>
               <p className="mb-3">Email: {user.email}</p>
-              <p className="mb-3">Role: {user.role}</p>
-              <p className="mb-3">Verified: {String(user.verified)}</p>
+   {/*            <p className="mb-3">Role: {user.role}</p> */}
+              <p className="mb-3">Verificado: {String(user.verified)}</p>
+              <p className="mb-3">Verified: {String(user.administrador)}</p>
             </div>
           </div>
         </div>

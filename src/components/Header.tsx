@@ -54,6 +54,11 @@ const Header = () => {
             {user && (
               <>
                 <li>
+                  <Link href="/transacoes" className="text-ct-dark-600">
+                    Registro de contas                    
+                  </Link>
+                </li>
+                <li>
                   <Link href="/profile" className="text-ct-dark-600">
                     Perfil
                   </Link>
