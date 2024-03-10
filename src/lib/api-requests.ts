@@ -72,10 +72,13 @@ export async function apiGetAuthUser(token?: string): Promise<FilteredUser> {
   }
   console.log(token)
   console.log(`chama api/users/me`)
-  const response = await fetch(`${SERVER_ENDPOINT}/api/users/me`, {
-    method: "GET",
+  const response = await fetch(`https://www.jfimperadores.com.br/api/users/me`, {
+    method: "POST",
     credentials: "include",
     headers,
+    body: JSON.stringify({
+      id: '111'
+    })
   });
  console.log(response)
 
