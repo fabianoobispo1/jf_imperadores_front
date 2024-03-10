@@ -4,47 +4,47 @@ export const RegisterUserSchema = z
   .object({
     name: z
       .string({
-        required_error: "Name is required",
+        required_error: "O nome é obrigatório",
       })
-      .min(1, "Full name is required"),
+      .min(1, "O nome completo é obrigatório"),
     email: z
       .string({
-        required_error: "Email is required",
+        required_error: "Email é obrigatório",
       })
-      .min(1, "Email is required")
-      .email("Email is invalid"),
+      .min(1, "Email é obrigatório")
+      .email("Email é obrigatório"),
     photo: z.string().optional(),
     password: z
       .string({
-        required_error: "Password is required",
+        required_error: "Senha obrigatoria.",
       })
-      .min(1, "Password is required")
-      .min(8, "Password must be more than 8 characters")
-      .max(32, "Password must be less than 32 characters"),
+      .min(1, "Senha obrigatoria.")
+      .min(8, "A senha deve ter mais de 8 caracteres")
+      .max(32, "A senha deve ter menos de 32 caracteres"),
     passwordConfirm: z
       .string({
-        required_error: "Confirm your password",
+        required_error: "Confirme sua senha",
       })
-      .min(1, "Confirm your password"),
+      .min(1, "Confirme sua senha"),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     path: ["passwordConfirm"],
-    message: "Passwords do not match",
+    message: "As senhas não coincidem",
   });
 
 export const LoginUserSchema = z.object({
   email: z
     .string({
-      required_error: "Email is required",
+      required_error: "Email é obrigatório",
     })
-    .min(1, "Email is required")
-    .email("Email is invalid"),
+    .min(1, "Email é obrigatório")
+    .email("Email inválido"),
   password: z
     .string({
-      required_error: "Password is required",
+      required_error: "Senha obrigatoria.",
     })
-    .min(1, "Password is required")
-    .min(8, "Password must be at least 8 characters"),
+    .min(1, "Senha obrigatoria.")
+    .min(8, "A senha deve conter pelo menos 8 caracteres"),
 });
 
 export type LoginUserInput = z.infer<typeof LoginUserSchema>;
