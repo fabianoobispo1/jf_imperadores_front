@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   
 
     //minhaapi 
-    const responseApi = await fetch(`${process.env.MINHA_API}/fausuario`, {
+    const responseApi = await fetch(`${process.env.NEXT_PUBLIC_API_MINHA_BASE}/fausuario`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

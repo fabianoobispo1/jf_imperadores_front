@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   }
   console.log(userId)
 
-   const responseApi = await fetch(`${process.env.MINHA_API}/faperfilid`, {
+   const responseApi = await fetch(`${process.env.NEXT_PUBLIC_API_MINHA_BASE}/faperfilid`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
