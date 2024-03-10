@@ -18,7 +18,7 @@ export default async function ProfilePage() {
         <div className="max-w-4xl mx-auto bg-ct-dark-100 rounded-md h-[20rem] flex justify-center items-center">
           <div>
             <p className="mb-3 text-5xl text-center font-semibold">
-              Profile Page
+              Pagina logada 
             </p>
             <div className="mt-8">
               <p className="mb-3">Id: {user.id}</p>

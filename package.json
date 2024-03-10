@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "ngrok": "ngrok http 3000"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.0",
@@ -28,5 +29,8 @@
     "typescript": "5.0.4",
     "zod": "^3.21.4",
     "zustand": "^4.3.8"
+  },
+  "devDependencies": {
+    "ngrok": "^5.0.0-beta.2"
   }
 }
