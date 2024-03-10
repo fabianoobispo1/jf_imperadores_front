@@ -24,15 +24,9 @@ export async function POST(req: NextRequest) {
     if (responseApi.status === 400)  {
       return getErrorResponse(400, "Email ou senha errados");
     }
-
-
-
-
+    
     const JWT_EXPIRES_IN = getEnvVariable("JWT_EXPIRES_IN");
-
-
     const {token} = await responseApi.json() 
-
 
     const tokenMaxAge = parseInt(JWT_EXPIRES_IN) * 60;
     const cookieOptions = {

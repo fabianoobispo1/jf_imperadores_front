@@ -1,6 +1,7 @@
 import { FilteredUser, UserLoginResponse, UserResponse } from "./types";
 
-const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+
 
 async function handleResponse<T>(response: Response): Promise<T> {
   const contentType = response.headers.get("Content-Type") || "";
@@ -63,6 +64,8 @@ export async function apiGetAuthUser(token?: string): Promise<FilteredUser> {
     "Content-Type": "application/json",
   };
   console.log('apiGetAuthUser')
+  console.log(SERVER_ENDPOINT)
+  console.log(process.env.VERCEL_URL)
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }

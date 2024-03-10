@@ -23,6 +23,9 @@ const Header = () => {
     }
   };
 
+  const SERVER_ENDPOINT = process.env.VERCEL_URL || "http://localhost:3000";
+
+
   return (
     <>
       <header className="bg-white h-20">
@@ -34,6 +37,7 @@ const Header = () => {
           </div>
           <ul className="flex items-center gap-4">
             <li>
+              <p>{SERVER_ENDPOINT}</p>
               <Link href="/" className="text-ct-dark-600">
                 Inicio
               </Link>
