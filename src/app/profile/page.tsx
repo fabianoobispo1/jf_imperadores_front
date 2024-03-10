@@ -5,9 +5,9 @@ import { AuthPageInvisible } from "@/lib/protect-page";
 
 
 export default async function ProfilePage() {
-  const cookieStore = cookies();
+/*   const cookieStore = cookies();
   const token = cookieStore.get("tokenjfimperadores");
-   const user = await apiGetAuthUser(token?.value); 
+   const user = await apiGetAuthUser(token?.value);  */
 
 
   return (
