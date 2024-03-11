@@ -7,6 +7,7 @@ export interface FilteredUser {
   createdAt: string;
   updatedAt: string;
   administrador :boolean;
+  token?: string | undefined
 }
 
 export interface FaUsuario {
@@ -16,6 +17,7 @@ export interface FaUsuario {
   administrador: boolean;
   data_nascimento:string
   created_at: string;
+  token?: string | undefined
 }
 
 export interface UserResponse {
@@ -36,4 +38,13 @@ export interface UserFaResponse {
 export interface UserLoginResponse {
   status: string;
   token: string;
+}
+
+export interface FaTransacoes {
+  id: string;
+  titulo: string;
+  valor: number;
+  tipo:string;
+  vencimento: string;
+  faUsuario_id: string   
 }

@@ -42,8 +42,9 @@ export default function LoginForm() {
   async function LoginUserFunction(credentials: LoginUserInput) {
     store.setRequestLoading(true);
     try {
-      await apiLoginUser(JSON.stringify(credentials));
-
+      const token = await apiLoginUser(JSON.stringify(credentials));
+      store.setToken(token)
+ 
       toast.success("Conectado com sucesso");
       return router.push("/profile");
     } catch (error: any) {

@@ -1,6 +1,9 @@
+
+import { useStore } from "zustand";
 import { FilteredUser, UserLoginResponse, UserResponse } from "./types";
 
 const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000";
+const NEXT_PUBLIC_API_MINHA_BASE =  process.env.NEXT_PUBLIC_API_MINHA_BASE || "http://localhost:3331";
 
 async function handleResponse<T>(response: Response): Promise<T> {
   const contentType = response.headers.get("Content-Type") || "";
@@ -62,18 +65,38 @@ export async function apiGetAuthUser(token?: string): Promise<FilteredUser> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-  console.log('apiGetAuthUser')
+  /*   console.log('apiGetAuthUser') */
   if (token) {
+   
     headers["Authorization"] = `Bearer ${token}`;
   }
-  console.log(token)
-  console.log(`chama api/users/me`)
+  /*   console.log(token)
+  console.log(`chama api/users/me`) */
   const response = await fetch(`${SERVER_ENDPOINT}/api/users/me`, {
     method: "GET",
     credentials: "include",
     headers,
   });
- console.log(response)
+ 
 
   return handleResponse<UserResponse>(response).then((data) => data.data.user);
+}
+
+
+export async function apiExterna(tipo: string, caminho:string, body: string, token: string ) {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  
+  const response = await fetch(NEXT_PUBLIC_API_MINHA_BASE+caminho, {
+    method: tipo,
+    credentials: "include",
+    headers,
+  });
+
+  return  response
 }

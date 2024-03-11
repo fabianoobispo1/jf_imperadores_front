@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import Spinner from "./Spinner";
 
 type LoadingButtonProps = {
-  loading: boolean;
+  loading?: boolean;
   btnColor?: string;
   textColor?: string;
   children: React.ReactNode;

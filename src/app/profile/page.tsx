@@ -3,16 +3,14 @@ import { apiGetAuthUser } from "@/lib/api-requests";
 import { cookies } from "next/headers";
 import { AuthPageInvisible } from "@/lib/protect-page";
 
-
 export default async function ProfilePage() {
   const cookieStore = cookies();
   const token = cookieStore.get("tokenjfimperadores");
-   const user = await apiGetAuthUser(token?.value); 
-
+  const user = await apiGetAuthUser(token?.value); 
 
   return (
     <>
-      <Header />
+      <Header  />
       <section className="bg-ct-blue-600  min-h-screen pt-20">
         <div className="max-w-4xl mx-auto bg-ct-dark-100 rounded-md h-[20rem] flex justify-center items-center">
           <div>

@@ -47,5 +47,26 @@ export const LoginUserSchema = z.object({
     .min(8, "A senha deve conter pelo menos 8 caracteres"),
 });
 
+export const FaTransacoesSchema = z.object({
+  titulo: z 
+    .string({
+      required_error: "Titulo é obrigatório"
+    }).min(1,"Titulo é obrigatório"),    
+  valor: z 
+    .string({
+      required_error: "Valor é obrigatório"
+    }).min(1,"Valor é obrigatório"),
+  tipo: z 
+    .string({
+      required_error: "Tipo é obrigatório"
+    }).min(1,"Tipo é obrigatório"),
+    vencimento: z 
+    .string({
+      required_error: "Data de vencimento é obrigatório"
+    }).min(1,"Data de vencimento é obrigatório")
+  
+})
+
 export type LoginUserInput = z.infer<typeof LoginUserSchema>;
 export type RegisterUserInput = z.infer<typeof RegisterUserSchema>;
+export type FaTransacoesInput = z.infer<typeof FaTransacoesSchema>;

@@ -10,7 +10,7 @@ type FormInputProps = {
 const FormInput: React.FC<FormInputProps> = ({
   label,
   name,
-  type = "text",
+  type ,
 }) => {
   const {
     register,
@@ -25,6 +25,7 @@ const FormInput: React.FC<FormInputProps> = ({
         type={type}
         placeholder=" "
         className="block w-full rounded-2xl appearance-none focus:outline-none py-2 px-4"
+        step="0.01"
         {...register(name)}
       />
       {errors[name] && (
