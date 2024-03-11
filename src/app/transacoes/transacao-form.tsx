@@ -67,6 +67,13 @@ export default function TransacaoForm() {
       router.refresh()
       router.push('/transacoes')
     }
+    if (response.status === 403){
+
+      toast.success(await response.json());
+      router.refresh()
+      router.push('/transacoes')
+    }
+
 
 
  
