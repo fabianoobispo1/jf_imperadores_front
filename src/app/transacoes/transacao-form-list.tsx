@@ -143,7 +143,7 @@ export default function TransacaoFormList() {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmitHandler)}
-        className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-2xl p-8 space-y-5"
+        className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-md p-8 space-y-5"
       >
 
       <div className="grid grid-cols-1 gap-4">
@@ -171,9 +171,9 @@ export default function TransacaoFormList() {
       </form>
     </FormProvider>
 
-    <div className="max-w-full w-full mx-auto overflow-hidden  bg-transparent rounded-2xl p-8 space-y-5"></div>
+    <div className="max-w-full w-full mx-auto overflow-hidden  bg-transparent rounded-md p-8 space-y-5"></div>
 
-    <div className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-2xl p-8 space-y-5">
+    <div className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-md p-8 space-y-5">
       <div className="grid grid-cols-5 gap-4">
         <p>Titulo</p>
         <p>Valor</p>
