@@ -187,7 +187,7 @@ export default function TransacaoFormList() {
             <p>{iten.valor}</p>
             {iten.tipo =='P'? <p>Pagamento</p> :<p>Recebiemnto</p>  }
 
-            <p>{format(new Date(iten.vencimento), "dd/MM/yyyy")}</p>
+            <p>{format(new Date(iten.vencimento), "dd/MM/yyyy")    }</p>
             <div>
               <button onClick={() => {deleteRow(iten.id)}} >
                 {/* <Trash  /> */}
