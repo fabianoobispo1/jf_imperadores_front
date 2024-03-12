@@ -4,7 +4,6 @@ import useStore from "@/store";
 
 export default function useSession() {
   const store = useStore();
-
   async function fetchUser() {
     try {
       const user = await apiGetAuthUser();
