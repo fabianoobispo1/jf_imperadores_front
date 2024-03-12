@@ -11,8 +11,10 @@ module.exports = {
         'ct-dark-600': '#222',
         'ct-dark-200': '#e5e7eb',
         'ct-dark-100': '#f5f6f7',
-        'ct-blue-600': '#2363eb',
+        'ct-blue-600': '#9a6c14',
         'ct-yellow-600': '#f9d13e',
+        'fa-dourado': '#9a6c14',
+        'fa-preto': '#1e1e1c',
       },
       fontFamily: {
         Poppins: ['Poppins, sans-serif'],
