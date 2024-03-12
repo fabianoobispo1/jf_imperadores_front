@@ -13,7 +13,7 @@ import useSession from "@/lib/useSession";
 import { useRouter } from "next/navigation";
 
 import { api } from "@/lib/api";
-import { format, compareAsc } from "date-fns";
+import { format } from "date-fns";
 
 import FormInputComboBox from "@/components/FormInputCombobox";
 
@@ -25,6 +25,7 @@ export default function TransacaoFormList() {
   const token = sesion?.token
 
   const [list, setList] = useState([''])
+  const [carregandoLista, setCarregandoLista] = useState(true)
 
   const methods = useForm<FaTransacoesInput>({
     resolver: zodResolver(FaTransacoesSchema),
@@ -97,6 +98,7 @@ export default function TransacaoFormList() {
   };
 
   async function atualizaLista() {
+    setCarregandoLista(true)    
     try {
       const headers: Record<string, string> = {
        "Content-Type": "application/json",
@@ -106,7 +108,8 @@ export default function TransacaoFormList() {
      }      
      const response = await api('/fatransacaolistar', {method: 'GET',headers} )
 
-     setList(await response.json())      
+     setList(await response.json())  
+     setCarregandoLista(false)    
      } catch (error: any) {
        console.log(error);     
      } 
@@ -178,8 +181,12 @@ export default function TransacaoFormList() {
         <p>Venciemnto</p>
         <p>Opcoes</p>
       </div>
-
-      {list.map((iten: any) =>
+    
+      {carregandoLista == true?
+      <p>carregando</p>
+      :
+      <>
+            {list.map((iten: any) =>
         <div key={iten.id} >
 
           <div className="grid grid-cols-5 gap-4 border-b-2 border-fa-dourado">
@@ -187,7 +194,7 @@ export default function TransacaoFormList() {
             <p>{iten.valor}</p>
             {iten.tipo =='P'? <p>Pagamento</p> :<p>Recebiemnto</p>  }
 
-            <p>{format(new Date(iten.vencimento), "dd/MM/yyyy")    }</p>
+            <p>{format(new Date(iten.vencimento), "dd/MM/yyyy")}</p>
             <div>
               <button onClick={() => {deleteRow(iten.id)}} >
                 {/* <Trash  /> */}
@@ -197,6 +204,9 @@ export default function TransacaoFormList() {
           </div>
         </div>      
       )}
+      </>}
+
+   
         <div className="grid ">
           Total
         </div>
