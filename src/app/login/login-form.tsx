@@ -3,7 +3,7 @@
 import { LoginUserInput, LoginUserSchema } from "@/lib/validations/user.schema";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { apiLoginUser } from "@/lib/api-requests";
 import FormInput from "@/components/FormInput";
 import Link from "next/link";
@@ -12,10 +12,15 @@ import useStore from "@/store";
 import { handleApiError } from "@/lib/helpers";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
 
 export default function LoginForm() {
   const store = useStore();
   const router = useRouter();
+  
+  const [statusApi, setStatusApi] = useState('off')
+  
+  const [cont, setCont] = useState(1)
 
   const methods = useForm<LoginUserInput>({
     resolver: zodResolver(LoginUserSchema),
@@ -38,6 +43,34 @@ export default function LoginForm() {
     store.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    verificaApi()
+
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[cont])
+
+
+  async function verificaApi() {
+    try {
+      const headers: Record<string, string> = {
+       "Content-Type": "application/json",
+     };    
+     const response = await api('/', {method: 'GET',headers} )
+
+     if (response.status === 200){
+      setStatusApi('on') 
+     }else{
+      setStatusApi('off') 
+      setCont(cont + 1)
+     }
+     } catch (error: any) {
+      setStatusApi('off')    
+        setCont(cont + 1)
+     } 
+    
+  }
 
   async function LoginUserFunction(credentials: LoginUserInput) {
     store.setRequestLoading(true);
@@ -65,6 +98,7 @@ export default function LoginForm() {
   };
 
   return (
+    
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmitHandler)}
@@ -85,12 +119,17 @@ export default function LoginForm() {
           Entrar
         </LoadingButton>
         <span className="block">
-          Need an account?{" "}
+          Precisa de uma conta?{" "}
           <Link href="/register" className="text-ct-blue-600">
             Registar aqui
           </Link>
         </span>
+        <p>Status api {statusApi}</p>
       </form>
     </FormProvider>
+   
+    
+    
+
   );
 }
