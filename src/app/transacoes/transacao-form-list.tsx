@@ -11,8 +11,10 @@ import { handleApiError } from "@/lib/helpers";
 import { toast } from "react-hot-toast";
 import useSession from "@/lib/useSession";
 import { useRouter } from "next/navigation";
-import { Trash } from "phosphor-react";
+
 import { api } from "@/lib/api";
+import { format, compareAsc } from "date-fns";
+
 import FormInputComboBox from "@/components/FormInputCombobox";
 
 export default function TransacaoFormList() {
@@ -110,6 +112,7 @@ export default function TransacaoFormList() {
      } 
   }
 
+  
   async function deleteRow(id:string) {
     try {
      const headers: Record<string, string> = {
@@ -184,10 +187,10 @@ export default function TransacaoFormList() {
             <p>{iten.valor}</p>
             {iten.tipo =='P'? <p>Pagamento</p> :<p>Recebiemnto</p>  }
 
-            <p>{iten.vencimento}</p>
+            <p>{format(new Date(iten.vencimento), "dd/MM/yyyy")}</p>
             <div>
               <button onClick={() => {deleteRow(iten.id)}} >
-                <Trash />
+                {/* <Trash  /> */}
               </button>          
             </div>  
 

@@ -2,7 +2,7 @@
 import { useStore } from "zustand";
 import { FilteredUser, UserLoginResponse, UserResponse } from "./types";
 
-const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000";
+const SERVER_ENDPOINT = process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3001";
 const NEXT_PUBLIC_API_MINHA_BASE =  process.env.NEXT_PUBLIC_API_MINHA_BASE || "http://localhost:3331";
 
 async function handleResponse<T>(response: Response): Promise<T> {
