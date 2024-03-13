@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
     headers: { "Content-Type": "application/json" },
   });
 
-  await Promise.all([
+  const responsePromise = await Promise.all([
     response.cookies.set({
       name: "tokenjfimperadores",
       value: "",
@@ -18,6 +18,8 @@ export async function GET(req: NextRequest) {
       maxAge: -1,
     }),
   ]);
+
+  
 
   return response;
 }

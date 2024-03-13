@@ -52,7 +52,7 @@ export async function apiLoginUser(credentials: string): Promise<string> {
 export async function apiLogoutUser(): Promise<void> {
   const response = await fetch(`${SERVER_ENDPOINT}/api/auth/logout`, {
     method: "GET",
-    credentials: "include",
+    /* credentials: "include", */
     headers: {
       "Content-Type": "application/json",
     },
