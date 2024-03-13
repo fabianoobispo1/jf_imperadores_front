@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const response = new NextResponse(JSON.stringify({ status: "success" }), {
     status: 200,
     headers: { "Content-Type": "application/json" },
   });
 
-  const responsePromise = await Promise.all([
+  await Promise.all([
     response.cookies.set({
       name: "tokenjfimperadores",
       value: "",
@@ -18,8 +18,6 @@ export async function GET(req: NextRequest) {
       maxAge: -1,
     }),
   ]);
-
-  
 
   return response;
 }
