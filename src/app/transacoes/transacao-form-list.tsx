@@ -16,6 +16,7 @@ import { api } from "@/lib/api";
 import { format } from "date-fns";
 
 import FormInputComboBox from "@/components/FormInputCombobox";
+import { Trash } from "phosphor-react";
 
 export default function TransacaoFormList() {
   const store = useStore();
@@ -197,7 +198,7 @@ export default function TransacaoFormList() {
             <p>{format(new Date(iten.vencimento), "dd/MM/yyyy")}</p>
             <div>
               <button onClick={() => {deleteRow(iten.id)}} >
-                {/* <Trash  /> */}
+                <Trash  />
               </button>          
             </div>  
 

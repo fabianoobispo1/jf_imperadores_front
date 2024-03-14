@@ -10,13 +10,18 @@ export const demos: { key: number; name: string; items: Item[] }[] = [
     name: 'itens',
     items: [
       {
-        name: 'Sub Iten 01',
-        slug: 'paginateste01',
+        name: 'Cadastrar pagamentos',
+        slug: 'transacoes',
+        description: 'Descricao',
+      },
+      {
+        name: 'item 01',
+        slug: '/',
         description: 'Descricao',
       },
     ],
   },
-  {
+/*   {
     key: 2,
     name: 'itens',
     items: [
@@ -31,5 +36,5 @@ export const demos: { key: number; name: string; items: Item[] }[] = [
         description: 'Descricao',
       },
     ],
-  },
+  }, */
 ]
