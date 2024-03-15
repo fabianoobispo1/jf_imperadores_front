@@ -47,14 +47,13 @@ export default function ListUsuarios() {
       
 
       {list.map((iten: any) =>
-        <div key={iten.id} >
 
-          <div className="grid grid-cols-2 gap-4 border-b-2 border-fa-dourado">
+          <div key={iten.id} className="grid grid-cols-2 gap-4 border-b-2 border-fa-dourado">
             <p>{iten.nome}</p>
             
             {iten.administrador? <p>Sim</p> :<p>Nao</p>  } 
           </div>
-        </div>      
+  
       )}
     </div>
 

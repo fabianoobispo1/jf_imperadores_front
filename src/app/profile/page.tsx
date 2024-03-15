@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import { apiGetAuthUser } from "@/lib/api-requests";
 import { cookies } from "next/headers";
 import { AuthPageInvisible } from "@/lib/protect-page";
@@ -11,8 +10,6 @@ export default async function ProfilePage() {
 
   return (
     <>
-      {/* <Header  /> */}
-      
       <section className="bg-ct-blue-600  min-h-screen pt-20  w-full absolute top-0 right-0 lg:w-5/6 ">
         <div className="max-w-4xl mx-auto bg-ct-dark-100 rounded-md max-sm:h-[40rem] h-[20rem] p-1 flex justify-center items-center">
           <div>

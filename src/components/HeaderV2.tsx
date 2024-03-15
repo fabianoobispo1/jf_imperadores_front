@@ -7,7 +7,7 @@ import useSession from "@/lib/useSession";
 import useStore from "@/store";
 import { apiLogoutUser } from "@/lib/api-requests";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, List, User } from 'phosphor-react'
 import clsx from 'clsx'
 import { NextRequest } from "next/server";
@@ -22,6 +22,8 @@ const HeaderV2 = () => {
 
   const [isOpen, setIsOpen] = useState(false)
   const close = () => setIsOpen(false)
+
+
 
   const handleLogout = async () => {
     store.setRequestLoading(true);

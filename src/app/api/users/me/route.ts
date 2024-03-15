@@ -1,8 +1,6 @@
-export const dynamic = 'force-dynamic' 
-
+export const dynamic = 'force-dynamic'
 import { getErrorResponse } from "@/lib/helpers";
 import { NextRequest, NextResponse } from "next/server";
-import { stringify } from "postcss";
 
 export async function GET(req: NextRequest) {
 try {
@@ -14,8 +12,6 @@ try {
       "You are not logged in, please provide token to gain access"
     );
   }
-/*   console.log(userId) */
-
    const responseApi = await fetch(`${process.env.NEXT_PUBLIC_API_MINHA_BASE}/faperfilid`, {
     method: "POST",
     headers: {
