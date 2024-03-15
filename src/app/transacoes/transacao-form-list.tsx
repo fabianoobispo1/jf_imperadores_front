@@ -190,7 +190,23 @@ export default function TransacaoFormList() {
             {list.map((iten: any) =>
         <div key={iten.id} >
 
-          <div className="grid grid-cols-5 gap-4 border-b-2 border-fa-dourado">
+          <div className="grid grid-cols-2 gap-4">
+            <p>{iten.titulo}</p>
+            <div>
+              <button onClick={() => {deleteRow(iten.id)}} >
+                <Trash  />
+              </button>          
+            </div>  
+           </div>
+           <div className="grid grid-cols-3 gap-4 border-b-2 border-fa-dourado">
+           <p>{iten.valor}</p>
+            {iten.tipo =='P'? <p>Pagamento</p> :<p>Recebiemnto</p>  }
+
+            <p>{format(new Date(iten.vencimento), "dd/MM/yyyy")}</p>
+          
+           </div>
+
+         {/*  <div className="grid grid-cols-5 gap-4 border-b-2 border-fa-dourado">
             <p>{iten.titulo}</p>
             <p>{iten.valor}</p>
             {iten.tipo =='P'? <p>Pagamento</p> :<p>Recebiemnto</p>  }
@@ -202,7 +218,7 @@ export default function TransacaoFormList() {
               </button>          
             </div>  
 
-          </div>
+          </div> */}
         </div>      
       )}
       </>}

@@ -1,8 +1,12 @@
 import Header from "@/components/Header";
 import TransacaoFormList from "./transacao-form-list";
-
+import { apiGetAuthUser } from "@/lib/api-requests";
+import { cookies } from "next/headers";
 
 export default async function transacaoPage() {
+  const cookieStore = cookies();
+  const token = cookieStore.get("tokenjfimperadores");
+  const user = await apiGetAuthUser(token?.value); 
 
   return (
     <>

@@ -76,10 +76,15 @@ export default function LoginForm() {
     store.setRequestLoading(true);
     try {
       const token = await apiLoginUser(JSON.stringify(credentials));
-      store.setToken(token)
- 
-      toast.success("Conectado com sucesso");
-      return router.push("/profile");
+      
+      if(token){
+        store.setToken(token)
+  
+        toast.success("Conectado com sucesso");
+        return router.push("/profile");
+      }else{
+        toast.error("Error")
+      }
     } catch (error: any) {
       console.log(error);
       if (error instanceof Error) {

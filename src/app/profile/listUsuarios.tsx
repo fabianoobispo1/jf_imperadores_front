@@ -39,18 +39,19 @@ export default function ListUsuarios() {
 
 
     <div className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-2xl p-8 space-y-5 ">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <p>Nome</p>
-        <p>mail</p>
+      
         <p>Admin</p>
       </div>
+      
 
       {list.map((iten: any) =>
         <div key={iten.id} >
 
-          <div className="grid grid-cols-3 gap-4 border-b-2 border-fa-dourado">
+          <div className="grid grid-cols-2 gap-4 border-b-2 border-fa-dourado">
             <p>{iten.nome}</p>
-            <p>{iten.email}</p>
+            
             {iten.administrador? <p>Sim</p> :<p>Nao</p>  } 
           </div>
         </div>      
