@@ -49,11 +49,11 @@ export default function TransacaoFormList() {
       atualizaLista()   
      } 
      
-     if (carregandoLista == false){
+     if (list){
       contador(list)
      } 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful, token, carregandoLista]);
+  }, [isSubmitSuccessful, token, list]);
 
 
 
