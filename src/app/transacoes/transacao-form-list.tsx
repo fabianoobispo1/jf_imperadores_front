@@ -121,29 +121,11 @@ export default function TransacaoFormList() {
 
      setList(await response.json())  
 
-
-/*      list.map((iten: any) =>{
-      if(iten.tipo =='P'){
-        if(iten.valor){
-          setTotalPagamentos(totalPagamentos+iten.valor) 
-        }     
-      }else{
-        if(iten.valor){
-          setTotalRecebimentos(totalRecebimentos+iten.valor)
-        }
-      }
-     })
- */
-/*      console.log(totalPagamentos)
-     console.log(totalRecebimentos)
- */
  
      } catch (error: any) {
        console.log(error);     
      } finally {
-      setCarregandoLista(false)   
- 
-      
+      setCarregandoLista(false)         
     }
 
   
