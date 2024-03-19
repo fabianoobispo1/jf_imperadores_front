@@ -18,6 +18,13 @@ import { format } from "date-fns";
 import FormInputComboBox from "@/components/FormInputCombobox";
 import { List, Trash } from "phosphor-react";
 
+interface ResultList {
+  totalRecebimentos: number;
+  totalPagamentos: number;
+  transacoes: string[];
+}
+
+
 export default function TransacaoFormList() {
   const store = useStore();
   const sesion = useSession();
@@ -25,11 +32,8 @@ export default function TransacaoFormList() {
 
   const token = sesion?.token
 
-  const [list, setList] = useState([''])
+  const [list, setList] = useState<ResultList | null>(null)
   const [carregandoLista, setCarregandoLista] = useState(true)
-  const [totalPagamentos, setTotalPagamentos] = useState(0)
-  const [totalRecebimentos, setTotalRecebimentos] = useState(0)
-
 
   const methods = useForm<FaTransacoesInput>({
     resolver: zodResolver(FaTransacoesSchema),
@@ -105,8 +109,7 @@ export default function TransacaoFormList() {
 
   async function atualizaLista() {
     setCarregandoLista(true)  
-    setTotalPagamentos(0)
-    setTotalRecebimentos(0)  
+
     try {
       const headers: Record<string, string> = {
        "Content-Type": "application/json",
@@ -116,7 +119,7 @@ export default function TransacaoFormList() {
      }      
      const response = await api('/fatransacaolistar', {method: 'GET',headers})
 
-     setList(await response.json())  
+     setList(await response.json()) 
 
  
      } catch (error: any) {
@@ -127,27 +130,7 @@ export default function TransacaoFormList() {
 
   
   }
-  async function contador(list:any ) {
-    let totalRecebimento: any	 
-    let totalPagamento: any	 
-    totalRecebimento = 0
-    totalPagamento = 0
-    list.map((iten: any) =>{
 
-      if(iten.tipo =='P'){
-        if(iten.valor){
-          totalPagamento = totalPagamento+iten.valor
-        }     
-      }else{
-        if(iten.valor){
-          totalRecebimento = totalRecebimento + iten.valor
-        }
-      }
-     })
-     setTotalPagamentos(totalPagamento)
-     setTotalRecebimentos(totalRecebimento)
-  
-  }
   
   async function deleteRow(id:string) {
     try {
@@ -221,9 +204,11 @@ export default function TransacaoFormList() {
     
       {carregandoLista == true? 
       <p>carregando</p>
-      :
+      : 
+   
       <>
-        {list.map((iten: any) =>
+      
+        {list?.transacoes.map((iten: any) =>
         
         <div key={iten.id} >
        
@@ -240,9 +225,7 @@ export default function TransacaoFormList() {
             {iten.tipo =='P'?             
             <p className="text-center">Pagamento</p>             
             :
-            <p className="text-center">Recebimento</p>  }
-
-            
+            <p className="text-center">Recebimento</p>  }       
 
             
             <p  className="text-right">{format(new Date(iten.vencimento), "dd/MM/yyyy")}</p>
@@ -250,18 +233,20 @@ export default function TransacaoFormList() {
            </div>
         </div>      
       )}
+
+      
+        <div className="grid ">
+          <p>Total Pagamentos:</p>
+          <p>{list?.totalPagamentos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
+        </div>  
+
+        <div className="grid ">
+          <p>Total Recebimentos:</p>
+          <p>{list?.totalRecebimentos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
+        </div>
       </>}
 
    
-        <div className="grid ">
-          <p>Total Pagamentos:</p>
-          <p>{totalPagamentos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
-        </div>
-
-        <div className="grid ">
-          <p>Total Recebiemntos:</p>
-          <p>{totalRecebimentos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
-        </div>
 
     </div>
 
