@@ -40,7 +40,7 @@ const HeaderV2 = () => {
       <div className="fixed top-0 z-10 flex w-full flex-col border-b border-gray-500 bg-white lg:bottom-0 lg:z-auto lg:w-1/6 lg:border-b-0 lg:border-r lg:border-gray-500">
         <div className="flex h-14 items-center px-4 py-4 lg:h-auto">
           <Link
-            as="style"
+        
             href="/profile"
             className="group flex w-4/5 items-center gap-x-2.5"           
           >
@@ -129,7 +129,7 @@ function GlobalNavItem({
 
   return (
     <Link
-      as="style"
+      
       onClick={close}
       href={`/${item.slug}`}
       className={clsx(

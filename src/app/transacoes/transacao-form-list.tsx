@@ -18,10 +18,22 @@ import { format } from "date-fns";
 import FormInputComboBox from "@/components/FormInputCombobox";
 import { List, Trash } from "phosphor-react";
 
+
+interface Transacao {
+  id: string,
+ titulo: string,
+ valor:number,
+ tipo: string,
+ vencimento: string,
+ updated_at: string,
+ created_at: string,
+ faUsuario_id: string
+}
+
 interface ResultList {
   totalRecebimentos: number;
   totalPagamentos: number;
-  transacoes: string[];
+  transacoes: Transacao[];
 }
 
 
@@ -208,7 +220,7 @@ export default function TransacaoFormList() {
    
       <>
       
-        {list?.transacoes.map((iten: any) =>
+        {list?.transacoes.map((iten: Transacao) =>
         
         <div key={iten.id} >
        
