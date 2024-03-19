@@ -16,7 +16,7 @@ import { api } from "@/lib/api";
 import { format } from "date-fns";
 
 import FormInputComboBox from "@/components/FormInputCombobox";
-import { Trash } from "phosphor-react";
+import { List, Trash } from "phosphor-react";
 
 export default function TransacaoFormList() {
   const store = useStore();
@@ -53,7 +53,7 @@ export default function TransacaoFormList() {
       contador(list)
      } 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful, token, list]);
+  }, [isSubmitSuccessful, token, carregandoLista]);
 
 
 
@@ -117,9 +117,10 @@ export default function TransacaoFormList() {
      if (token) {
        headers["Authorization"] = `Bearer ${token}`;
      }      
-     const response = await api('/fatransacaolistar', {method: 'GET',headers} )
+     const response = await api('/fatransacaolistar', {method: 'GET',headers})
 
      setList(await response.json())  
+
 
 /*      list.map((iten: any) =>{
       if(iten.tipo =='P'){
@@ -136,10 +137,14 @@ export default function TransacaoFormList() {
 /*      console.log(totalPagamentos)
      console.log(totalRecebimentos)
  */
-     setCarregandoLista(false)    
+ 
      } catch (error: any) {
        console.log(error);     
-     } 
+     } finally {
+      setCarregandoLista(false)   
+ 
+      
+    }
 
   
   }
