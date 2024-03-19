@@ -114,7 +114,7 @@ export default function LoginForm() {
 
         <div className="text-right">
           <Link href="#" className="">
-            Esqueceu asenha?(breve)
+            Esqueceu a senha?(breve)
           </Link>
         </div>
         <LoadingButton
