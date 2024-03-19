@@ -49,11 +49,8 @@ export default function TransacaoFormList() {
       atualizaLista()   
      } 
      
-     if (list){
-      contador(list)
-     } 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful, token, carregandoLista]);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitSuccessful, token]);
 
 
 
