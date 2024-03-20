@@ -3,7 +3,7 @@
 import { FaTransacoesInput, FaTransacoesSchema } from "@/lib/validations/user.schema";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState } from "react";
 import FormInput from "@/components/FormInput";
 import { LoadingButton } from "@/components/LoadingButton";
 import useStore from "@/store";
@@ -16,7 +16,7 @@ import { api } from "@/lib/api";
 import { format } from "date-fns";
 
 import FormInputComboBox from "@/components/FormInputCombobox";
-import { List, Trash } from "phosphor-react";
+import {  Trash } from "phosphor-react";
 
 
 interface Transacao {
@@ -121,7 +121,6 @@ export default function TransacaoFormList() {
 
   async function atualizaLista() {
     setCarregandoLista(true)  
-
     try {
       const headers: Record<string, string> = {
        "Content-Type": "application/json",
@@ -138,9 +137,7 @@ export default function TransacaoFormList() {
        console.log(error);     
      } finally {
       setCarregandoLista(false)         
-    }
-
-  
+    }  
   }
 
   
@@ -185,8 +182,8 @@ export default function TransacaoFormList() {
 
         <FormInputComboBox label="Tipo" name="tipo" type="select" />
 
-{/*         <FormInput label="Tipo" name="tipo" type="select"  /> */}
-        <FormInput label="Vencimento" name="vencimento" type="date" />
+
+        <FormInput label="Vencimento" name="vencimento" type="date" value={format(new Date(), "yyyy-MM-dd")} />
       </div>
 
         <LoadingButton
