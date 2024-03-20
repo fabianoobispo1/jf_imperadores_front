@@ -136,7 +136,7 @@ function GlobalNavItem({
         'block rounded-md px-3 py-2 text-sm font-medium hover:text-gray-900',
         {
           'text-gray-900 hover:bg-fa-dourado': !isActive,
-          'text-gray-900': isActive,
+          'text-gray-500': isActive,
         },
       )}
     >

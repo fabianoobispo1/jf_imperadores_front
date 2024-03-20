@@ -16,7 +16,7 @@ export const demos: { key: number; name: string; items: Item[] }[] = [
       },
       {
         name: 'Atletas',
-        slug: '/',
+        slug: 'atletas',
         description: 'Descricao',
       },
     ],
