@@ -11,15 +11,16 @@ export default async function ProfilePage() {
   return (
     <>
       <section className="bg-ct-blue-600  min-h-screen pt-20  w-full absolute top-0 right-0 lg:w-5/6 ">
-        <div className="max-w-4xl mx-auto bg-ct-dark-100 rounded-md max-sm:h-[40rem] h-[20rem] p-1 flex justify-center items-center">
+        <div className="max-w-4xl mx-auto bg-ct-dark-100 rounded-md max-sm:h-[20rem] h-[20rem] p-1 flex justify-center items-center">
           <div>
             <p className="mb-3 text-5xl pt-4 text-center font-semibold">
-              Bem vindo, {user.name}
+              Bem vindo{/* , {user.name} */}
             </p>
             <div className="mt-8 m-2">
              {/*  <p className="mb-3">Id: {user.id}</p> */}
-              <p className="mb-3">Usuarios registrados:</p>
-                <ListUsuarios />
+              <p className="mb-3">Aqui pode ficar algumas informacoes iniciais.</p>
+              
+              {/*   <ListUsuarios /> */}
             </div>
           </div>
         </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  RegisterUserInput,
-  RegisterUserSchema,
+  FaUsuarioInput,
+  FaUsuarioSchema
 } from "@/lib/validations/user.schema";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,8 +20,8 @@ export default function RegisterForm() {
   const store = useStore();
   const router = useRouter();
 
-  const methods = useForm<RegisterUserInput>({
-    resolver: zodResolver(RegisterUserSchema),
+  const methods = useForm<FaUsuarioInput>({
+    resolver: zodResolver(FaUsuarioSchema),
   });
 
   const {
@@ -37,9 +37,10 @@ export default function RegisterForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful]);
 
-  async function RegisterUserFunction(credentials: RegisterUserInput) {
+  async function RegisterUserFunction(credentials: FaUsuarioInput) {
     store.setRequestLoading(true);
     try {
+      console.log(credentials)
       const user = await apiRegisterUser(JSON.stringify(credentials));
       store.setAuthUser(user);
       return router.push("/login");
@@ -55,7 +56,7 @@ export default function RegisterForm() {
     }
   }
 
-  const onSubmitHandler: SubmitHandler<RegisterUserInput> = (values) => {
+  const onSubmitHandler: SubmitHandler<FaUsuarioInput> = (values) => {
     RegisterUserFunction(values);
   };
 
@@ -65,8 +66,9 @@ export default function RegisterForm() {
         onSubmit={handleSubmit(onSubmitHandler)}
         className="max-w-md w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-2xl p-8 space-y-5"
       >
-        <FormInput label="Nome Completo" name="name" />
-        <FormInput label="Email" name="email" type="email" />
+        <FormInput label="Nome Completo" name="nome"  />
+        <FormInput label="Data Nascimento" name="data_nascimento" type="date"  />
+        <FormInput label="Email" name="email" type="email"  />
         <FormInput label="Senha" name="password" type="password" />
         <FormInput
           label="Comfirmar Senha"

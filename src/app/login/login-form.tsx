@@ -13,6 +13,7 @@ import { handleApiError } from "@/lib/helpers";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
+import { space } from "postcss/lib/list";
 
 export default function LoginForm() {
   const store = useStore();
@@ -60,13 +61,13 @@ export default function LoginForm() {
      const response = await api('/', {method: 'GET',headers} )
 
      if (response.status === 200){
-      setStatusApi('on') 
+      setStatusApi('ON') 
      }else{
-      setStatusApi('off') 
+      setStatusApi('OFF') 
       setCont(cont + 1)
      }
      } catch (error: any) {
-      setStatusApi('off')    
+      setStatusApi('OFF')    
         setCont(cont + 1)
      } 
     
@@ -129,7 +130,10 @@ export default function LoginForm() {
             Registar aqui
           </Link>
         </span>
-        <p>Status api {statusApi}</p>
+        <p>Status api {statusApi == 'ON'?
+                      <span className="text-green-700 font-semibold">ON</span>
+                      :
+                      <span className="text-red-700 font-semibold">OFF</span>}</p>
       </form>
     </FormProvider>
    

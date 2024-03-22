@@ -1,15 +1,15 @@
 import { getErrorResponse } from "@/lib/helpers";
 import {
-  RegisterUserInput,
-  RegisterUserSchema,
+  FaUsuarioInput,
+  FaUsuarioSchema
 } from "@/lib/validations/user.schema";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as RegisterUserInput;
-    const data = RegisterUserSchema.parse(body);
+    const body = (await req.json()) as FaUsuarioInput;
+    const data = FaUsuarioSchema.parse(body);
   
 
     //minhaapi 
@@ -19,10 +19,10 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nome: data.name,
+        nome: data.nome,
         email: data.email,
         password: data.password,
-        data_nascimento:"1990-04-24T00:00:00.000Z"
+        data_nascimento: data.data_nascimento+'T00:00:00.000Z'
       
       })
     });
@@ -30,13 +30,13 @@ export async function POST(req: NextRequest) {
     if (responseApi.status === 409)  {
       return getErrorResponse(409, "Email Ja cadastrado.");
     }
-
-    
+   
     if (responseApi.status === 201)  {
 
     const user = await responseApi.json() 
     //alteracoes de campos para que minha api funcione no frontend
-    user.faUsuario.name = user.faUsuario.nome
+
+    user.faUsuario.nome = user.faUsuario.nome
     user.faUsuario.role= 'user'
     user.faUsuario.photo= 'default.png'
     user.faUsuario.verified= false
