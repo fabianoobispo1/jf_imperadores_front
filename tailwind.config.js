@@ -28,6 +28,16 @@ module.exports = {
           '2xl': '1125px',
         },
       },
+      keyframes: {
+        flash: {
+          '0%': { opacity: '0.2' },
+          '20%': { opacity: '1' },
+          '100%': { opacity: '0.2' },
+        },
+      },
+      animation: {
+        flash: 'flash 1.4s infinite linear',
+      },
     },
   },
   plugins: [],

@@ -133,7 +133,14 @@ export default function LoginForm() {
         <p>Status api {statusApi == 'ON'?
                       <span className="text-green-700 font-semibold">ON</span>
                       :
-                      <span className="text-red-700 font-semibold">OFF</span>}</p>
+                      <span className=""> 
+                        <span className="w-2 h-2 ml-2 rounded-full bg-red-500 inline-block animate-flash"></span>
+                        <span className="w-2 h-2 ml-2 rounded-full bg-red-500 inline-block animate-flash [ :0.2s]"></span>
+                        <span className="w-2 h-2 ml-2 rounded-full bg-red-500 inline-block animate-flash [animation-delay:0.4s]"></span>
+                      </span>}
+        </p>
+
+ 
       </form>
     </FormProvider>
    
