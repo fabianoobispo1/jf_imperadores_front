@@ -33,7 +33,7 @@ interface Transacao {
 interface ResultList {
   totalRecebimentos: number;
   totalPagamentos: number;
-  transacoes: Transacao[];
+  faTransacao: Transacao[];
 }
 
 
@@ -129,9 +129,7 @@ export default function TransacaoFormList() {
        headers["Authorization"] = `Bearer ${token}`;
      }      
      const response = await api('/fatransacaolistar', {method: 'GET',headers})
-
      setList(await response.json()) 
-
  
      } catch (error: any) {
        console.log(error);     
@@ -149,12 +147,9 @@ export default function TransacaoFormList() {
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       }     
-      await fetch(`${process.env.NEXT_PUBLIC_API_MINHA_BASE}/fatransacaoapagar`, {
-        method: "POST",      
-        headers,
-        body:JSON.stringify({
-        id
-        })
+      await fetch(`${process.env.NEXT_PUBLIC_API_MINHA_BASE}/faApagar/${id}`, {
+        method: "GET",      
+        headers
       });
 
     atualizaLista()        
@@ -217,7 +212,7 @@ export default function TransacaoFormList() {
    
       <>
       
-        {list?.transacoes.map((iten: Transacao) =>
+        {list?.faTransacao.map((iten: Transacao) =>
         
         <div key={iten.id} >
        
