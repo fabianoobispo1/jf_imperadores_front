@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">      
       <body>
-        <HeaderV2 />
+        {/* <HeaderV2 /> */}
         {children}
         <Analytics />
         <SpeedInsights />

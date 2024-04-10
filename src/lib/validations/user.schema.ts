@@ -1,7 +1,6 @@
 import { z } from "zod";
 
-export const RegisterUserSchema = z
-  .object({
+export const RegisterUserSchema = z.object({
     name: z
       .string({
         required_error: "O nome é obrigatório",
@@ -26,7 +25,7 @@ export const RegisterUserSchema = z
         required_error: "Confirme sua senha",
       })
       .min(1, "Confirme sua senha"),
-  })
+    })
   .refine((data) => data.password === data.passwordConfirm, {
     path: ["passwordConfirm"],
     message: "As senhas não coincidem",
@@ -67,8 +66,7 @@ export const FaTransacoesSchema = z.object({
   
 })
 
-export const FaUsuarioSchema = z
-  .object({
+export const FaUsuarioSchema = z.object({
     nome: z
       .string({
         required_error: "O nome é obrigatório",
@@ -102,8 +100,25 @@ export const FaUsuarioSchema = z
     message: "As senhas não coincidem",
   });
 
+  export const FaAtletaSchema = z.object({
+    nome: z
+      .string({
+        required_error: "O nome é obrigatório",
+      })
+      .min(1, "O nome completo é obrigatório"),
+    email: z
+      .string({
+        required_error: "Email é obrigatório",
+      })
+      .min(1, "Email é obrigatório")
+      .email("Email é obrigatório"),
+  })
+
+
+
 
 export type LoginUserInput = z.infer<typeof LoginUserSchema>;
 export type RegisterUserInput = z.infer<typeof RegisterUserSchema>;
 export type FaTransacoesInput = z.infer<typeof FaTransacoesSchema>;
 export type FaUsuarioInput = z.infer<typeof FaUsuarioSchema>;
+export type FaAtletaInput = z.infer<typeof FaAtletaSchema>;

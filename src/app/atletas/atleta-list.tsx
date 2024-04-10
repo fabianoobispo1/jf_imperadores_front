@@ -1,10 +1,9 @@
 "use client";
 
-import { FaAtletaInput, FaAtletaSchema, FaTransacoesInput, FaTransacoesSchema } from "@/lib/validations/user.schema";
+import { FaTransacoesInput, FaTransacoesSchema } from "@/lib/validations/user.schema";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import FormInput from "@/components/FormInput";
 import { LoadingButton } from "@/components/LoadingButton";
 import useStore from "@/store";
@@ -17,68 +16,73 @@ import { api } from "@/lib/api";
 import { format } from "date-fns";
 
 import FormInputComboBox from "@/components/FormInputCombobox";
-import {  Trash } from "phosphor-react";
+import {  EnvelopeSimpleOpen, Trash } from "phosphor-react";
 
 
 interface Transacao {
   id: string,
-  titulo: string,
-  valor:number,
-  tipo: string,
-  vencimento: string,
-  updated_at: string,
-  created_at: string,
-  faUsuario_id: string
+ titulo: string,
+ valor:number,
+ tipo: string,
+ vencimento: string,
+ updated_at: string,
+ created_at: string,
+ faUsuario_id: string
 }
 
 interface ResultList {
   totalRecebimentos: number;
   totalPagamentos: number;
-  transacoes: Transacao[];
+  faTransacao: Transacao[];
 }
 
-
-
-interface Atleta {
-  id : string,
-	data_inicio : string,
-	tipo : string,
-	posicao : string,
-	numero : string,
-	altura : number,
-	pesso : number,
-	updated_at : string,
-	created_at : string,
-	faUsuarioId : string,
-}
 
 interface Usuario {
-  id : string,
-  nome : string,
-  email : string,
-  password_hash : string,
-  administrador : boolean,
-  data_nascimento : string,
-  created_at : string,
-  atleta : Atleta[],
+  nome: string,
+   email: string,
+   data_nascimento: string,
+}
+interface Atleta {
+ id: string,
+ apelido: string,
+ data_inicio: string,
+ tipo: string,
+ posicao: string,
+ numero_camisa:  number,
+ altura:  number,
+ pesso:  number,
+ rg: string,
+ cpf: number,
+ cep:  number,
+ endereco: string,
+ numero_endereco: number,
+ complemento: string,
+ bairro: string,
+ cidade: string,
+ estado: string,
+ telefone:  number,
+ updated_at: string,
+ created_at: string,
+ faUsuarioId: string,
+ usuario: Usuario
+}
+interface FaAtleta {
+  faAtleta: Atleta[]
 }
 
-
-
-export default function AtletaForm() {
+export default function AtletaList() {
   const store = useStore();
   const sesion = useSession();
   const router = useRouter();
 
   const token = sesion?.token
 
-  const [selectListUsuario, setSelectListUsuario] = useState<any>([{}])
-  const [listUsuario, setListUsuario] = useState<Usuario[] | null>(null)
+  const [ listAtleta, setListAtleta] =  useState<FaAtleta | null>(null)
   const [list, setList] = useState<ResultList | null>(null)
   const [carregandoLista, setCarregandoLista] = useState(true)
 
-  const methods = useForm<FaAtletaInput>({
-    resolver: zodResolver(FaAtletaSchema),
+  const methods = useForm<FaTransacoesInput>({
+    resolver: zodResolver(FaTransacoesSchema),
   });
 
   const {
@@ -87,21 +91,19 @@ export default function AtletaForm() {
     formState: { isSubmitSuccessful },
   } = methods;
 
-/*   useEffect(() => {
+  useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
     }
     if (token){  
-      atualizaLista()
-      listaUsuariosNaoAtletas() 
-
+      atualizaLista()   
      } 
      
    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful, token]);
 
- */
-/* 
+
+
   async function addFaTransacaoFunction(faTransacao: FaTransacoesInput) {    
     store.setRequestLoading(true);    
     try {
@@ -146,18 +148,12 @@ export default function AtletaForm() {
       store.setRequestLoading(false);
     }
   }
- */
 
-  async function addFaAtletaFunction(faAtleta: FaAtletaInput) {
-    console.log(faAtleta)
-  }
-
-
-  const onSubmitHandler: SubmitHandler<FaAtletaInput> = (values) => {
-    addFaAtletaFunction(values);
+  const onSubmitHandler: SubmitHandler<FaTransacoesInput> = (values) => {
+    addFaTransacaoFunction(values);
   };
 
-/*   async function atualizaLista() {
+  async function atualizaLista() {
     setCarregandoLista(true)  
     try {
       const headers: Record<string, string> = {
@@ -166,20 +162,18 @@ export default function AtletaForm() {
      if (token) {
        headers["Authorization"] = `Bearer ${token}`;
      }      
-     const response = await api('/fatransacaolistar', {method: 'GET',headers})
+     const response = await api('/faatletalistar', {method: 'GET',headers})
 
-     setList(await response.json()) 
-
- 
+     setListAtleta(await response.json()) 
      } catch (error: any) {
        console.log(error);     
      } finally {
       setCarregandoLista(false)         
     }  
   }
- */
-  
-/*   async function deleteRow(id:string) {
+
+/*   
+  async function deleteRow(id:string) {
     try {
      const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -187,100 +181,24 @@ export default function AtletaForm() {
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       }     
-      await fetch(`${process.env.NEXT_PUBLIC_API_MINHA_BASE}/fatransacaoapagar`, {
-        method: "POST",      
-        headers,
-        body:JSON.stringify({
-        id
-        })
+      await fetch(`${process.env.NEXT_PUBLIC_API_MINHA_BASE}/faApagar/${id}`, {
+        method: "GET",      
+        headers
       });
 
     atualizaLista()        
     } catch (error: any) {
       console.log(error);
    }
- } */
-
-/*  async function listaUsuariosNaoAtletas() {
-  setCarregandoLista(true)  
-  try {
-    const headers: Record<string, string> = {
-     "Content-Type": "application/json",
-   };  
-   if (token) {
-     headers["Authorization"] = `Bearer ${token}`;
-   }      
-   const response = await api('/listarusuarios', {method: 'GET',headers})
-
-   setListUsuario(await response.json()) 
-   console.log(listUsuario) 
-   } catch (error: any) {
-     console.log(error);     
-   } finally {
-    setCarregandoLista(false)         
-  }  
-} 
-
-async function onChange(e:any) {
-  setSelectListUsuario(() => ({ ...selectListUsuario, [e.target.name]: e.target.value }));
-  console.log(selectListUsuario)
-  
-}
+ }
  */
   return (
     <div>
-    
-    <FormProvider {...methods}>
-       <form
-        onSubmit={handleSubmit(onSubmitHandler)}
-        className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-md p-8 space-y-5"
-      >
-
-        <FormInput label="Nome Completo" name="nome"  />
-        {/* <FormInput label="Data Nascimento" name="data_nascimento" type="date"  /> */}
-        <FormInput label="Email" name="email" type="email"  />
-{/*
-      <div className="grid grid-cols-1 gap-4">
-        <FormInput label="Título" name="titulo" type="text" />
-      </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <FormInput label="Valor" name="valor" type="number"  />
-
-
-
-        <FormInputComboBox label="Tipo" name="tipo" type="select" />
-
-
-        <FormInput label="Vencimento" name="vencimento" type="date" value={format(new Date(), "yyyy-MM-dd")} />
-      </div>
-*/}
-        <div className="flex flex-col gap-4 ">
-          <div className="w-60 max-sm:w-auto" >
-            <LoadingButton 
-            loading={false}
-            textColor="text-ct-blue-600"
-            >
-              Salvar
-            </LoadingButton>
-          </div>     
-
-          <Link href={'/atletas'} className="w-60 max-sm:w-auto"  >
-              <LoadingButton textColor="text-ct-blue-600">
-                Voltar 
-              </LoadingButton>
-            </Link>
-
-
-        </div>
-        
-      </form>
-    </FormProvider> 
-
-    {/* <div className="max-w-full w-full mx-auto overflow-hidden  bg-transparent rounded-md p-8 space-y-5"></div>
+   
+    <div className="max-w-full w-full mx-auto overflow-hidden  bg-transparent rounded-md p-8 space-y-5"></div>
 
     <div className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-md p-8 space-y-5">
-      <div className="grid grid-cols-2 gap-4 justify-between">
+      {/* <div className="grid grid-cols-2 gap-4 justify-between">
         <p>Título</p>
         <p className="text-right">Opções</p>
       </div>
@@ -290,7 +208,7 @@ async function onChange(e:any) {
         <p  className="text-center">Tipo</p>
         <p  className="text-right">Vencimento</p>
 
-      </div>
+      </div> */}
     
       {carregandoLista == true? 
       <p>carregando</p>
@@ -298,13 +216,13 @@ async function onChange(e:any) {
    
       <>
       
-        {list?.transacoes.map((iten: Transacao) =>
+        {listAtleta?.faAtleta.map((iten: Atleta) =>
         
-        <div key={iten.id} >
+         <div key={iten.id} >
        
-          <div className="grid grid-cols-2 gap-4 justify-between">
-            <p>{iten.titulo}</p>
-            <div className="grid justify-items-end">
+         <div className="grid grid-cols-2 gap-4 justify-between">
+           <p>{iten.usuario.nome} - {iten.apelido}</p> 
+            {/*  <div className="grid justify-items-end">
               <button onClick={() => {deleteRow(iten.id)}} >
                 <Trash  />
               </button>          
@@ -319,13 +237,13 @@ async function onChange(e:any) {
 
             
             <p  className="text-right">{format(new Date(iten.vencimento), "dd/MM/yyyy")}</p>
-          
+          */}  
            </div>
-        </div>      
+        </div>     
       )}
 
       
-        <div className="grid ">
+       {/*  <div className="grid ">
           <p>Total Pagamentos:</p>
           <p>{list?.totalPagamentos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
         </div>  
@@ -333,13 +251,13 @@ async function onChange(e:any) {
         <div className="grid ">
           <p>Total Recebimentos:</p>
           <p>{list?.totalRecebimentos.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</p>
-        </div>
+        </div> */}
       </>}
 
    
 
-    </div> */}
-     
+    </div>
+
   </div>
 
   );

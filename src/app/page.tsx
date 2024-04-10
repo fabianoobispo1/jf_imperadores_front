@@ -1,4 +1,5 @@
 import { LoadingButton } from "@/components/LoadingButton";
+import { AuthPageInvisible } from "@/lib/protect-page";
 import Link from "next/link";
 
 export default function Home() {
@@ -24,6 +25,7 @@ export default function Home() {
         </div>
         </div>      
       </section>
+      <AuthPageInvisible />
     </>
   );
 }

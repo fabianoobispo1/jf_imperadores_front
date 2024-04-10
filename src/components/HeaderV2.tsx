@@ -35,6 +35,7 @@ const HeaderV2 = () => {
       router.push("/login");
     }
   };
+
   if(store.authUser){
     return (
       <div className="fixed top-0 z-10 flex w-full flex-col border-b border-gray-500 bg-white lg:bottom-0 lg:z-auto lg:w-1/6 lg:border-b-0 lg:border-r lg:border-gray-500">
