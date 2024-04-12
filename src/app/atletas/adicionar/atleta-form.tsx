@@ -150,6 +150,66 @@ export default function AtletaForm() {
 
   async function addFaAtletaFunction(faAtleta: FaAtletaInput) {
     console.log(faAtleta)
+
+    store.setRequestLoading(true);    
+    try {
+     const token =sesion?.token
+     const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };  
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+    const response = await api('/faatletaregister', {method: 'POST',headers, body: JSON.stringify({
+      nome: faAtleta.nome,
+      data_nascimento:  faAtleta.data_nascimento+'T00:00:00.000Z',
+      email: faAtleta.email,
+      apelido: faAtleta.apelido,
+      data_inicio: faAtleta.data_inicio+'T00:00:00.000Z',
+      tipo: faAtleta.tipo,
+      posicao: faAtleta.posicao,
+      numero_camisa: faAtleta.numero_camisa,
+      altura: faAtleta.altura,
+      pesso: faAtleta.pesso,
+      rg: faAtleta.rg,
+      cpf: faAtleta.cpf,
+      cep: faAtleta.cep,
+      endereco: faAtleta.endereco,
+      numero_endereco: faAtleta.numero_endereco,
+      complemento: faAtleta.complemento,
+      bairro: faAtleta.bairro,
+      cidade: faAtleta.cidade,
+      estado: faAtleta.estado,
+      telefone: faAtleta.telefone
+    })} )
+
+    if (response.status === 201){
+
+      toast.success("Atleta adicionado");
+
+    }
+    if (response.status === 403){
+
+      toast.success(await response.json());
+    }
+
+    } catch (error: any) {
+      console.log(error);
+      if (error instanceof Error) {
+        handleApiError(error);
+      } else {
+        toast.error(error.message);
+        console.log("Error message:", error.message);
+      }
+    } finally {
+      store.setRequestLoading(false);
+    }
+
+
+
+
+
+
   }
 
 
@@ -228,7 +288,8 @@ async function onChange(e:any) {
 }
  */
   return (
-    <div>
+    <div>      
+    
     
     <FormProvider {...methods}>
        <form
@@ -236,9 +297,31 @@ async function onChange(e:any) {
         className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-md p-8 space-y-5"
       >
 
-        <FormInput label="Nome Completo" name="nome"  />
-        {/* <FormInput label="Data Nascimento" name="data_nascimento" type="date"  /> */}
+        <FormInput label="Nome Completo" name="nome"  />        
         <FormInput label="Email" name="email" type="email"  />
+        <FormInput label="Data Nascimento" name="data_nascimento" type="date"  />
+        <FormInput label="Apelido" name="apelido" type="apelido"  />
+        <FormInput label="Data Inicio" name="data_inicio" type="date"  />
+        <FormInput label="Tipo" name="tipo" type="tipo"  />
+        <FormInput label="Posicao" name="posicao" type="posicao"  />
+        <FormInput label="Numero camisa" name="numero_camisa" type="number"  />
+        <FormInput label="Altura" name="altura" type="number"  />
+        <FormInput label="Pesso" name="pesso" type="number"  />
+        <FormInput label="Rg" name="rg" type="rg"  />
+        <FormInput label="Cpf" name="cpf" type="number"  />
+        <FormInput label="Cep" name="cep" type="number"  />
+        <FormInput label="Endereço" name="endereco" type="endereco"  />
+        <FormInput label="Numero Endereço" name="numero_endereco" type="number"  />
+        <FormInput label="Complemento" name="complemento" type="complemento"  />
+        <FormInput label="Bairro" name="bairro" type="bairro"  />
+        <FormInput label="Cidade" name="cidade" type="cidade"  />
+        <FormInput label="Estado" name="estado" type="estado"  />
+        <FormInput label="Telefone" name="telefone" type="number"  />
+ 
+
+
+
+
 {/*
       <div className="grid grid-cols-1 gap-4">
         <FormInput label="Título" name="titulo" type="text" />
@@ -265,11 +348,7 @@ async function onChange(e:any) {
             </LoadingButton>
           </div>     
 
-          <Link href={'/atletas'} className="w-60 max-sm:w-auto"  >
-              <LoadingButton textColor="text-ct-blue-600">
-                Voltar 
-              </LoadingButton>
-            </Link>
+         
 
 
         </div>

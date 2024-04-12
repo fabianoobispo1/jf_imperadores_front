@@ -12,6 +12,12 @@ export default async function atletaAdcionarPage() {
           <p>Para regsitrar um atleta, esse deve ter o cadastro de usuario do site, 
             caso não exsita e possivel cadastrar por essa tela.</p>
           
+            <Link href={'/atletas'} className="w-60 max-sm:w-auto"  >
+              <LoadingButton textColor="text-ct-blue-600">
+                Voltar 
+              </LoadingButton>
+            </Link>
+            
             <AtletaForm />
           
 

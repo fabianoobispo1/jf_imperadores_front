@@ -112,6 +112,29 @@ export const FaUsuarioSchema = z.object({
       })
       .min(1, "Email é obrigatório")
       .email("Email é obrigatório"),
+    data_nascimento: z.
+      string({
+        required_error: "Data de nascimento é obrigatório"
+      }).min(1,"Data de nascimento é obrigatório"),
+    apelido: z.string(),
+    data_inicio: z.string(),
+    tipo: z.string().min(1, "O tipo é obrigatório"),
+    posicao: z.string(),
+    numero_camisa: z.string(),
+    altura:z.string(),
+    pesso:z.string(),
+    rg: z.string(),
+    cpf: z.string(),
+    cep: z.string(),
+    endereco: z.string(),
+    numero_endereco:z.string(),
+    complemento: z.string(),
+    bairro: z.string(),
+    cidade: z.string(),
+    estado: z.string(),
+    telefone:z.string(),
+
+
   })
 
 
