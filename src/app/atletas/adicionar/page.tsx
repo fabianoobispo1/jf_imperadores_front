@@ -13,7 +13,7 @@ export default async function atletaAdcionarPage() {
             Atletas
           </p>
           
-          <Link href={'/atletas'} className="w-60 max-sm:w-auto mb-3"  >
+          <Link href={'/atletas'} className="w-60 max-sm:w-auto mb-3"  > 
               <LoadingButton textColor="text-ct-blue-600">
                 Voltar 
               </LoadingButton>

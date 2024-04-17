@@ -65,7 +65,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (req.url.includes("/login") && authUser ) {
-    return NextResponse.redirect(new URL("/profile", req.url));
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
 
@@ -73,5 +73,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/profile", "/login", "/api/users/:path*", "/api/auth/logout", "/transacoes", "/atletas", "/atletas/adicionar"],
+  matcher: ["/profile", "/dashboard", "/login", "/api/users/:path*", "/api/auth/logout", "/transacoes", "/atletas", "/atletas/adicionar"],
 };

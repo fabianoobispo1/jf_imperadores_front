@@ -4,7 +4,7 @@ import { AuthPageInvisible } from "@/lib/protect-page";
 import ListUsuarios from "./listUsuarios";
 import HeaderV2 from "@/components/HeaderV2";
 
-export default async function ProfilePage() {
+export default async function DashboardPage() {
   const cookieStore = cookies();
   const token = cookieStore.get("tokenjfimperadores");
   const user = await apiGetAuthUser(token?.value); 
@@ -16,11 +16,11 @@ export default async function ProfilePage() {
         <div className="max-w-4xl mx-auto bg-ct-dark-100 rounded-md max-sm:h-[20rem] h-[20rem] p-1 flex justify-center items-center">
           <div>
             <p className="mb-3 text-5xl pt-4 text-center font-semibold">
-              Bem vindo{/* , {user.name} */}
+              Bem vindo D{/* , {user.name} */}
             </p>
             <div className="mt-8 m-2">
              {/*  <p className="mb-3">Id: {user.id}</p> */}
-              <p className="mb-3">Tela para alterar as suas informações de dadastro no site.</p>
+              <p className="mb-3">Aqui pode ficar algumas informações iniciais.</p>
               
               {/*   <ListUsuarios /> */}
             </div>

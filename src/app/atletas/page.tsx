@@ -13,7 +13,7 @@ export default async function atletaPage() {
             Atletas
           </p>
           <div className="flex mx-auto gap-2  w-full justify-between">
-          <Link href={'/profile'} className="w-60 "  >
+          <Link href={'/dashboard'} className="w-60 "  >
             <LoadingButton textColor="text-ct-blue-600">
               Voltar 
             </LoadingButton>

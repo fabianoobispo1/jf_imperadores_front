@@ -82,7 +82,7 @@ export default function LoginForm() {
         store.setToken(token)
   
         toast.success("Conectado com sucesso");
-        return router.push("/profile");
+        return router.push("/dashboard");
       }else{
         toast.error("Error")
       }

@@ -8,7 +8,7 @@ import useStore from "@/store";
 import { apiLogoutUser } from "@/lib/api-requests";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { X, List, User } from 'phosphor-react'
+import { X, List, User, GearSix   } from 'phosphor-react'
 import clsx from 'clsx'
 import { NextRequest } from "next/server";
 
@@ -42,8 +42,8 @@ const HeaderV2 = () => {
         <div className="flex h-14 items-center px-4 py-4 lg:h-auto">
           <Link
         
-            href="/profile"
-            className="group flex w-4/5 items-center gap-x-2.5"           
+            href="/dashboard"
+            className="group flex lg:w-4/5 items-center gap-x-2.5"           
           >
             <div className="flex h-7 w-7 items-center  rounded-full border border-fa-dourado/30 group-hover:border-fa-dourado/50">
               <User size={26} className="text-cyan-900" />
@@ -51,8 +51,15 @@ const HeaderV2 = () => {
   
             <h3 className="font-semibold tracking-wide text-gray-900 group-hover:text-gray-400">
               {user?.name}
-            </h3>
+            </h3>    
           </Link>
+          <Link       
+            href="/profile"
+            className=" p-2"           
+          >
+            <GearSix size={18} className="text-cyan-900 hover:text-cyan-700 "/>
+          </Link>
+ 
         </div>
   
         <button
@@ -129,8 +136,7 @@ function GlobalNavItem({
   const isActive = item.slug === segment
 
   return (
-    <Link
-      
+    <Link      
       onClick={close}
       href={`/${item.slug}`}
       className={clsx(
