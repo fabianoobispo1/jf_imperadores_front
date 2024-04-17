@@ -118,16 +118,28 @@ export const FaUsuarioSchema = z.object({
       }).min(1,"Data de nascimento é obrigatório"),
     apelido: z.string(),
     data_inicio: z.string(),
-    tipo: z.string().min(1, "O tipo é obrigatório"),
+    tipo: z.string({
+      required_error: "Tipo é obrigatório"
+    }).min(1,"Tipo é obrigatório"),
     posicao: z.string(),
-    numero_camisa: z.string(),
-    altura:z.string(),
-    pesso:z.string(),
+    numero_camisa: z.string({
+      required_error: "Numero camisa é obrigatório",
+    }).min(1, "Numero camisa é obrigatório"),
+    altura:z.string({
+      required_error: "Altura é obrigatório",
+    }).min(1, "Altura é obrigatório"),
+    pesso:z.string({
+      required_error: "Pesso é obrigatório",
+    }).min(1, "Pesso é obrigatório"),
     rg: z.string(),
     cpf: z.string(),
     cep: z.string(),
-    endereco: z.string(),
-    numero_endereco:z.string(),
+    endereco: z.string({
+      required_error: "Endereço é obrigatório",
+    }).min(1, "Endereço é obrigatório"),
+    numero_endereco:z.string({
+      required_error: "Numero é obrigatório",
+    }).min(1, "Numero é obrigatório"),
     complemento: z.string(),
     bairro: z.string(),
     cidade: z.string(),

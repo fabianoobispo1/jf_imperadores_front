@@ -193,9 +193,9 @@ export default function AtletaList() {
  }
  */
   return (
-    <div>
+    <div className="pt-2">
    
-    <div className="max-w-full w-full mx-auto overflow-hidden  bg-transparent rounded-md p-8 space-y-5"></div>
+   {/*  <div className="max-w-full w-full mx-auto overflow-hidden  bg-transparent rounded-md p-8 space-y-5"></div> */}
 
     <div className="max-w-full w-full mx-auto overflow-hidden shadow-lg bg-ct-dark-200 rounded-md p-8 space-y-5">
       {/* <div className="grid grid-cols-2 gap-4 justify-between">
