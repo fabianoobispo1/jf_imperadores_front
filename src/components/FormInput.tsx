@@ -5,7 +5,8 @@ type FormInputProps = {
   label: string;
   name: string;
   type?: string;
-  value?: string
+  value?: string;
+  onchange?: string
 };
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -13,6 +14,7 @@ const FormInput: React.FC<FormInputProps> = ({
   name,
   type,
   value,
+  onchange
 }) => {
   const {
     register,

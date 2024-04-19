@@ -100,6 +100,30 @@ export const FaUsuarioSchema = z.object({
     message: "As senhas não coincidem",
   });
 
+export const FaUsuarioUpdateSchema = z.object({
+    nome: z
+      .string()
+      .min(1, "O nome completo é obrigatório"),
+    email: z
+      .string({
+        required_error: "Email é obrigatório",
+      })
+      .min(1, "Email é obrigatório")
+      .email("Email é obrigatório"),
+    password: z
+      .string(),
+    passwordConfirm: z
+      .string(),
+    data_nascimento: z.
+      string({
+        required_error: "Data de nascimento é obrigatório"
+      }).min(1,"Data de nascimento é obrigatório")
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    path: ["passwordConfirm"],
+    message: "As senhas não coincidem",
+  });
+
   export const FaAtletaSchema = z.object({
     nome: z
       .string({
@@ -157,3 +181,4 @@ export type RegisterUserInput = z.infer<typeof RegisterUserSchema>;
 export type FaTransacoesInput = z.infer<typeof FaTransacoesSchema>;
 export type FaUsuarioInput = z.infer<typeof FaUsuarioSchema>;
 export type FaAtletaInput = z.infer<typeof FaAtletaSchema>;
+export type FaUsuarioUpdate = z.infer<typeof FaUsuarioUpdateSchema>;
