@@ -72,6 +72,7 @@ export async function middleware(req: NextRequest) {
   return response;
 }
 
+// rotas protegidas
 export const config = {
   matcher: ["/profile", "/dashboard", "/login", "/api/users/:path*", "/api/auth/logout", "/transacoes", "/atletas", "/atletas/adicionar"],
 };
