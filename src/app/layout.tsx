@@ -6,7 +6,7 @@ import HeaderV2 from "@/components/HeaderV2";
 
 export const metadata = {
   title: "Jf Imperadores",
-  description: "Pagina para gerenciamento do time de futibol americano.",
+  description: "Pagina para gerenciamento do time de Futebol Americano.",
 };
 
 export default function RootLayout({
