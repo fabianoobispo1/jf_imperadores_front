@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 
     const password_hash = await hash(password, 6);
 
-    const userWithSameEmail = await prisma.sFAUser.findUnique({
+    const userWithSameEmail = await prisma.sFBUser.findUnique({
       where: {
         email,
       },
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newUser = await prisma.sFAUser.create({
+    const newUser = await prisma.sFBUser.create({
       data: {
         nome,
         email,

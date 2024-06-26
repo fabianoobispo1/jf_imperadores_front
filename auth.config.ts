@@ -44,7 +44,7 @@ const authConfig = {
           return null;
         }
 
-        const usuario  = await prisma.sFAUser.findUnique({
+        const usuario  = await prisma.sFBUser.findUnique({
           where: {
             email
           },
@@ -58,7 +58,7 @@ const authConfig = {
           id: usuario.id,
           name: usuario.nome,
           email: credentials?.email as string,
-          administrador: usuario.administrador,
+          tipo: usuario.tipo,
           provider: usuario.provider
 
         };
@@ -83,12 +83,12 @@ const authConfig = {
         const provider = account?.provider 
         const email = profile?.email;
         if(email){
-          let usuario = await prisma.sFAUser.findUnique({
+          let usuario = await prisma.sFBUser.findUnique({
             where: { email }
           });
   
           if (!usuario) {
-            usuario = await prisma.sFAUser.create({
+            usuario = await prisma.sFBUser.create({
               data: {
                 email,
                 nome: String(profile.name),
@@ -100,7 +100,7 @@ const authConfig = {
           
           
           user.id = usuario.id;
-          user.administrador = usuario.administrador
+          user.tipo = usuario.tipo
           user.provider = usuario.provider
         }
        
@@ -112,7 +112,7 @@ const authConfig = {
       // First time JWT callback is run, user object is available
       if (user) {
         token.id = user.id;
-        token.administrador= user.administrador
+        token.tipo= user.tipo
         token.provider= user.provider
       }
       return token;
@@ -120,7 +120,7 @@ const authConfig = {
     async session({ session, token }) {
       if (token?.id) {
         session.user.id = String(token.id);
-        session.user.administrador = token.administrador;
+        session.user.tipo = String(token.tipo);
         session.user.provider = String(token.provider)
       }
       return session;

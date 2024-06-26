@@ -1,5 +1,7 @@
 'use client';
+
 import { useRouter } from 'next/navigation';
+
 import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
@@ -11,21 +13,22 @@ export default function NotFound() {
         404
       </span>
       <h2 className="font-heading my-2 text-2xl font-bold">
-        Não encontrado
+        Something&apos;s missing
       </h2>
       <p>
-      Desculpe, a página que você está procurando não existe.
+        Sorry, the page you are looking for doesn&apos;t exist or has been
+        moved.
       </p>
       <div className="mt-8 flex justify-center gap-2">
         <Button onClick={() => router.back()} variant="default" size="lg">
-          Voltar
+          Go back
         </Button>
         <Button
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/dashboard')}
           variant="ghost"
           size="lg"
         >
-          Voltar para o iníco 
+          Back to Home
         </Button>
       </div>
     </div>
