@@ -15,7 +15,7 @@ datasource db {
 
 
 
-model User {
+model SFBUser {
   id            String    @id @default(uuid())
   nome          String
   email         String    @unique
@@ -24,14 +24,15 @@ model User {
   tipo          Role      @default(MEMBER)
   provider      String    @default("Credentials")
 
-  @@map("users")
+  @@map("sfb_users")
 }
 
 enum Role {
   ADMIN
   MEMBER
 }
-model FaUsuario {
+
+model SFAUser {
   id              String        @id @default(uuid())
   nome            String
   email           String        @unique
@@ -41,5 +42,5 @@ model FaUsuario {
   created_at      DateTime      @default(now())
   provider        String        @default("Credentials")
 
-  @@map("fa_usuario")
+  @@map("sfa_users")
 }
