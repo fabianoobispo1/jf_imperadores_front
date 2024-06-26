@@ -1,10 +1,10 @@
-/* import Providers from '@/components/layout/providers'; */
+import Providers from '@/components/layout/providers';
 import { Toaster } from '@/components/ui/toaster';
 import '@uploadthing/react/styles.css';
 import type { Metadata } from 'next';
 import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
-/* import { auth } from '@/auth'; */
+import { auth } from '@/auth';
 
 
 
@@ -18,15 +18,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  /* const session = await auth(); */
+  const session = await auth();
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={'font-inter overflow-hidden'}>
-        <NextTopLoader />
-       {/*  <Providers session={session}> */}
+        <NextTopLoader showSpinner={false}/>
+        <Providers session={session}>
           <Toaster />
           {children}
-       {/*  </Providers> */}
+        </Providers>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-/* import AuthenticationModal from '@/components/signin/authentication-modal';
- */
+import AuthenticationModal from '@/components/signin/authentication-modal';
+
 export const metadata: Metadata = {
   title: 'Principal',
   description: 'Pagina inicial do meu sistema'
@@ -38,7 +38,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* <AuthenticationModal/> */}
+      <AuthenticationModal/>
   
     </div>
   );
