@@ -36,19 +36,13 @@ const authConfig = {
       
       async authorize(credentials, req) {
         let email
-        let password
+        let password 
         if (credentials?.email ){
           email = credentials?.email as string
-        }else{
-          return null;
-        }
-
-        if (credentials?.password ){
           password = credentials?.password as string
         }else{
           return null;
         }
-
 
         const usuario  = await prisma.sFAUser.findUnique({
           where: {
@@ -131,10 +125,10 @@ const authConfig = {
       }
       return session;
     }
-  }/* ,
+  },
   jwt: {
-    maxAge: 60 * 60 * 24, // 1 dias
-  } */
+    maxAge: 10 // 10 min
+  }
 } satisfies NextAuthConfig;
 
 export default authConfig;

@@ -9,8 +9,8 @@ import { auth } from '@/auth';
 
 
 export const metadata: Metadata = {
-  title: 'Fabiano sistema',
-  description: 'Site para testar novas tecnologias'
+  title: 'JF Imperadores',
+  description: 'Site para Gerenciamento do time de futebol americano'
 };
 
 export default async function RootLayout({
@@ -22,7 +22,7 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={'font-inter overflow-hidden'}>
-        <NextTopLoader showSpinner={false}/>
+        <NextTopLoader showSpinner={false} />
         <Providers session={session}>
           <Toaster />
           {children}
