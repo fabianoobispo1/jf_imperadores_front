@@ -42,28 +42,50 @@ export default function UserAuthForm() {
 
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
-  
-    const result = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-      callbackUrl: callbackUrl ?? '/dashboard'
+    const response = await fetch('/api/usuarioverificalogin', {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body:  JSON.stringify(data),
     });
     
-    if (result?.error) {
-     
-      console.log(result)
+
+    const dataresponse = await response.json();
+
+     if (response.status != 201){
       toast({
-        title: 'Error',
+        title: 'Erro',
         variant: 'destructive',
-        description: result.error
+        description: dataresponse.message
       });
-    } else {
+      console.log(response)
       setLoading(false);
-      window.location.href = result?.url ?? '/dashboard';
-    }
-    setLoading(false);
+    }else{
+      
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+        callbackUrl: callbackUrl ?? '/dashboard'
+      });
+      
+      if (result?.error) {
+       
+        console.log(result)
+        toast({
+          title: 'Error',
+          variant: 'destructive',
+          description: 'Erro desconhecido'
+        });
+      } else {
+        setLoading(false);
+        window.location.href = result?.url ?? '/dashboard';
+      }
+      setLoading(false);
   };
+}
 
 
   return (
@@ -127,7 +149,7 @@ export default function UserAuthForm() {
         </div>
       </div>
       {/* mudar o nome do componete */}
-      <GitHubSignInButton />     
+     {/*  <GitHubSignInButton />  */}    
       <GoogleSignInButton />   
     {/*   <DbTestComponent /> */}
     </>

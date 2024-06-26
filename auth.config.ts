@@ -50,7 +50,7 @@ const authConfig = {
         }
 
 
-        const usuario  = await prisma.faUsuario.findUnique({
+        const usuario  = await prisma.sFAUser.findUnique({
           where: {
             email
           },
@@ -59,14 +59,6 @@ const authConfig = {
         if (!usuario ) {
           return null;
         }
-
-        const doestPasswordMatches = await compare( password, usuario.password_hash);
-
-            if (!doestPasswordMatches) {
-              return null;
-            }
-        
-
 
         const user = {
           id: usuario.id,
@@ -97,12 +89,12 @@ const authConfig = {
         const provider = account?.provider 
         const email = profile?.email;
         if(email){
-          let usuario = await prisma.faUsuario.findUnique({
+          let usuario = await prisma.sFAUser.findUnique({
             where: { email }
           });
   
           if (!usuario) {
-            usuario = await prisma.faUsuario.create({
+            usuario = await prisma.sFAUser.create({
               data: {
                 email,
                 nome: String(profile.name),
