@@ -15,31 +15,13 @@ import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "../ui/table"
 import { useState } from "react"
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  }
-]
 export function ModalUsuarios() {
   const [loading, setLoading]= useState(false)
-
+  const [users, setUsers] = useState([]);
+  const [columns, setColumns] = useState([]);
 
   const loadUserData = async () => {
+
     setLoading(true);
     try {
         const response = await fetch('/api/usuario/recuperalista', {
@@ -51,6 +33,11 @@ export function ModalUsuarios() {
         });
 
         const result = await response.json();
+        if (result.length > 0) {
+          setColumns(Object.keys(result.user[0]));
+        }
+        setUsers(result);
+
         console.log(result);
         setLoading(false);
     } catch (error) {
@@ -63,7 +50,7 @@ export function ModalUsuarios() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" onClick={loadUserData}>Usuarios</Button>
+        <Button variant="default">Usuarios</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[90%] sm:max-h-[90%] h-full w-full">
         <DialogHeader>
@@ -72,31 +59,29 @@ export function ModalUsuarios() {
             tela para listar usuarios cadastrados, e realizar alterções.
           </DialogDescription>
         </DialogHeader>
-        <Button variant={"secondary"} className="w-36">Carregar</Button>
+        <Button variant={"secondary"} className="w-36"  onClick={loadUserData}>Carregar</Button>
         <ScrollArea className="h-[calc(80vh-220px)] rounded-md border">
           <Table className="p-2">
          
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Invoice</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                {columns.map((column, index) => (
+                  <TableHead key={index}>{column}</TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
-                  {invoices.map((invoice) => (
-              <TableRow key={invoice.invoice}>
-                <TableCell className="font-medium">01</TableCell>
-                <TableCell>02</TableCell>
-                <TableCell>03</TableCell>
-                <TableCell className="text-right">04</TableCell>
-                <TableCell className="text-right">04</TableCell>
-                <TableCell className="text-right">04</TableCell>
-              </TableRow>
-                  ))} 
+                
+            {users.map((user, rowIndex) => (
+                <TableRow key={rowIndex}>
+                  {columns.map((column, colIndex) => (
+                    <TableCell key={colIndex} className={colIndex === columns.length - 1 ? "text-right" : ""}>
+                      {user[column]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+               
             </TableBody>
            
           </Table>
