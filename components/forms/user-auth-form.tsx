@@ -43,7 +43,7 @@ export default function UserAuthForm() {
 
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
-    const response = await fetch('/api/usuarioverificalogin', {
+    const response = await fetch('/api/usuario/verificarlogin', {
       method: "POST",
       credentials: "include",
       headers: {

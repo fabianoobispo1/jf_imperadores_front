@@ -15,27 +15,52 @@ import { CalendarIcon } from '@radix-ui/react-icons';
 import { Calendar } from '../ui/calendar';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Loader2 } from 'lucide-react';
 
 export const PerfilUser: React.FC = () => {
-    const [data, setData] = useState({});
+    const [responseApi, setResponseApi] = useState({});
     const [loading, setLoading] = useState(false);
     const [bloqueioProvider, setBloqueioProvider] = useState(false);
     const [umaVez, setUmaVez] = useState(true);
+
+    const[nome,setNome] = useState('')
 
     const { data: session } = useSession();
 
     useEffect(() => {
         if (umaVez) {
+            setLoading(true)
             if (session?.user.provider !== "Credentials") {
                 setBloqueioProvider(true);
             }
+            const tste = async () => {
+            const response = await fetch('/api/usuario/recupera', {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body:  JSON.stringify({email: session?.user.email}),
+              });
+              
+                const dataresponse = await response.json();
+                setResponseApi(dataresponse.user)
+                console.log(dataresponse)
+                setNome(dataresponse.name)
+                setLoading(false)
+            }
+
+            tste()
+            
             setUmaVez(false); // Corrigido para evitar repetição infinita
+          
+
         
         }
     }, [session, umaVez]);
 
     const defaultValues = {
-        nome: session?.user.name || '',
+        nome: nome,
         email: session?.user.email || '',
         dataNascimento: new Date(),
     };
@@ -51,12 +76,17 @@ export const PerfilUser: React.FC = () => {
         const formattedData = { ...data, dataNascimento: formattedDate };
 
         console.log('data ==>', formattedData);
-        setData(formattedData);
+        /* setData(formattedData); */
 
         // api call and reset
         // form.reset();
     };
 
+    if (loading){
+        return (
+            <Loader2 className={cn('h-4 w-4 animate-spin')} />
+        );
+    }else{
     return (
         <>
             <div className="flex items-center justify-between">
@@ -155,4 +185,5 @@ export const PerfilUser: React.FC = () => {
             </Form>
         </>
     );
+    }
 }
