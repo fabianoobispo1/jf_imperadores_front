@@ -42,7 +42,11 @@ export const perfilSchema = z.object({
     .min(3, { message: 'Nome requerido.' }),
   email: z
     .string()
-    .email({ message: 'Digite um email valido.' })
+    .email({ message: 'Digite um email valido.' }),
+    dataNascimento: z.date({
+      required_error: "A date of birth is required.",
+    }),
+  
 
 });
 

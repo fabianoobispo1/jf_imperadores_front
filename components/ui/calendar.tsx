@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { DayPicker } from 'react-day-picker';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
@@ -61,6 +63,13 @@ function Calendar({
       components={{
         IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />
+      }}
+      formatters={{
+        formatCaption: (month) => format(month, 'MMMM yyyy', { locale: ptBR }),
+        formatDay: (day) => format(day, 'dd', { locale: ptBR }),
+        formatWeekdayName: (weekday) => format(weekday, 'EEEEE', { locale: ptBR }),
+        formatMonthCaption: (month) => format(month, 'MMMM', { locale: ptBR }),
+        formatYearCaption: (year) => format(year, 'yyyy', { locale: ptBR }),
       }}
       {...props}
     />

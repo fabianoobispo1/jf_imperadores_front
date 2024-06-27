@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 export function UserNav() {
   const { data: session } = useSession();
   const router = useRouter();
-  
+  console.log(session)
   if (session) {
     return (
       <DropdownMenu>

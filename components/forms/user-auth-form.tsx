@@ -21,7 +21,8 @@ import GoogleSignInButton from '../google-auth-button';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Digite um email valido.' }),
-  password: z.string().min(8, { message: "Senha obrigatoria, min 8" })
+  password: z.string().min(8, { message: "Senha obrigatoria, min 8" }),
+  provider: z.string()
 });
 
 type UserFormValue = z.infer<typeof formSchema>;
@@ -33,7 +34,7 @@ export default function UserAuthForm() {
   const { toast } = useToast();
   const defaultValues = {
     email: '',
-    password: ''
+    password: '',
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
@@ -60,7 +61,7 @@ export default function UserAuthForm() {
         variant: 'destructive',
         description: dataresponse.message
       });
-      console.log(response)
+      
       setLoading(false);
     }else{
       
@@ -149,7 +150,7 @@ export default function UserAuthForm() {
         </div>
       </div>
       {/* mudar o nome do componete */}
-      <GitHubSignInButton />     
+      {/* <GitHubSignInButton />    */}  
       <GoogleSignInButton />   
     {/*   <DbTestComponent /> */}
     </>

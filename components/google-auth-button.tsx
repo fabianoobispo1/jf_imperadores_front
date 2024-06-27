@@ -15,11 +15,8 @@ export default function GoogleSignInButton() {
     setLoading(true);
 
     const result = await signIn('google', { callbackUrl: callbackUrl ?? '/dashboard' })
-
-    if (result?.error) {
-     
-      console.log(result)
-    
+    if (result?.error) {     
+      console.log(result)    
     } else {
       setLoading(false);
      /*  window.location.href = result?.url ?? '/dashboard'; */

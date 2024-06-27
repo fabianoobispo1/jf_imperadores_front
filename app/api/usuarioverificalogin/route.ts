@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
     const { email, password } = body;
 
-     const user = await prisma.sFBUser.findUnique({
+     const user = await prisma.sFAUser.findUnique({
       where: {
         email,
       },
@@ -20,6 +20,14 @@ export async function POST(req: NextRequest) {
         { status: 409 },
       );
     }
+
+    if (user.provider == 'google'){
+      return NextResponse.json(
+        { message: "Continue com conta google" },
+        { status: 409 },
+      );
+    }
+
     const doestPasswordMatches = await compare( String(password), user.password_hash);
 
     if (!doestPasswordMatches) {
