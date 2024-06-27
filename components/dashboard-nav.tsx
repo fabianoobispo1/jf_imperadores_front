@@ -14,6 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from './ui/tooltip';
+import { useSession } from 'next-auth/react';
 
 interface DashboardNavProps {
   items: NavItem[];
@@ -27,7 +28,9 @@ export function DashboardNav({
   isMobileNav = false
 }: DashboardNavProps) {
   const path = usePathname();
-  const { isMinimized } = useSidebar();
+  const { isMinimized } = useSidebar();  
+  const { data: session } = useSession();
+  /* console.log(session) */
 
   if (!items?.length) {
     return null;
@@ -45,7 +48,7 @@ export function DashboardNav({
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <Link
-                    href={item.disabled ? '/' : item.href}
+                    href={item.disabled ? {} : item.href}
                     className={cn(
                       'flex items-center gap-2 overflow-hidden rounded-md py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
                       path === item.href ? 'bg-accent' : 'transparent',

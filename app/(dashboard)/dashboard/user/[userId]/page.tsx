@@ -1,3 +1,4 @@
+import AcessoAdministrador from '@/components/AcessoAdministrador';
 import BreadCrumb from '@/components/breadcrumb';
 import { ProductForm } from '@/components/forms/product-form';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -10,6 +11,7 @@ export default function Page() {
   ];
   return (
     <ScrollArea className="h-full">
+      <AcessoAdministrador/>
       <div className="flex-1 space-y-4 p-5">
         <BreadCrumb items={breadcrumbItems} />
         <ProductForm

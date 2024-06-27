@@ -124,25 +124,22 @@ export const navItems: NavItem[] = [
     title: 'Perfil',
     href: '/dashboard/perfil',
     icon: 'profile',
-    label: 'profile'
- 
-    
+    label: 'profile'    
   },
-
 
   {
     title: 'User',
     href: '/dashboard/user',
     icon: 'user',
     label: 'user',
-    disabled: true,
+    disabled: true
   },
     {
     title: 'Plano Homologação',
     href: '/dashboard/planohmg',
     icon: 'post',
     label: 'post',
-    disabled: true,
+    disabled: true
   },
   /*   {
     title: 'Employee',

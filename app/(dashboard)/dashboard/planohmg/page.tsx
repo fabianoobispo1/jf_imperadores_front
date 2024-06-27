@@ -12,6 +12,7 @@ import readXlsx from '@/components/planohmg/readXlsx';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import copyToClipboard from '@/components/planohmg/copyToClipboard';
 import downloadCSV from '@/components/planohmg/downloadCSV';
+import AcessoAdministrador from '@/components/AcessoAdministrador';
 
 const breadcrumbItems = [{ title: 'PlanoHMG', link: '/dashboard/planohmg' }];
 
@@ -202,6 +203,7 @@ export default function Page() {
 
   return (
     <>
+      <AcessoAdministrador/>
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <BreadCrumb items={breadcrumbItems} />
         <div className="flex items-start justify-between">
