@@ -17,8 +17,8 @@ import { useState } from "react"
 
 export function ModalUsuarios() {
   const [loading, setLoading]= useState(false)
-  const [users, setUsers] = useState([]);
-  const [columns, setColumns] = useState([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [columns, setColumns] = useState<string[]>([]);
 
   const loadUserData = async () => {
 
