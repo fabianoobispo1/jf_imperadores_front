@@ -33,29 +33,29 @@ export const PerfilUser: React.FC = () => {
                 setBloqueioProvider(true);
             }
             const tste = async () => {
-            const response = await fetch('/api/usuario/recupera', {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body:  JSON.stringify({email: session?.user.email}),
-              });
-              
+                const response = await fetch('/api/usuario/recupera', {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: session?.user.email }),
+                });
+
                 const dataresponse = await response.json();
 
                 dataresponse.user.data_nascimento = adjustToLocalTimezone(dataresponse.user.data_nascimento); // Ajustar a data ao fuso horário local
-           
-                form.reset(dataresponse.user); 
+
+                form.reset(dataresponse.user);
                 setLoading(false)
             }
 
             tste()
-            
-            setUmaVez(false); // Corrigido para evitar repetição infinita
-          
 
-        
+            setUmaVez(false); // Corrigido para evitar repetição infinita
+
+
+
         }
     }, [session, umaVez]);
 
@@ -99,7 +99,7 @@ export const PerfilUser: React.FC = () => {
         }
     };
 
-    
+
 
     const processForm: SubmitHandler<PerfilFormValues> = (data) => {
         const formattedDate = format(new Date(data.data_nascimento), 'yyyy-MM-dd');
@@ -107,125 +107,46 @@ export const PerfilUser: React.FC = () => {
 
 
         console.log('data ==>', formattedData);
-     updateUserData(formattedData);
+        updateUserData(formattedData);
 
     };
 
-    if (loading){
-        return (
-            <div className="flex items-center space-x-4">
-      <Skeleton className="h-12 w-12 rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-[250px]" />
-        <Skeleton className="h-4 w-[200px]" />
-      </div>
-    </div>
-        );
-    }else{
+
     return (
         <>
+
             <div className="flex items-center justify-between">
                 <Heading title={'Perfil'} description={'Editar suas informações pessoais.'} />
             </div>
             <Separator />
 
-            <Form {...form}>
-                <form
-                    onSubmit={form.handleSubmit(processForm)}
-                    className="w-full space-y-8"
-                >
-                    <div className='gap-4 md:grid md:grid-cols-2'>
-                        <FormField
-                            control={form.control}
-                            name="nome"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Nome</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            disabled={loading}
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            disabled={loading || bloqueioProvider}
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+            {loading ?
+                <div className="flex items-center space-x-4">
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
                     </div>
+                </div>
+                :
 
-                    <div className='gap-4 md:grid md:grid-cols-3'>
-                        <FormField
-                            control={form.control}
-                            name="data_nascimento"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Data de Nascimento</FormLabel>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-full pl-3 text-left font-normal",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value ? (
-                                                        format(new Date(field.value), "dd/MM/yyyy", { locale: ptBR })
-                                                    ) : (
-                                                        <span>Escolha uma data</span>
-                                                    )}
-                                                    
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={field.value}
-                                                onSelect={field.onChange}
-                                                disabled={(date) =>
-                                                    date > new Date() || date < new Date("1900-01-01")
-                                                }
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
 
+
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(processForm)}
+                        className="w-full space-y-8"
+                    >
+                        <div className='gap-4 md:grid md:grid-cols-2'>
                             <FormField
                                 control={form.control}
-                                name="data_nascimento"
+                                name="nome"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Data de Nascimento</FormLabel>
+                                        <FormLabel>Nome</FormLabel>
                                         <FormControl>
                                             <Input
-                                                type="date"
                                                 disabled={loading}
-                                                value={field.value ? format(new Date(field.value), "yyyy-MM-dd") : ''}
-                                                onChange={e => field.onChange(e.target.value)}
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -233,14 +154,83 @@ export const PerfilUser: React.FC = () => {
                                 )}
                             />
 
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                disabled={loading || bloqueioProvider}
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
 
-                    </div>
-                    <Button disabled={loadingFinal} className="ml-auto" type="submit">
-                        Salvar
-                    </Button>
-                </form>
-            </Form>
+                        <div className='gap-4 md:grid md:grid-cols-3'>
+                            <FormField
+                                control={form.control}
+                                name="data_nascimento"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Data de Nascimento</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-full pl-3 text-left font-normal",
+                                                            !field.value && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {field.value ? (
+                                                            format(new Date(field.value), "dd/MM/yyyy", { locale: ptBR })
+                                                        ) : (
+                                                            <span>Escolha uma data</span>
+                                                        )}
+
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+
+                                                    fromYear={1960}
+                                                    toYear={2024}
+                                                    captionLayout="dropdown-buttons"
+                                                    mode="single"
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+
+
+
+
+
+                        </div>
+                        <Button disabled={loadingFinal} className="ml-auto" type="submit">
+                            Salvar
+                        </Button>
+                    </form>
+                </Form>
+            }
         </>
     );
-    }
+
 }
