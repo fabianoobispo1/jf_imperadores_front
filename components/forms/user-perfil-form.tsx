@@ -16,14 +16,13 @@ import { Calendar } from '../ui/calendar';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Loader2 } from 'lucide-react';
+import { Skeleton } from '../ui/skeleton';
 
 export const PerfilUser: React.FC = () => {
-    const [responseApi, setResponseApi] = useState({});
     const [loading, setLoading] = useState(false);
+    const [loadingFinal, setLoadingFinal] = useState(false);
     const [bloqueioProvider, setBloqueioProvider] = useState(false);
     const [umaVez, setUmaVez] = useState(true);
-
-    const[nome,setNome] = useState('')
 
     const { data: session } = useSession();
 
@@ -44,9 +43,10 @@ export const PerfilUser: React.FC = () => {
               });
               
                 const dataresponse = await response.json();
-                setResponseApi(dataresponse.user)
-                console.log(dataresponse)
-                setNome(dataresponse.name)
+
+                dataresponse.user.data_nascimento = adjustToLocalTimezone(dataresponse.user.data_nascimento); // Ajustar a data ao fuso horário local
+           
+                form.reset(dataresponse.user); 
                 setLoading(false)
             }
 
@@ -60,9 +60,9 @@ export const PerfilUser: React.FC = () => {
     }, [session, umaVez]);
 
     const defaultValues = {
-        nome: nome,
-        email: session?.user.email || '',
-        dataNascimento: new Date(),
+        nome: '',
+        email: '',
+        data_nascimento: new Date(),
     };
 
     const form = useForm<PerfilFormValues>({
@@ -71,20 +71,55 @@ export const PerfilUser: React.FC = () => {
         mode: 'onChange',
     });
 
+    // Função para ajustar a data ao fuso horário local
+    const adjustToLocalTimezone = (dateString: string) => {
+        const date = new Date(dateString);
+        const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+        return new Date(date.getTime() + userTimezoneOffset);
+    };
+
+    const updateUserData = async (data: PerfilFormValues) => {
+        setLoading(true);
+        try {
+            const response = await fetch('/api/usuario/atualiza', {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            console.log('Update result:', result);
+            setLoading(false);
+        } catch (error) {
+            console.error("Failed to update user data", error);
+            setLoading(false);
+        }
+    };
+
+    
+
     const processForm: SubmitHandler<PerfilFormValues> = (data) => {
-        const formattedDate = format(new Date(data.dataNascimento), 'yyyy-MM-dd HH:mm:ss');
-        const formattedData = { ...data, dataNascimento: formattedDate };
+        const formattedDate = format(new Date(data.data_nascimento), 'yyyy-MM-dd');
+        const formattedData = { ...data, data_nascimento: new Date(formattedDate) };
+
 
         console.log('data ==>', formattedData);
-        /* setData(formattedData); */
+     updateUserData(formattedData);
 
-        // api call and reset
-        // form.reset();
     };
 
     if (loading){
         return (
-            <Loader2 className={cn('h-4 w-4 animate-spin')} />
+            <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
         );
     }else{
     return (
@@ -138,7 +173,7 @@ export const PerfilUser: React.FC = () => {
                     <div className='gap-4 md:grid md:grid-cols-3'>
                         <FormField
                             control={form.control}
-                            name="dataNascimento"
+                            name="data_nascimento"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Data de Nascimento</FormLabel>
@@ -148,7 +183,7 @@ export const PerfilUser: React.FC = () => {
                                                 <Button
                                                     variant={"outline"}
                                                     className={cn(
-                                                        "w-[240px] pl-3 text-left font-normal",
+                                                        "w-full pl-3 text-left font-normal",
                                                         !field.value && "text-muted-foreground"
                                                     )}
                                                 >
@@ -157,6 +192,7 @@ export const PerfilUser: React.FC = () => {
                                                     ) : (
                                                         <span>Escolha uma data</span>
                                                     )}
+                                                    
                                                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                 </Button>
                                             </FormControl>
@@ -177,8 +213,29 @@ export const PerfilUser: React.FC = () => {
                                 </FormItem>
                             )}
                         />
+
+                            <FormField
+                                control={form.control}
+                                name="data_nascimento"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Data de Nascimento</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="date"
+                                                disabled={loading}
+                                                value={field.value ? format(new Date(field.value), "yyyy-MM-dd") : ''}
+                                                onChange={e => field.onChange(e.target.value)}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+
                     </div>
-                    <Button disabled={loading} className="ml-auto" type="submit">
+                    <Button disabled={loadingFinal} className="ml-auto" type="submit">
                         Salvar
                     </Button>
                 </form>

@@ -46,7 +46,7 @@ export default function UserRegisterForm() {
 
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
-    const response = await fetch('/api/usuario/rgistrar', {
+    const response = await fetch('/api/usuario/registrar', {
       method: "POST",
       credentials: "include",
       headers: {

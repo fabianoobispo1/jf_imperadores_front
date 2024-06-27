@@ -21,8 +21,7 @@ import GoogleSignInButton from '../google-auth-button';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Digite um email valido.' }),
-  password: z.string().min(8, { message: "Senha obrigatoria, min 8" }),
-  provider: z.string()
+  password: z.string().min(8, { message: "Senha obrigatoria, min 8" })
 });
 
 type UserFormValue = z.infer<typeof formSchema>;
