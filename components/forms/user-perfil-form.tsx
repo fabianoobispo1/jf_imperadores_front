@@ -81,8 +81,8 @@ export const PerfilUser: React.FC = () => {
     const updateUserData = async (data: PerfilFormValues) => {
         setLoading(true);
         try {
-            const response = await fetch('/api/usuario/atualiza', {
-                method: "POST",
+            const response = await fetch(`/api/usuario/atualizar/${data.id}`, {
+                method: "PUT",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
