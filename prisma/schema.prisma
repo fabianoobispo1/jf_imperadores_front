@@ -13,16 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model SFBUser {
-  id            String    @id @default(uuid())
+  id            String   @id @default(uuid())
   nome          String
-  email         String    @unique
-  created_at    DateTime  @default(now())
+  email         String   @unique
+  created_at    DateTime @default(now())
   password_hash String
-  tipo          Role      @default(MEMBER)
-  provider      String    @default("Credentials")
+  tipo          Role     @default(MEMBER)
+  provider      String   @default("Credentials")
 
   @@map("sfb_users")
 }
@@ -33,14 +31,24 @@ enum Role {
 }
 
 model SFAUser {
-  id              String        @id @default(uuid())
+  id              String    @id @default(uuid())
   nome            String
-  email           String        @unique
+  email           String    @unique
   password_hash   String
-  administrador   Boolean       @default(false)
+  administrador   Boolean   @default(false)
   data_nascimento DateTime?
-  created_at      DateTime      @default(now())
-  provider        String        @default("Credentials")
+  created_at      DateTime  @default(now())
+  provider        String    @default("Credentials")
 
   @@map("sfa_users")
+}
+
+model SFATodo {
+  id          String   @id @default(uuid())
+  text        String
+  isCompleted Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+
+  @@map("sfa_todo")
 }

@@ -125,7 +125,7 @@ export const navItems: NavItem[] = [
     label: 'profile'
   },
 
-  {
+ /*  {
     title: 'User',
     href: '/dashboard/user',
     icon: 'user',
@@ -138,7 +138,7 @@ export const navItems: NavItem[] = [
     icon: 'post',
     label: 'post',
     disabled: true
-  },
+  }, */
   /*   {
     title: 'Employee',
     href: '/dashboard/employee',

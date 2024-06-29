@@ -51,7 +51,7 @@ export function RecentSales() {
         </div>
         <div className="ml-auto font-medium">+$99.00</div>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center justify-center">
         <Avatar className="h-9 w-9">
           <AvatarImage src="/avatars/05.png" alt="Avatar" />
           <AvatarFallback>SD</AvatarFallback>

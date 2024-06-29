@@ -1,3 +1,4 @@
+import { TodoList } from '@/components/TodoList';
 import { CalendarDateRangePicker } from '@/components/date-range-picker';
 import { Overview } from '@/components/overview';
 import { RecentSales } from '@/components/recent-sales';
@@ -23,15 +24,15 @@ export default function page() {
             <Button>Download</Button>
           </div> */}
         </div>
-        {/* <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
+        <Tabs defaultValue="overview" className="space-y-4">
+         {/*   <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="analytics" disabled>
               Analytics
             </TabsTrigger>
-          </TabsList>
+          </TabsList> */}
           <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {/*  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
@@ -56,8 +57,8 @@ export default function page() {
                     +20.1% from last month
                   </p>
                 </CardContent>
-              </Card>
-              <Card>
+             </Card>
+               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
                     Subscriptions
@@ -85,7 +86,7 @@ export default function page() {
                 </CardContent>
               </Card>
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Sales</CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -133,30 +134,30 @@ export default function page() {
                   </p>
                 </CardContent>
               </Card>
-            </div>
+            </div> */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <Card className="col-span-4">
-                <CardHeader>
+            {/*   <Card className="col-span-4">
+               <CardHeader>
                   <CardTitle>Overview</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <Overview />
                 </CardContent>
-              </Card>
-              <Card className="col-span-4 md:col-span-3">
+              </Card> */}
+              <Card className="col-span-4 md:col-span-4">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Lista de sugestões</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    Essa lista seera visivel para todos os usuários.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <RecentSales />
+                  <TodoList />
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
-        </Tabs> */}
+          </TabsContent> 
+        </Tabs>
       </div>
     </ScrollArea>
   );
