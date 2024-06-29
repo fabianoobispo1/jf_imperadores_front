@@ -11,9 +11,10 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
-import {  LoadingButton } from './ui/loading-button';
+import { LoadingButton } from './ui/loading-button';
 import { Trash } from 'lucide-react';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
+import { useSession } from 'next-auth/react';
 
 interface Todo {
   id: string;
@@ -21,6 +22,10 @@ interface Todo {
   isCompleted: boolean;
   created_at: string;
   updated_at: string;
+  sfaUser_id: string;
+  sfaUser?: {
+    nome: string;
+  };
 }
 
 export function TodoList() {
@@ -28,6 +33,8 @@ export function TodoList() {
   const [newTodo, setNewTodo] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingTodo, setLoadingTodo] = useState<boolean>(false);
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     loadTodos();
@@ -51,7 +58,7 @@ export function TodoList() {
     const response = await fetch('/api/todo/registrar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: newTodo })
+      body: JSON.stringify({ text: newTodo, sfaUser_id: session?.user.id })
     });
 
     const { todo } = await response.json();
@@ -63,16 +70,16 @@ export function TodoList() {
   const toggleTodo = async (id: string) => {
     setLoadingTodo(true);
     const todo = todos.find((todo) => todo.id === id);
-    if (!todo){
+    if (!todo) {
       setLoadingTodo(false);
-      return
-    };
+      return;
+    }
 
     const updatedTodo = { ...todo, isCompleted: !todo.isCompleted };
     await fetch(`/api/todo/atualizar/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedTodo),
+      body: JSON.stringify(updatedTodo)
     });
 
     setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo)));
@@ -82,20 +89,19 @@ export function TodoList() {
   const removeTodo = async (id: string) => {
     setLoadingTodo(true);
     const todo = todos.find((todo) => todo.id === id);
-    if (!todo){
+    if (!todo) {
       setLoadingTodo(false);
-      return
-    };
+      return;
+    }
 
     await fetch(`/api/todo/remover/${id}`, {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' }
     });
 
     loadTodos();
     setLoadingTodo(false);
   };
-
 
   return (
     <div className="space-y-8">
@@ -103,7 +109,7 @@ export function TodoList() {
         <Input
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Adicioner nova sugestão"
+          placeholder="Adicionar nova sugestão"
         />
         <LoadingButton loading={loading} onClick={addTodo} className="ml-2">
           Adicionar
@@ -111,39 +117,51 @@ export function TodoList() {
       </div>
 
       <ScrollArea className="h-[calc(80vh-220px)] w-full overflow-x-auto rounded-md border">
-      <Table className="relative">
-        <TableHeader >
-          <TableRow >
-            <TableHead className="text-center" >Sugestão</TableHead>
-            <TableHead className="text-center" >Completou</TableHead>
-            <TableHead className="text-center" >Criado em</TableHead>
-            <TableHead className="text-center" >Opções</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {todos.map((todo) => (
-            <TableRow key={todo.id}>
-              <TableCell>{todo.text}</TableCell>
-              <TableCell className="text-center" >
-                <Checkbox
-                  checked={todo.isCompleted}
-                  onCheckedChange={() => toggleTodo(todo.id)}
-                />
-              </TableCell>
-              <TableCell className="text-center" >{new Date(todo.created_at).toLocaleDateString()}</TableCell>
-              <TableCell className='flex gap-2 items-center justify-center'>
-                <LoadingButton className='w-32' loading={loadingTodo} onClick={() => toggleTodo(todo.id)}>
-                  {todo.isCompleted ? 'Desfazer' : 'Completo'}
-                </LoadingButton>
-                <LoadingButton  loading={loadingTodo} variant={"destructive"} onClick={() => removeTodo(todo.id)}>
-                <Trash className="h-4 w-4" />
-                </LoadingButton>
-              </TableCell>
+        <Table className="relative">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-center">Sugestão</TableHead>
+              <TableHead className="text-center">Completou</TableHead>
+              <TableHead className="text-center">Criado em</TableHead>
+              <TableHead className="text-center">Criado por</TableHead>
+              <TableHead className="text-center">Opções</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <ScrollBar orientation="horizontal" />
+          </TableHeader>
+          <TableBody>
+            {todos.map((todo) => (
+              <TableRow key={todo.id}>
+                <TableCell>{todo.text}</TableCell>
+                <TableCell className="text-center">
+                  <Checkbox
+                    checked={todo.isCompleted}
+                    onCheckedChange={() => toggleTodo(todo.id)}
+                  />
+                </TableCell>
+                <TableCell className="text-center">
+                  {new Date(todo.created_at).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-center">{todo.sfaUser?.nome || 'Desconhecido'}</TableCell>
+                <TableCell className="flex gap-2 items-center justify-center">
+                  <LoadingButton
+                    className="w-32"
+                    loading={loadingTodo}
+                    onClick={() => toggleTodo(todo.id)}
+                  >
+                    {todo.isCompleted ? 'Desfazer' : 'Completo'}
+                  </LoadingButton>
+                  <LoadingButton
+                    loading={loadingTodo}
+                    variant={"destructive"}
+                    onClick={() => removeTodo(todo.id)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </LoadingButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </div>
   );

@@ -5,9 +5,16 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { text } = body;
+    const { text, sfaUser_id } = body;
     const newTodo = await prisma.sFATodo.create({
-      data: { text },
+      include: {
+        sfaUser: {
+          select: {
+            nome: true
+          }
+        }
+      },
+      data: { text, sfaUser_id },
     });
 
     return NextResponse.json(

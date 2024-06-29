@@ -3,7 +3,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    const todos = await prisma.sFATodo.findMany();
+    const todos = await prisma.sFATodo.findMany({
+      include: {
+        sfaUser: {
+          select: {
+            nome: true
+          }
+        }
+      }
+    });
 
     return NextResponse.json(
       { message: 'Todos recuperado com sucesso.', todos: todos },
