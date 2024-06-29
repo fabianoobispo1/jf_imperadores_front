@@ -148,7 +148,7 @@ export default function page() {
                 <CardHeader>
                   <CardTitle>Lista de sugestões</CardTitle>
                   <CardDescription>
-                    Essa lista seera visivel para todos os usuários.
+                    Essa lista sera visivel para todos os usuários.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
