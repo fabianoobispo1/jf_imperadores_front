@@ -28,7 +28,7 @@ export function DashboardNav({
   isMobileNav = false
 }: DashboardNavProps) {
   const path = usePathname();
-  const { isMinimized } = useSidebar();  
+  const { isMinimized } = useSidebar();
   const { data: session } = useSession();
   /* console.log(session) */
 

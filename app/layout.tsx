@@ -6,8 +6,6 @@ import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 import { auth } from '@/auth';
 
-
-
 export const metadata: Metadata = {
   title: 'Fabiano sistema',
   description: 'Site para testar novas tecnologias'

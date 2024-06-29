@@ -8,7 +8,13 @@ import { ptBR } from 'date-fns/locale';
 
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -18,12 +24,14 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps & { onChange?: React.ChangeEventHandler<HTMLSelectElement> }) {
-
-  const handleCalendarChange = (_value: string | number, _e: React.ChangeEventHandler<HTMLSelectElement>) => {
+  const handleCalendarChange = (
+    _value: string | number,
+    _e: React.ChangeEventHandler<HTMLSelectElement>
+  ) => {
     const _event = {
       target: {
         value: String(_value)
-      },
+      }
     } as React.ChangeEvent<HTMLSelectElement>;
     _e(_event);
   };
@@ -32,17 +40,19 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn('p-3', className)}
-        classNames={{
+      classNames={{
         months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-3',
         caption_start: 'is-start',
         caption_between: 'is-between',
         caption_end: 'is-end',
         caption: 'flex justify-center pt-1 relative items-center gap-1',
-        caption_label: 'flex h-7 text-sm font-medium justify-center items-center grow [.is-multiple_&]:flex',
+        caption_label:
+          'flex h-7 text-sm font-medium justify-center items-center grow [.is-multiple_&]:flex',
         caption_dropdowns: 'flex justify-center grow dropdowns pl-7 pr-8',
         multiple_months: 'is-multiple',
-        vhidden: 'hidden [.is-between_&]:flex [.is-end_&]:flex [.is-start.is-end_&]:hidden',
+        vhidden:
+          'hidden [.is-between_&]:flex [.is-end_&]:flex [.is-start.is-end_&]:hidden',
         nav: 'flex items-center [&:has([name="previous-month"])]::order-first [&:has([name="next-month"])]::order-last',
         nav_button: cn(
           buttonVariants({ variant: 'outline' }),
@@ -52,7 +62,8 @@ function Calendar({
         nav_button_next: 'absolute right-1',
         table: 'w-full border-collapse space-y-1',
         head_row: 'flex',
-        head_cell: 'text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]',
+        head_cell:
+          'text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]',
         row: 'flex w-full mt-2',
         cell: cn(
           'relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent',
@@ -71,9 +82,10 @@ function Calendar({
         day_today: 'bg-accent text-accent-foreground',
         day_outside: 'text-muted-foreground opacity-50',
         day_disabled: 'text-muted-foreground opacity-50',
-        day_range_middle: 'aria-selected:bg-accent aria-selected:text-accent-foreground',
+        day_range_middle:
+          'aria-selected:bg-accent aria-selected:text-accent-foreground',
         day_hidden: 'invisible',
-        ...classNames,
+        ...classNames
       }}
       components={{
         IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
@@ -88,25 +100,37 @@ function Calendar({
             }}
             value={props.value as string}
           >
-            <SelectTrigger className={cn(buttonVariants({ variant: 'ghost' }), 'px-2 py-1 h-7 border-none shadow-none font-medium [.is-between_&]:hidden [.is-end_&]:hidden [.is-start.is-end_&]:flex')}>
-              <SelectValue placeholder={props?.caption}>{props?.caption}</SelectValue>
+            <SelectTrigger
+              className={cn(
+                buttonVariants({ variant: 'ghost' }),
+                'h-7 border-none px-2 py-1 font-medium shadow-none [.is-between_&]:hidden [.is-end_&]:hidden [.is-start.is-end_&]:flex'
+              )}
+            >
+              <SelectValue placeholder={props?.caption}>
+                {props?.caption}
+              </SelectValue>
             </SelectTrigger>
-            <SelectContent className="max-h-[var(--radix-popper-available-height);] overflow-y-auto scrolling-auto min-w-[var(--radix-popper-anchor-width)]">
+            <SelectContent className="scrolling-auto max-h-[var(--radix-popper-available-height);] min-w-[var(--radix-popper-anchor-width)] overflow-y-auto">
               {props.children &&
-                React.Children.map(props.children, (child) =>
-                  <SelectItem value={(child as React.ReactElement<any>)?.props?.value} className="min-w-[var(--radix-popper-anchor-width)] pr-7">{(child as React.ReactElement<any>)?.props?.children}</SelectItem>
-                )
-              }
+                React.Children.map(props.children, (child) => (
+                  <SelectItem
+                    value={(child as React.ReactElement<any>)?.props?.value}
+                    className="min-w-[var(--radix-popper-anchor-width)] pr-7"
+                  >
+                    {(child as React.ReactElement<any>)?.props?.children}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
-        ),
+        )
       }}
       formatters={{
         formatCaption: (month) => format(month, 'MMMM yyyy', { locale: ptBR }),
         formatDay: (day) => format(day, 'dd', { locale: ptBR }),
-        formatWeekdayName: (weekday) => format(weekday, 'EEEEE', { locale: ptBR }),
+        formatWeekdayName: (weekday) =>
+          format(weekday, 'EEEEE', { locale: ptBR }),
         formatMonthCaption: (month) => format(month, 'MMMM', { locale: ptBR }),
-        formatYearCaption: (year) => format(year, 'yyyy', { locale: ptBR }),
+        formatYearCaption: (year) => format(year, 'yyyy', { locale: ptBR })
       }}
       {...props}
     />

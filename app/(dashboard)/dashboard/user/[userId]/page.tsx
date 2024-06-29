@@ -11,7 +11,7 @@ export default function Page() {
   ];
   return (
     <ScrollArea className="h-full">
-      <AcessoAdministrador/>
+      <AcessoAdministrador />
       <div className="flex-1 space-y-4 p-5">
         <BreadCrumb items={breadcrumbItems} />
         <ProductForm

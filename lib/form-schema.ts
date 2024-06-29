@@ -39,19 +39,12 @@ export const profileSchema = z.object({
 export const perfilSchema = z.object({
   id: z.string(),
   administrador: z.boolean(),
-  nome: z
-    .string()
-    .min(3, { message: 'Nome requerido.' }),
-  email: z
-    .string()
-    .email({ message: 'Digite um email valido.' }),
+  nome: z.string().min(3, { message: 'Nome requerido.' }),
+  email: z.string().email({ message: 'Digite um email valido.' }),
   data_nascimento: z.date({
-      required_error: "campo requerido.",
-    }),
-  
-
+    required_error: 'campo requerido.'
+  })
 });
-
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
 export type PerfilFormValues = z.infer<typeof perfilSchema>;

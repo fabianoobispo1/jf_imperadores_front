@@ -30,23 +30,30 @@ console.log(userId)
 
  */
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from "@/lib/prisma";
+import prisma from '@/lib/prisma';
 
-
-export async function PUT(req: NextRequest, { params }: { params: { userid: string } }) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { userid: string } }
+) {
   try {
     const { userid } = params;
     const userData = await req.json();
 
-      // Atualize o usuário no banco de dados
-      const updatedUser = await prisma.sFAUser.update({
+    // Atualize o usuário no banco de dados
+    const updatedUser = await prisma.sFAUser.update({
       where: { id: String(userid) },
-      data: userData,
-      });
+      data: userData
+    });
 
-      return NextResponse.json({ message: 'Registro atualizado'}, { status: 200 });
+    return NextResponse.json(
+      { message: 'Registro atualizado' },
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json({ message: 'Erro ao atualizar o recurso', error }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Erro ao atualizar o recurso', error },
+      { status: 500 }
+    );
   }
-
 }

@@ -1,6 +1,6 @@
-import prisma from "@/lib/prisma";
-import { hash } from "bcryptjs";
-import { NextRequest, NextResponse } from "next/server";
+import prisma from '@/lib/prisma';
+import { hash } from 'bcryptjs';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,18 +9,18 @@ export async function POST(req: NextRequest) {
     const { email } = body;
     const usuario = await prisma.sFAUser.findUnique({
       where: {
-        email,
-      },
+        email
+      }
     });
 
     return NextResponse.json(
-      { message: "Usuário recuperado com sucesso.", user: usuario },
-      { status: 201 },
+      { message: 'Usuário recuperado com sucesso.', user: usuario },
+      { status: 201 }
     );
   } catch (error: any) {
     return NextResponse.json(
-      { message: "Erro ao conectar ao banco de dados." },
-      { status: 500 },
+      { message: 'Erro ao conectar ao banco de dados.' },
+      { status: 500 }
     );
   }
 }
