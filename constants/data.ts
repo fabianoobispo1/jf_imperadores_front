@@ -92,6 +92,211 @@ export const users: User[] = [
   }
 ];
 
+//alterar
+export type Atletas = {
+  id: number;
+  nome: string;
+  setor: string;
+  posicao: string;
+  ativo: boolean;
+  numero: string;
+};
+export const atletas: Atletas[] = [
+  {
+    id: 1,
+    nome: 'Candice Schiner',
+    setor: 'Dell',
+    posicao: 'Frontend Developer',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 2,
+    nome: 'John Doe',
+    setor: 'TechCorp',
+    posicao: 'Backend Developer',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 3,
+    nome: 'Alice Johnson',
+    setor: 'WebTech',
+    posicao: 'UI Designer',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 4,
+    nome: 'David Smith',
+    setor: 'Innovate Inc.',
+    posicao: 'Fullstack Developer',
+    ativo: false,
+    numero: 'Inactive'
+  },
+  {
+    id: 5,
+    nome: 'Emma Wilson',
+    setor: 'TechGuru',
+    posicao: 'Product Manager',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 6,
+    nome: 'James Brown',
+    setor: 'CodeGenius',
+    posicao: 'QA Engineer',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 7,
+    nome: 'Laura White',
+    setor: 'SoftWorks',
+    posicao: 'UX Designer',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 8,
+    nome: 'Michael Lee',
+    setor: 'DevCraft',
+    posicao: 'DevOps Engineer',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 9,
+    nome: 'Olivia Green',
+    setor: 'WebSolutions',
+    posicao: 'Frontend Developer',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 10,
+    nome: 'Robert Taylor',
+    setor: 'DataTech',
+    posicao: 'Data Analyst',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 11,
+    nome: 'Robert Taylor',
+    setor: 'DataTech',
+    posicao: 'Data Analyst',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 12,
+    nome: 'Robert Taylor',
+    setor: 'DataTech',
+    posicao: 'Data Analyst',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 1,
+    nome: 'Candice Schiner',
+    setor: 'Dell',
+    posicao: 'Frontend Developer',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 2,
+    nome: 'John Doe',
+    setor: 'TechCorp',
+    posicao: 'Backend Developer',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 3,
+    nome: 'Alice Johnson',
+    setor: 'WebTech',
+    posicao: 'UI Designer',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 4,
+    nome: 'David Smith',
+    setor: 'Innovate Inc.',
+    posicao: 'Fullstack Developer',
+    ativo: false,
+    numero: 'Inactive'
+  },
+  {
+    id: 5,
+    nome: 'Emma Wilson',
+    setor: 'TechGuru',
+    posicao: 'Product Manager',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 6,
+    nome: 'James Brown',
+    setor: 'CodeGenius',
+    posicao: 'QA Engineer',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 7,
+    nome: 'Laura White',
+    setor: 'SoftWorks',
+    posicao: 'UX Designer',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 8,
+    nome: 'Michael Lee',
+    setor: 'DevCraft',
+    posicao: 'DevOps Engineer',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 9,
+    nome: 'Olivia Green',
+    setor: 'WebSolutions',
+    posicao: 'Frontend Developer',
+    ativo: true,
+    numero: 'Active'
+  },
+  {
+    id: 10,
+    nome: 'Robert Taylor',
+    setor: 'DataTech',
+    posicao: 'Data Analyst',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 11,
+    nome: 'Robert Taylor',
+    setor: 'DataTech',
+    posicao: 'Data Analyst',
+    ativo: false,
+    numero: 'Active'
+  },
+  {
+    id: 12,
+    nome: 'Robert Taylor',
+    setor: 'DataTech',
+    posicao: 'Data Analyst',
+    ativo: false,
+    numero: 'Active'
+  }
+];
+
+
 export type Employee = {
   id: number;
   first_name: string;
@@ -117,6 +322,12 @@ export const navItems: NavItem[] = [
     href: '/dashboard',
     icon: 'dashboard',
     label: 'Dashboard'
+  },
+  {
+    title: 'Atleta',
+    href: '/dashboard/atleta',
+    icon: 'bookCheck',
+    label: 'Atleta'
   },
   {
     title: 'Perfil',

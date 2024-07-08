@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import AuthenticationModal from '@/components/signin/authentication-modal';
 
 export const metadata: Metadata = {
-  title: 'Principal',
-  description: 'Pagina inicial do meu sistema'
+  title: 'JF Imperadores',
+  description: 'Pagina inicial JF Imperadores'
 };
 
 export default function HomePage() {
