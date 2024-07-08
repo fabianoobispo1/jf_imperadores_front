@@ -102,3 +102,18 @@ model SFATodo {
 
   @@map("sfa_todo")
 }
+
+modal SFAAtleta {
+  id          String   @id @default(uuid())
+  cpf             String
+  nome            String
+  email           String    @unique
+  ativo           Boolean
+  data_nascimento DateTime
+  data_inicio DateTime
+  created_at      DateTime  @default(now())
+  updated_at  DateTime @default(now())
+
+
+  @@map("sfa_atleta")
+}
