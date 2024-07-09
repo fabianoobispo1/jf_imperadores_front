@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Atletas, User } from '@/constants/data';
+import { Atletas } from '@/constants/data';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -23,7 +23,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
 
   const onConfirm = async () => {
+    setLoading(true)
     setOpen(false)
+    setLoading(false)
   };
 
   return (
@@ -45,13 +47,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
           <DropdownMenuItem
-            disabled={true}
             onClick={() => router.push(`/dashboard/atleta/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Atualizar
           </DropdownMenuItem>
           <DropdownMenuItem
-            disabled={true}
             onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" /> Apagar
           </DropdownMenuItem>

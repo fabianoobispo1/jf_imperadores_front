@@ -1,15 +1,11 @@
 'use client';
-
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getPaginationRowModel,
   useReactTable
 } from '@tanstack/react-table';
-
-
 import {
   Table,
   TableBody,
@@ -21,6 +17,7 @@ import {
 import { Input } from './input';
 import { Button } from './button';
 import { ScrollArea, ScrollBar } from './scroll-area';
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -46,9 +43,8 @@ export function DataTable<TData, TValue>({
     },
     
   });
-
   /* this can be used to get the selectedrows */
-  //console.log("value", table.getFilteredSelectedRowModel()); 
+  //console.log("value", table.getFilteredSelectedRowModel());
 
   return (
     <>
@@ -113,7 +109,7 @@ export function DataTable<TData, TValue>({
       </ScrollArea>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
+          {table.getFilteredSelectedRowModel().rows.length} de{' '}
           {table.getFilteredRowModel().rows.length} linhas(s) selecionadas.
         </div>
         <div className="space-x-2">

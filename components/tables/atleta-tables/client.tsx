@@ -19,7 +19,7 @@ export const AtletaClient: React.FC<AtletasProps> = ({ data }) => {
     <>
       <div className="flex items-start justify-between">
         <Heading
-          title={`.. (${data.length})`}
+          title={`Atleetas ${data.length}`}
           description="Gerenciar atletas"
         />
         <Button
