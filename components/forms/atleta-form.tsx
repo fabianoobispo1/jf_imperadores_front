@@ -1,6 +1,6 @@
 'use client';
 import * as z from 'zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Trash } from 'lucide-react';
@@ -33,6 +33,7 @@ import { CalendarIcon } from '@radix-ui/react-icons';
 import { Calendar } from '../ui/calendar';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { LoadingButton } from '../ui/loading-button';
 
 const formSchema = z.object({
   cpf: z.string().min(11, 'CPF inválido').max(11, 'CPF inválido'),
@@ -67,6 +68,50 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       ? 'Adicionar informações de um novo atleta'
       : 'Editar informações de um atleta';
   const action = id === 'create' ? 'Salvar' : 'Salvar alterações';
+  const [atleta, setAtleta] = useState<AtletaFormValues | null>(null);
+
+
+  useEffect(() => {
+    const fetchAtleta = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/atleta/buscar/${id}`); 
+        if (!response.ok) {
+          throw new Error('Erro ao buscar dados');
+        }
+
+        const data = await response.json();
+        const atletaData = data.atleta[0];
+        
+        // Atualize o estado e o formulário
+        setAtleta(atletaData);
+        form.reset({
+          cpf: atletaData.cpf || '',
+          nome: atletaData.nome || '',
+          email: atletaData.email || '',
+          data_nascimento: new Date(atletaData.data_nascimento),
+          data_inicio: new Date(atletaData.data_inicio),
+          setor: atletaData.setor || '',
+          posicao: atletaData.posicao || '',
+          numero: atletaData.numero || 0,
+          altura: atletaData.altura || 0,
+          peso: atletaData.peso || 0,
+          ativo: atletaData.ativo ? 'true' : 'false',
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id !== 'create') {
+      fetchAtleta();
+    }
+  
+  }, []);
 
   const form = useForm<AtletaFormValues>({
     resolver: zodResolver(formSchema),
@@ -74,13 +119,13 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       cpf: '',
       nome: '',
       email: '',
-      data_nascimento: new Date(), // Inicialize com uma data padrão
-      data_inicio: new Date(), // Inicialize com uma data padrão
+      data_nascimento: new Date(),
+      data_inicio: new Date(),
       setor: '',
       posicao: '',
-      numero: 0, // Inicialize com um valor padrão
-      altura: 0, // Inicialize com um valor padrão
-      peso: 0, // Inicialize com um valor padrão
+      numero: 0,
+      altura: 0,
+      peso: 0,
       ativo: 'true'
     }
   });
@@ -128,12 +173,32 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
         }
        
       } else {
-        toast({
-          title: 'OK',
-          description: 'Atleta alterado'
+        setLoading(true);
+        const response = await fetch(`/api/atleta/atualizar/${id}`, {
+          method: 'PUT',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ atleta: finalData })
         });
-        // const res = await axios.post(`/api/products/create-product`, data);
-        // console.log("product", res);
+  
+        
+        if (response.ok) {
+          toast({
+            title: 'OK',
+            description: 'Atleta alterado'
+          });
+          router.refresh();
+          router.push(`/dashboard/atleta`);
+        }else{
+          toast({
+            variant: 'destructive',
+            title: 'Atleta não alterado',
+            description: 'Erro desconhecido'
+          });
+        }
+        setLoading(true);
       }
    
     } catch (error: any) {
@@ -171,14 +236,14 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {id !== 'create' && (
-          <Button
-            disabled={loading}
+          <LoadingButton
+            loading={loading}
             variant="destructive"
             size="sm"
             onClick={() => setOpen(true)}
           >
             <Trash className="h-4 w-4" />
-          </Button>
+          </LoadingButton>
         )}
       </div>
       <Separator />
@@ -434,9 +499,9 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
               )}
             />
           </div>
-          <Button type="submit" disabled={loading}>
+          <LoadingButton  type="submit" loading={loading}>
             {action}
-          </Button>
+          </LoadingButton >
         </form>
       </Form>
     </>

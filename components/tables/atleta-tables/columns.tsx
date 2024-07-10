@@ -34,7 +34,7 @@ export const columns: ColumnDef<Atletas>[] = [
   },
   {
     accessorKey: 'posicao',
-    header: 'POSIÇÂO'
+    header: 'POSIÇÃO'
   },
   {
     accessorKey: 'numero',

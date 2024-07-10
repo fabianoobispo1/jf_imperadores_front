@@ -8,39 +8,33 @@ export async function PUT(
   try {
     const { id } = params;
 
-    const { cpf,
-      nome,
-      email,
-      ativo,
-      data_nascimento,
-      data_inicio,
-      setor,
-      posicao,
-      numero,
-      altura,
-      pesso } = await req.json();
+    const body = await req.json();
 
-    const updatedTodo = await prisma.sFAAtleta.update({
+    const {
+      atleta
+    } = body;
+
+    const updatedAtleeta = await prisma.sFAAtleta.update({
       where: { id: String(id) },
       data: {
-        cpf,
-        nome,
-        email,
-        ativo,
-        data_nascimento,
-        data_inicio,
-        setor,
-        posicao,
-        numero,
-        altura,
-        pesso
+        cpf: atleta.cpf,
+        nome: atleta.nome,
+        email: atleta.email,
+        ativo: atleta.ativo,
+        data_nascimento: atleta.data_nascimento,
+        data_inicio: atleta.data_inicio,
+        setor: atleta.setor,
+        posicao: atleta.posicao,
+        numero: atleta.numero,
+        altura: atleta.altura,
+        pesso: atleta.pesso,
       },
     });
 
     
 
     return NextResponse.json(
-      { message: 'Atleta atualizado' },
+      { message: 'Atleta atualizado', atleta:updatedAtleeta },
       { status: 200 }
     );
   } catch (error) {

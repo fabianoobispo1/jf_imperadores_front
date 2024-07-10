@@ -24,7 +24,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const onConfirm = async () => {
     setLoading(true)
+
+
+
     setOpen(false)
+
     setLoading(false)
   };
 
@@ -47,13 +51,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
           <DropdownMenuItem
-            disabled={true}
+        
             onClick={() => router.push(`/dashboard/atleta/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Atualizar
           </DropdownMenuItem>
           <DropdownMenuItem
-            disabled={true}
             onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" /> Apagar
           </DropdownMenuItem>
