@@ -19,6 +19,7 @@ import { Button } from './button';
 import { ScrollArea, ScrollBar } from './scroll-area';
 
 
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -38,14 +39,14 @@ export function DataTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0, //custom initial page index
-        pageSize: 10, //custom default page size
+        pageSize: 5, //custom default page size
       },
     },
     
   });
   /* this can be used to get the selectedrows */
   //console.log("value", table.getFilteredSelectedRowModel());
-
+ /*  console.log(table) */
   return (
     <>
       <Input

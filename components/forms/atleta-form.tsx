@@ -2,10 +2,10 @@
 import * as z from 'zod';
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Trash } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
-import InputMask from 'react-input-mask';
+import { useRouter } from 'next/navigation';
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,28 +35,19 @@ import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
-  cpf: z
-    .string()
-    .min(14, 'CPF inválido')
-    .max(14, 'CPF inválido'),
-  nome: z
-    .string()
-    .min(3, { message: 'Nome é obrigatorio' }),
-  email: z
-    .string()
-    .email({ message: 'email é obrigatorio' }),
-  data_nascimento: z
-    .date({ required_error: 'Data de nascimento é obrigatorio' }),
-  data_inicio: z
-    .date({ required_error: 'Data de inicio é obrigatorio' }),
-  setor: z
-    .string(),
-  posicao: z
-    .string(),
+  cpf: z.string().min(11, 'CPF inválido').max(11, 'CPF inválido'),
+  nome: z.string().min(3, { message: 'Nome é obrigatorio' }),
+  email: z.string().email({ message: 'email é obrigatorio' }),
+  data_nascimento: z.date({
+    required_error: 'Data de nascimento é obrigatorio'
+  }),
+  data_inicio: z.date({ required_error: 'Data de inicio é obrigatorio' }),
+  setor: z.string(),
+  posicao: z.string(),
   numero: z.coerce.number(),
   altura: z.coerce.number(),
   peso: z.coerce.number(),
-  ativo: z.enum(['true', 'false']), 
+  ativo: z.enum(['true', 'false'])
 });
 
 type AtletaFormValues = z.infer<typeof formSchema>;
@@ -71,7 +62,10 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const title = id === 'create' ? 'Novo atleta' : 'Editar Atleta';
-  const description = id === 'create' ? 'Adicionar informações de um novo atleta' : 'Editar informações de um atleta';
+  const description =
+    id === 'create'
+      ? 'Adicionar informações de um novo atleta'
+      : 'Editar informações de um atleta';
   const action = id === 'create' ? 'Salvar' : 'Salvar alterações';
 
   const form = useForm<AtletaFormValues>({
@@ -80,34 +74,59 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       cpf: '',
       nome: '',
       email: '',
-      data_nascimento: undefined,
-      data_inicio: undefined,
+      data_nascimento: new Date(), // Inicialize com uma data padrão
+      data_inicio: new Date(), // Inicialize com uma data padrão
       setor: '',
       posicao: '',
-      numero: undefined,
-      altura: undefined,
-      peso: undefined,
-      ativo: 'true',
-    },
+      numero: 0, // Inicialize com um valor padrão
+      altura: 0, // Inicialize com um valor padrão
+      peso: 0, // Inicialize com um valor padrão
+      ativo: 'true'
+    }
   });
-
- 
 
   const onSubmit = async (data: AtletaFormValues) => {
     const finalData = {
       ...data,
-      ativo: data.ativo === 'true',
+      data_nascimento: new Date(data.data_nascimento.setHours(0, 0, 0, 0)),
+      data_inicio: new Date(data.data_inicio.setHours(0, 0, 0, 0)),
+      ativo: data.ativo === 'true'
     };
-    console.log(finalData);
 
     try {
       setLoading(true);
-      if (id === 'create') {
-        // await axios.post(`/api/products/edit-product/${id._id}`, data);
-        toast({
-          title: 'OK',
-          description: 'Atleta Salvo'
+      if (id === 'create') {        
+        const response = await fetch('/api/atleta/registrar', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ atleta: finalData })
         });
+
+        if(response.status == 201){
+          toast({
+            title: 'OK',
+            description: 'Atleta Salvo'
+          });
+          router.refresh();
+          router.push(`/dashboard/atleta`);
+
+        }else if(response.status == 409){
+          toast({
+            variant: 'destructive',
+            title: 'Atleta não salvo',
+            description: 'Email já cadastrado'
+          });
+        }else{
+          toast({
+            variant: 'destructive',
+            title: 'Atleta não salvo',
+            description: 'Erro desconhecido'
+          });
+        }
+       
       } else {
         toast({
           title: 'OK',
@@ -116,8 +135,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
         // const res = await axios.post(`/api/products/create-product`, data);
         // console.log("product", res);
       }
-      /* router.refresh();
-      router.push(`/dashboard/atleta`); */
+   
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -170,29 +188,20 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
           className="w-full space-y-8"
         >
           <div className="gap-8 md:grid md:grid-cols-3">
-            <Controller
+            <FormField
               control={form.control}
               name="cpf"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>CPF</FormLabel>
                   <FormControl>
-                    <InputMask
-                      mask="999.999.999-99"
-                      value={field.value}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                    >
-
-                      {(inputProps) => (
-                        <Input
-                          {...inputProps}
-                          placeholder="cpf"
-                        />
-                      )}
-                    </InputMask>
+                    <Input
+                      disabled={loading}
+                      placeholder="Cpf sem pontos"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage>{form.formState.errors.cpf?.message}</FormMessage>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -203,11 +212,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Nome"
-                      {...field}
-                    />
+                    <Input disabled={loading} placeholder="Nome" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -220,11 +225,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="email"
-                      {...field}
-                    />
+                    <Input disabled={loading} placeholder="email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -312,6 +313,92 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
                       />
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="setor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Setor</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="setor" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="posicao"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Posição</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="OL, DT...."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="numero"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Numero</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="01"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="altura"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Altura</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder=""
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="peso"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Peso</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder=""
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

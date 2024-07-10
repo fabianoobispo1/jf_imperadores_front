@@ -6,25 +6,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const {
-      cpf,
-      nome,
-      email,
-      ativo,
-      data_nascimento,
-      data_inicio,
-      setor,
-      posicao,
-      numero,
-      altura,
-      pesso
+      atleta
     } = body;
 
+    
     const verifyAtleta = await prisma.sFAAtleta.findUnique({
       where:{
-        email
+        email:atleta.email
       }
     })
-
     if (verifyAtleta) {
       return NextResponse.json(
         { message: 'Atleta já cadastrado com esse Email' },
@@ -34,22 +24,22 @@ export async function POST(req: NextRequest) {
 
     const newAtleta = await prisma.sFAAtleta.create({
       data: {
-        cpf,
-        nome,
-        email,
-        ativo,
-        data_nascimento,
-        data_inicio,
-        setor,
-        posicao,
-        numero,
-        altura,
-        pesso
+        cpf: atleta.cpf,
+        nome: atleta.nome,
+        email: atleta.email,
+        ativo: atleta.ativo,
+        data_nascimento: atleta.data_nascimento,
+        data_inicio: atleta.data_inicio,
+        setor: atleta.setor,
+        posicao: atleta.posicao,
+        numero: atleta.numero,
+        altura: atleta.altura,
+        pesso: atleta.pesso,
       },
     });
 
     return NextResponse.json(
-      { message: 'Atleta cadastrado com sucesso.', atleta: newAtleta },
+      { message: 'Atleta cadastrado com sucesso.', atleta: newAtleta  },
       { status: 201 }
     );
   } catch (error: any) {
