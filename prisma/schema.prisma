@@ -121,3 +121,17 @@ model SFAAtleta {
 
   @@map("sfa_atleta")
 }
+
+model SFAMovimentacao {
+  id              String    @id @default(uuid())
+  nome            String
+  descricao       String?
+  tipo            String
+  valor           Float?
+  data_vencimento DateTime?
+  data_pagamento  DateTime?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @default(now())
+
+  @@map("sfa_movimentacao")
+}

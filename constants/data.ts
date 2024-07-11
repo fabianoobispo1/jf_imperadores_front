@@ -148,6 +148,12 @@ export const navItems: NavItem[] = [
     label: 'Dashboard'
   },
   {
+    title: 'Movimentação',
+    href: '/dashboard/movimentacao',
+    icon: 'moeda',
+    label: 'Movimentação'
+  },
+  {
     title: 'Atleta',
     href: '/dashboard/atleta',
     icon: 'bookCheck',
