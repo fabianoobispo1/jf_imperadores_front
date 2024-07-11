@@ -9,10 +9,10 @@ export async function POST(req: NextRequest) {
       atleta
     } = body;
 
-    
+
     const verifyAtleta = await prisma.sFAAtleta.findUnique({
-      where:{
-        email:atleta.email
+      where: {
+        email: atleta.email
       }
     })
     if (verifyAtleta) {
@@ -38,8 +38,35 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    //envio de email asim que cadastra um atleta com status de ativo
+    if ( atleta.status) {
+      //so descomentar
+     /*  const mailerSend = new MailerSend({
+        apiKey: process.env.MAILERSEND_API ?? ''
+      });
+  
+      const sentFrom = new Sender("no-reply@jfimperadores.com.br", "Jf Imperadores");
+  
+      const recipients = [
+        new Recipient(atleta.email, atleta.nome)
+      ];
+  
+      const html = "<div><h1>Titulo</h1> <p>-</p> <p>Uma mensagem motivacional....</p></div>"
+      const emailParams = new EmailParams()
+        .setFrom(sentFrom)
+        .setTo(recipients)
+        .setReplyTo(sentFrom)
+        .setSubject("Bem Vindo ao time!")
+        .setHtml(html)
+  
+     
+      await mailerSend.email.send(emailParams); */
+    }   
+
+    //
+
     return NextResponse.json(
-      { message: 'Atleta cadastrado com sucesso.', atleta: newAtleta  },
+      { message: 'Atleta cadastrado com sucesso.', atleta: newAtleta },
       { status: 201 }
     );
   } catch (error: any) {

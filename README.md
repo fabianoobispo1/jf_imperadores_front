@@ -8,6 +8,7 @@ Este é um modelo inicial usando as seguintes ferramentas:
 - Auth - [next-auth](https://next-auth.js.org/)
 - Components - [Shadcn-ui](https://ui.shadcn.com)
 - Schema Validations - [Zod](https://zod.dev)
+- Email service - [mailersend](https://app.mailersend.com/dashboard)
 <!--- State Management - [Zustand](https://zustand-demo.pmnd.rs)
 - File Uploading - [Uploadthing](https://uploadthing.com)
 - Tables - [Tanstack Tables](https://ui.shadcn.com/docs/components/data-table)
