@@ -30,7 +30,14 @@ export const AtletaClient: React.FC = () => {
           throw new Error('Erro ao buscar dados');
         }
         const data = await response.json();
-        setAtletas(data.atletas);
+
+          // Mapear os dados para substituir o valor booleano do campo "ativo" por uma string
+          const atletasFormatados = data.atletas.map((atleta: any) => ({
+            ...atleta,
+            ativo: atleta.ativo ? 'Sim' : 'Não'
+          }));
+
+        setAtletas(atletasFormatados);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       } finally {
@@ -40,6 +47,10 @@ export const AtletaClient: React.FC = () => {
 
     fetchAtletas();
   }, []);
+
+  const handleDelete = (id: number) => {
+    setAtletas((prevAtletas) => prevAtletas.filter((atleta) => atleta.id !== id));
+  };
 
 /*   if (loading) {
     return <div>Carregando...</div>; // Você pode substituir isso por um spinner ou outra UI de carregamento
@@ -61,7 +72,12 @@ export const AtletaClient: React.FC = () => {
         </LoadingButton>
       </div>
       <Separator />
-      <DataTable searchKey="nome" columns={columns} data={atletas} />
+      {loading? 
+      <div></div>
+      :
+        <DataTable searchKey="nome" columns={columns(handleDelete)} data={atletas} /> 
+      }
+     
     </>
   );
 };

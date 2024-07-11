@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
+import { LoadingButton } from '../ui/loading-button';
 
 interface AlertModalProps {
   isOpen: boolean;
@@ -37,9 +38,9 @@ export const AlertModal: React.FC<AlertModalProps> = ({
         <Button disabled={loading} variant="outline" onClick={onClose}>
           Cancelar
         </Button>
-        <Button disabled={loading} variant="destructive" onClick={onConfirm}>
+        <LoadingButton loading={loading} variant="destructive" onClick={onConfirm}>
           Continuar
-        </Button>
+        </LoadingButton>
       </div>
     </Modal>
   );

@@ -116,16 +116,16 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
   const form = useForm<AtletaFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      cpf: '',
-      nome: '',
-      email: '',
+      cpf: '12345678910',
+      nome: 'Fabiano Bispo',
+      email: 'fbc623@gmail.com',
       data_nascimento: new Date(),
       data_inicio: new Date(),
-      setor: '',
-      posicao: '',
-      numero: 0,
-      altura: 0,
-      peso: 0,
+      setor: 'ataque',
+      posicao: 'Ol',
+      numero: 73,
+      altura: 1.90,
+      peso: 160,
       ativo: 'true'
     }
   });
@@ -214,8 +214,14 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
 
   const onDelete = async () => {
     try {
-      setLoading(true);
-      // await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
+      setLoading(true)
+      const response =  await fetch(`/api/atleta/remover/${id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });      
+        setLoading(false)    
+        setOpen(false)
+         
       router.refresh();
       router.push(`/dashboard/atleta`);
     } catch (error: any) {

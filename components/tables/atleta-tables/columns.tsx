@@ -4,23 +4,23 @@ import { CellAction } from './cell-action';
 import { Atletas } from '@/constants/data';
 import { Checkbox } from '@/components/ui/checkbox';
 
-export const columns: ColumnDef<Atletas>[] = [
-  {
+export const columns = (handleDelete: (id: number) => void): ColumnDef<Atletas>[] => [
+   {
     id: 'select',
-    header: ({ table }) => (
+    /* header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="selecionar todos"
       />
-    ),
-    cell: ({ row }) => (
+    ), */
+/*     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="selecionar linha"
       />
-    ),
+    ), */
     enableSorting: false,
     enableHiding: false
   },
@@ -46,6 +46,6 @@ export const columns: ColumnDef<Atletas>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />
+    cell: ({ row }) => <CellAction data={row.original} onDelete={handleDelete} />
   }
 ];

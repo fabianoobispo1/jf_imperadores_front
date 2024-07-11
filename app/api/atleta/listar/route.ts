@@ -3,7 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    const atletas = await prisma.sFAAtleta.findMany({});
+    const atletas = await prisma.sFAAtleta.findMany({
+      orderBy: {
+        nome: 'asc'
+      }
+    });
 
     return NextResponse.json(
       { message: 'Atletas recuperado com sucesso.', atletas: atletas },

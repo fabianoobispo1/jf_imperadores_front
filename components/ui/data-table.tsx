@@ -1,11 +1,13 @@
 'use client';
+
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
+  getFilteredRowModel,
   useReactTable
 } from '@tanstack/react-table';
+
 import {
   Table,
   TableBody,
@@ -17,8 +19,6 @@ import {
 import { Input } from './input';
 import { Button } from './button';
 import { ScrollArea, ScrollBar } from './scroll-area';
-
-
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,22 +35,16 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(), //load client-side pagination code
-    initialState: {
-      pagination: {
-        pageIndex: 0, //custom initial page index
-        pageSize: 5, //custom default page size
-      },
-    },
-    
+    getFilteredRowModel: getFilteredRowModel()
   });
-  /* this can be used to get the selectedrows */
-  //console.log("value", table.getFilteredSelectedRowModel());
- /*  console.log(table) */
+
+  /* this can be used to get the selectedrows 
+  console.log("value", table.getFilteredSelectedRowModel()); */
+
   return (
     <>
       <Input
-        placeholder={`Procurar ${searchKey}...`}
+        placeholder={`Procurar por ${searchKey}...`}
         value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
         onChange={(event) =>
           table.getColumn(searchKey)?.setFilterValue(event.target.value)
@@ -100,7 +94,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Sem Resultados.
+                  Sem resultados.
                 </TableCell>
               </TableRow>
             )}
@@ -109,10 +103,10 @@ export function DataTable<TData, TValue>({
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+       {/*  <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} de{' '}
-          {table.getFilteredRowModel().rows.length} linhas(s) selecionadas.
-        </div>
+          {table.getFilteredRowModel().rows.length} linha(s) selecionada.
+        </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"
@@ -128,7 +122,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Próximo
+            Proxima
           </Button>
         </div>
       </div>

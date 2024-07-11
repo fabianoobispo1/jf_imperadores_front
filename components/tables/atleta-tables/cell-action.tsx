@@ -15,21 +15,27 @@ import { useState } from 'react';
 
 interface CellActionProps {
   data: Atletas;
+  onDelete: (id: number) => void;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+export const CellAction: React.FC<CellActionProps> = ({ data, onDelete }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const onConfirm = async () => {
     setLoading(true)
+    const response =  await fetch(`/api/atleta/remover/${data.id}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-
-
+    if (response.status === 200) {
+      onDelete(data.id);
+    }
+  
+    setLoading(false)    
     setOpen(false)
-
-    setLoading(false)
   };
 
   return (
@@ -50,8 +56,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
-          <DropdownMenuItem
-        
+          <DropdownMenuItem        
             onClick={() => router.push(`/dashboard/atleta/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Atualizar
