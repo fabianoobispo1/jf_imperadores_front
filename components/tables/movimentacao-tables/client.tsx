@@ -33,10 +33,9 @@ export const MovimentacaoClient: React.FC = () => {
         if (!response.ok) {
           throw new Error('Erro ao buscar dados');
         }
-        const data = await response.json();
-
-        console.log(data)
-        setMovimentacoes(data); 
+        const data = await response.json();     
+        setMovimentacoes(data.movimentacao); 
+       
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       } finally {

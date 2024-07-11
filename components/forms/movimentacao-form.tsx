@@ -114,57 +114,57 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
       nome: 'Teste',
       descricao: 'Tteste Descrição',      
       data_vencimento: new Date(),
-/*       data_pagamento: new Date(), */
+      data_pagamento: new Date("1900-01-01"),
       valor: 55.10,
       tipo: 'Entrada'
     }
   });
 
   const onSubmit = async (data: MovimentacaoFormValues) => {
-    const finalData = {
+  /*   const finalData = {
       ...data,
-      data_nascimento: new Date(data.data_vencimento.setHours(0, 0, 0, 0)),
-      data_inicio: new Date(data.data_pagamento?.setHours(0, 0, 0, 0)),
+      data_vencimento: new Date(data.data_vencimento.setHours(0, 0, 0, 0)),
+      data_pagamento: new Date(data.data_pagamento.setHours(0, 0, 0, 0)),
     };
+ */
+   
 
-    console.log(finalData)
-
-   /*  try {
+    try {
       setLoading(true);
-      if (id === 'create') {        
-        const response = await fetch('/api/atleta/registrar', {
+     if (id === 'create') {  
+        const finalData = {
+          ...data,
+          data_vencimento: new Date(data.data_vencimento.setHours(0, 0, 0, 0)),
+       };
+        
+         const response = await fetch('/api/movimentacao/registrar', {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ atleta: finalData })
+          body: JSON.stringify({ movimentacao: finalData })
         });
 
         if(response.status == 201){
           toast({
             title: 'OK',
-            description: 'Atleta Salvo'
+            description: 'Movimentação Salva'
           });
           router.refresh();
-          router.push(`/dashboard/atleta`);
+          router.push(`/dashboard/movimentacao`);
 
-        }else if(response.status == 409){
-          toast({
-            variant: 'destructive',
-            title: 'Atleta não salvo',
-            description: 'Email já cadastrado'
-          });
         }else{
           toast({
             variant: 'destructive',
-            title: 'Atleta não salvo',
+            title: 'Movimentação nâo salva',
             description: 'Erro desconhecido'
           });
         }
+      
        
       } else {
-        setLoading(true);
+       /*  setLoading(true);
         const response = await fetch(`/api/atleta/atualizar/${id}`, {
           method: 'PUT',
           credentials: 'include',
@@ -189,7 +189,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
             description: 'Erro desconhecido'
           });
         }
-        setLoading(true);
+        setLoading(true); */
       }
    
     } catch (error: any) {
@@ -200,11 +200,11 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
       });
     } finally {
       setLoading(false);
-    } */
+    }
   };
 
   const onDelete = async () => {
-    try {
+   /*  try {
       setLoading(true)
       const response =  await fetch(`/api/atleta/remover/${id}`, {
         method: 'GET',
@@ -219,7 +219,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
     } finally {
       setLoading(false);
       setOpen(false);
-    }
+    } */
   };
 
   return (
@@ -244,30 +244,13 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
         )}
       </div>
       <Separator />
-     {/* <Form {...form}>
+      <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
           <div className="gap-8 md:grid md:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="cpf"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>CPF</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Cpf sem pontos"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
+          <FormField
               control={form.control}
               name="nome"
               render={({ field }) => (
@@ -280,179 +263,25 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input disabled={loading} placeholder="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="data_nascimento"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Data de Nascimento</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn(
-                            'w-full pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value ? (
-                            format(new Date(field.value), 'dd/MM/yyyy', {
-                              locale: ptBR
-                            })
-                          ) : (
-                            <span>Escolha uma data</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        fromYear={1960}
-                        toYear={2024}
-                        captionLayout="dropdown-buttons"
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="data_inicio"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Data de inicio</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn(
-                            'w-full pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
-                        >
-                          {field.value ? (
-                            format(new Date(field.value), 'dd/MM/yyyy', {
-                              locale: ptBR
-                            })
-                          ) : (
-                            <span>Escolha uma data</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        fromYear={1960}
-                        toYear={2024}
-                        captionLayout="dropdown-buttons"
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="setor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Setor</FormLabel>
-                  <FormControl>
-                    <Input disabled={loading} placeholder="setor" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="posicao"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Posição</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="OL, DT...."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="numero"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Numero</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder="01"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="altura"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Altura</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      disabled={loading}
-                      placeholder=""
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
              <FormField
               control={form.control}
-              name="peso"
+              name="descricao"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Peso</FormLabel>
+                  <FormLabel>Descrição</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="descricao" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="valor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Valor</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -468,10 +297,100 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
 
             <FormField
               control={form.control}
-              name="ativo"
+              name="data_vencimento"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Atleta Ativo</FormLabel>
+                  <FormLabel>Data de Vencimento</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            format(new Date(field.value), 'dd/MM/yyyy', {
+                              locale: ptBR
+                            })
+                          ) : (
+                            <span>Escolha uma data</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        fromYear={1960}
+                        toYear={2024}
+                        captionLayout="dropdown-buttons"
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {id !== 'create' && 
+            <FormField
+            control={form.control}
+            name="data_pagamento"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Data de pagamento</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={'outline'}
+                        className={cn(
+                          'w-full pl-3 text-left font-normal',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                      >
+                        {field.value ? (
+                          format(new Date(field.value), 'dd/MM/yyyy', {
+                            locale: ptBR
+                          })
+                        ) : (
+                          <span>Escolha uma data</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      fromYear={1960}
+                      toYear={2024}
+                      captionLayout="dropdown-buttons"
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          }
+
+            <FormField
+              control={form.control}
+              name="tipo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tipo de Movimentação</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={(value) => field.onChange(value)}
@@ -487,8 +406,8 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="true">Sim</SelectItem>
-                      <SelectItem value="false">Não</SelectItem>
+                      <SelectItem value="Entrada">Entrada</SelectItem>
+                      <SelectItem value="Saida">Saida</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -500,7 +419,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
             {action}
           </LoadingButton >
         </form>
-      </Form> */}
+      </Form> 
     </>
   );
 };

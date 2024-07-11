@@ -10,17 +10,19 @@ export async function POST(req: NextRequest) {
     } = body;
 
 
-    
     const novaMovimentacao = await prisma.sFAMovimentacao.create({
       data: {
         tipo: movimentacao.tipo,
         nome: movimentacao.nome,
         descricao: movimentacao.descricao,
-        data_pagamento: movimentacao.data_nascimento,
-        data_vencimento: movimentacao.data_inicio,
+        data_pagamento: movimentacao.data_pagamento,
+        data_vencimento: movimentacao.data_vencimento,
         valor: movimentacao.valor
       },
     });
+
+    console.log(novaMovimentacao)
+    
 
     return NextResponse.json(
       { message: 'Movimentação cadastrada com sucesso.', movimentacao: novaMovimentacao },

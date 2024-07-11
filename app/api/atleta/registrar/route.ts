@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
     //envio de email asim que cadastra um atleta com status de ativo
     if ( atleta.status) {
       //so descomentar
-     /*  const mailerSend = new MailerSend({
+      const mailerSend = new MailerSend({
         apiKey: process.env.MAILERSEND_API ?? ''
       });
   
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
         .setHtml(html)
   
      
-      await mailerSend.email.send(emailParams); */
+      await mailerSend.email.send(emailParams);
     }   
 
     //
