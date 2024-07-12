@@ -27,7 +27,8 @@ export const columns = (onUpdate: () => void): ColumnDef<Movimentacoes>[] => [
   },
   {
     accessorKey: 'nome',
-    header: 'NOME'
+    header: 'NOME',
+    size: 300,
   },
   {
     accessorKey: 'descricao',
@@ -37,6 +38,7 @@ export const columns = (onUpdate: () => void): ColumnDef<Movimentacoes>[] => [
     accessorKey: 'valor',
     header: 'Valor',
     cell: info => `R$ ${(info.getValue() as number).toFixed(2)}`, // Cast para number
+    size: 300,
   },
   {
     accessorKey: 'data_vencimento',

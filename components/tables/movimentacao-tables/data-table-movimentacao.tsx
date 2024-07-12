@@ -4,8 +4,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  useReactTable,
-  getPaginationRowModel
+  useReactTable
 } from '@tanstack/react-table';
 import {
   Table,
@@ -17,7 +16,6 @@ import {
 } from '@/components/ui/table';
 import { ScrollArea, ScrollBar } from '../../../components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -28,31 +26,13 @@ export function DataTableMovimentacao<TData, TValue>({
   columns,
   data
 }: DataTableProps<TData, TValue>) {
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-
   const table = useReactTable({
     data,
     columns,
-    pageCount: Math.ceil(data.length / pageSize),
-    state: {
-      pagination: {
-        pageIndex,
-        pageSize
-      }
-    },
-    onPaginationChange: (updater) => {
-      const newState = typeof updater === 'function' ? updater({ pageIndex, pageSize }) : updater;
-      setPageIndex(newState.pageIndex);
-      setPageSize(newState.pageSize);
-    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel()
+    columnResizeMode: 'onChange' // Adicione essa linha para habilitar o redimensionamento das colunas
   });
-
-  /* this can be used to get the selectedrows */
-  //sconsole.log("value", table.getFilteredSelectedRowModel());
 
   return (
     <>
@@ -61,18 +41,16 @@ export function DataTableMovimentacao<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} style={{ width: header.getSize() }}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                    </TableHead>
-                  );
-                })}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -84,7 +62,7 @@ export function DataTableMovimentacao<TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
