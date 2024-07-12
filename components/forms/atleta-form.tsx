@@ -122,7 +122,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       data_nascimento: new Date(),
       data_inicio: new Date(),
       setor: 'ataque',
-      posicao: 'Ol',
+      posicao: 'OL',
       numero: 73,
       altura: 1.90,
       peso: 160,
