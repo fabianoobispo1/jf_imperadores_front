@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Movimentacoes } from './client';
 import { formatDate } from '@/lib/formaDate';
 
-export const columns = (handleDelete: (id: number) => void): ColumnDef<Movimentacoes>[] => [
+export const columns = (onUpdate: () => void): ColumnDef<Movimentacoes>[] => [
    {
     id: 'select',
     /* header: ({ table }) => (
@@ -50,6 +50,6 @@ export const columns = (handleDelete: (id: number) => void): ColumnDef<Movimenta
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} onDelete={handleDelete} />
+    cell: ({ row }) => <CellAction data={row.original} onUpdate={onUpdate} />
   }
 ];

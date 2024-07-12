@@ -11,6 +11,7 @@ import { DataTableMovimentacao } from './data-table-movimentacao';
 import { Spinner } from '@/components/ui/spinner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+
 export type Movimentacoes = {
   id: number;
   nome: string;
@@ -29,28 +30,29 @@ export const MovimentacaoClient: React.FC = () => {
   const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
   const [year, setYear] = useState<number>(new Date().getFullYear());
 
-  useEffect(() => {
-    const fetchMovimentacoes = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`/api/movimentacao/listar?month=${month}&year=${year}`);
-        if (!response.ok) {
-          throw new Error('Erro ao buscar dados');
-        }
-        const data = await response.json();
-        setMovimentacoes(data.movimentacao);
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
+  const fetchMovimentacoes = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/movimentacao/listar?month=${month}&year=${year}`);
+      if (!response.ok) {
+        throw new Error('Erro ao buscar dados');
+      }
+      const data = await response.json();
+      setMovimentacoes(data.movimentacao);
+    } catch (error) {
+      console.error('Erro ao buscar dados:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {   
     fetchMovimentacoes();
   }, [month, year]);
 
-  const handleDelete = (id: number) => {
-    setMovimentacoes((prev) => prev.filter((item) => item.id !== id));
+  const onUpdate = () => {
+    fetchMovimentacoes();
   };
 
   const handleMonthChange = (value: string) => {
@@ -104,11 +106,12 @@ export const MovimentacaoClient: React.FC = () => {
           </SelectContent>
         </Select>
       </div>
-      <Separator />
+  
       {loading ? (
         <Spinner />
       ) : (
-        <DataTableMovimentacao columns={columns(handleDelete)} data={movimentacoes} />
+        <DataTableMovimentacao columns={columns(onUpdate)} data={movimentacoes} />
+        
       )}
     </>
   );

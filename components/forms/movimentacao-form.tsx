@@ -66,53 +66,53 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
   const [atleta, setAtleta] = useState<MovimentacaoFormValues | null>(null);
 
 
-/*   useEffect(() => {
-    const fetchAtleta = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`/api/atleta/buscar/${id}`); 
-        if (!response.ok) {
-          throw new Error('Erro ao buscar dados');
-        }
-
-        const data = await response.json();
-        const atletaData = data.atleta[0];
-        
-        // Atualize o estado e o formulário
-        setAtleta(atletaData);
-        form.reset({
-          cpf: atletaData.cpf || '',
-          nome: atletaData.nome || '',
-          email: atletaData.email || '',
-          data_nascimento: new Date(atletaData.data_nascimento),
-          data_inicio: new Date(atletaData.data_inicio),
-          setor: atletaData.setor || '',
-          posicao: atletaData.posicao || '',
-          numero: atletaData.numero || 0,
-          altura: atletaData.altura || 0,
-          peso: atletaData.peso || 0,
-          ativo: atletaData.ativo ? 'true' : 'false',
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
-        setLoading(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id !== 'create') {
-      fetchAtleta();
-    }
+  /*   useEffect(() => {
+      const fetchAtleta = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(`/api/atleta/buscar/${id}`); 
+          if (!response.ok) {
+            throw new Error('Erro ao buscar dados');
+          }
   
-  }, []);
- */
+          const data = await response.json();
+          const atletaData = data.atleta[0];
+          
+          // Atualize o estado e o formulário
+          setAtleta(atletaData);
+          form.reset({
+            cpf: atletaData.cpf || '',
+            nome: atletaData.nome || '',
+            email: atletaData.email || '',
+            data_nascimento: new Date(atletaData.data_nascimento),
+            data_inicio: new Date(atletaData.data_inicio),
+            setor: atletaData.setor || '',
+            posicao: atletaData.posicao || '',
+            numero: atletaData.numero || 0,
+            altura: atletaData.altura || 0,
+            peso: atletaData.peso || 0,
+            ativo: atletaData.ativo ? 'true' : 'false',
+          });
+          setLoading(false);
+        } catch (error) {
+          console.error('Erro ao buscar dados:', error);
+          setLoading(false);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      if (id !== 'create') {
+        fetchAtleta();
+      }
+    
+    }, []);
+   */
   const form = useForm<MovimentacaoFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       nome: 'Teste',
-      descricao: 'Tteste Descrição',      
+      descricao: 'Tteste Descrição',
       data_vencimento: new Date(),
       data_pagamento: new Date("1900-01-01"),
       valor: 55.10,
@@ -121,23 +121,23 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
   });
 
   const onSubmit = async (data: MovimentacaoFormValues) => {
-  /*   const finalData = {
-      ...data,
-      data_vencimento: new Date(data.data_vencimento.setHours(0, 0, 0, 0)),
-      data_pagamento: new Date(data.data_pagamento.setHours(0, 0, 0, 0)),
-    };
- */
-   
+    /*   const finalData = {
+        ...data,
+        data_vencimento: new Date(data.data_vencimento.setHours(0, 0, 0, 0)),
+        data_pagamento: new Date(data.data_pagamento.setHours(0, 0, 0, 0)),
+      };
+   */
+
 
     try {
       setLoading(true);
-     if (id === 'create') {  
+      if (id === 'create') {
         const finalData = {
           ...data,
           data_vencimento: new Date(data.data_vencimento.setHours(0, 0, 0, 0)),
-       };
-        
-         const response = await fetch('/api/movimentacao/registrar', {
+        };
+        /* console.log(finalData) */
+        const response = await fetch('/api/movimentacao/registrar', {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -146,7 +146,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
           body: JSON.stringify({ movimentacao: finalData })
         });
 
-        if(response.status == 201){
+        if (response.status == 201) {
           toast({
             title: 'OK',
             description: 'Movimentação Salva'
@@ -154,44 +154,44 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
           router.refresh();
           router.push(`/dashboard/movimentacao`);
 
-        }else{
+        } else {
           toast({
             variant: 'destructive',
             title: 'Movimentação nâo salva',
             description: 'Erro desconhecido'
           });
         }
-      
-       
+
+
       } else {
-       /*  setLoading(true);
-        const response = await fetch(`/api/atleta/atualizar/${id}`, {
-          method: 'PUT',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ atleta: finalData })
-        });
-  
-        
-        if (response.ok) {
-          toast({
-            title: 'OK',
-            description: 'Atleta alterado'
-          });
-          router.refresh();
-          router.push(`/dashboard/atleta`);
-        }else{
-          toast({
-            variant: 'destructive',
-            title: 'Atleta não alterado',
-            description: 'Erro desconhecido'
-          });
-        }
-        setLoading(true); */
-      }
+        /*  setLoading(true);
+         const response = await fetch(`/api/atleta/atualizar/${id}`, {
+           method: 'PUT',
+           credentials: 'include',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({ atleta: finalData })
+         });
    
+         
+         if (response.ok) {
+           toast({
+             title: 'OK',
+             description: 'Atleta alterado'
+           });
+           router.refresh();
+           router.push(`/dashboard/atleta`);
+         }else{
+           toast({
+             variant: 'destructive',
+             title: 'Atleta não alterado',
+             description: 'Erro desconhecido'
+           });
+         }
+         setLoading(true); */
+      }
+
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -204,33 +204,33 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
   };
 
   const onDelete = async () => {
-   /*  try {
-      setLoading(true)
-      const response =  await fetch(`/api/atleta/remover/${id}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });      
-        setLoading(false)    
-        setOpen(false)
-         
-      router.refresh();
-      router.push(`/dashboard/atleta`);
-    } catch (error: any) {
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    } */
+    /*  try {
+       setLoading(true)
+       const response =  await fetch(`/api/atleta/remover/${id}`, {
+         method: 'GET',
+         headers: { 'Content-Type': 'application/json' }
+       });      
+         setLoading(false)    
+         setOpen(false)
+          
+       router.refresh();
+       router.push(`/dashboard/atleta`);
+     } catch (error: any) {
+     } finally {
+       setLoading(false);
+       setOpen(false);
+     } */
   };
 
   return (
     <>
-     <AlertModal
+      <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
         loading={loading}
       />
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {id !== 'create' && (
           <LoadingButton
@@ -250,7 +250,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
           className="w-full space-y-8"
         >
           <div className="gap-8 md:grid md:grid-cols-3">
-          <FormField
+            <FormField
               control={form.control}
               name="nome"
               render={({ field }) => (
@@ -263,7 +263,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="descricao"
               render={({ field }) => (
@@ -339,51 +339,51 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
               )}
             />
 
-            {id !== 'create' && 
-            <FormField
-            control={form.control}
-            name="data_pagamento"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Data de pagamento</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={'outline'}
-                        className={cn(
-                          'w-full pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        {field.value ? (
-                          format(new Date(field.value), 'dd/MM/yyyy', {
-                            locale: ptBR
-                          })
-                        ) : (
-                          <span>Escolha uma data</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      fromYear={1960}
-                      toYear={2024}
-                      captionLayout="dropdown-buttons"
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          }
+            {id !== 'create' &&
+              <FormField
+                control={form.control}
+                name="data_pagamento"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Data de pagamento</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={'outline'}
+                            className={cn(
+                              'w-full pl-3 text-left font-normal',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            {field.value ? (
+                              format(new Date(field.value), 'dd/MM/yyyy', {
+                                locale: ptBR
+                              })
+                            ) : (
+                              <span>Escolha uma data</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          fromYear={1960}
+                          toYear={2024}
+                          captionLayout="dropdown-buttons"
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            }
 
             <FormField
               control={form.control}
@@ -415,11 +415,11 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
               )}
             />
           </div>
-          <LoadingButton  type="submit" loading={loading}>
+          <LoadingButton type="submit" loading={loading}>
             {action}
           </LoadingButton >
         </form>
-      </Form> 
+      </Form>
     </>
   );
 };

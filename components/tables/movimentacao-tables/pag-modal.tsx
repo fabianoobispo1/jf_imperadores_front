@@ -41,11 +41,12 @@ type DataPagamentoFormValues = z.infer<typeof formSchema>;
 
 interface DataPagamentoFormProps {
   id: string;
-  jaPago: string
+  jaPago: string;
+  onUpdate: () => void;
 }
 
 
-export function Pagmodal({id, jaPago}:DataPagamentoFormProps) {
+export function Pagmodal({id, jaPago, onUpdate }:DataPagamentoFormProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   
@@ -59,9 +60,21 @@ export function Pagmodal({id, jaPago}:DataPagamentoFormProps) {
   const onSubmit = async (data: DataPagamentoFormValues) => { 
       setLoading(true);
 
-      console.log(data)
+      const response = await fetch('/api/movimentacao/registrarpagamento', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, data_pagamento: data.data_pagamento })
+      });
+      
 
+
+    if (response.ok) {
+      onUpdate(); 
       router.refresh();
+    }
 
       setLoading(false);    
   };

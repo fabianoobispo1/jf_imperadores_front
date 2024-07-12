@@ -6,21 +6,22 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const {
-      movimentacao
+      id, 
+      data_pagamento
     } = body;
 
-    const novaMovimentacao = await prisma.sFAMovimentacao.create({
+
+    const novaMovimentacao = await prisma.sFAMovimentacao.update({
+      where:{
+        id
+      },
       data: {
-        tipo: movimentacao.tipo,
-        nome: movimentacao.nome,
-        descricao: movimentacao.descricao,
-        data_vencimento: movimentacao.data_vencimento,
-        valor: movimentacao.valor
+        data_pagamento
       },
     });
 
     return NextResponse.json(
-      { message: 'Movimentação cadastrada com sucesso.', movimentacao: novaMovimentacao },
+      { message: 'Movimentação atualizada com sucesso.', movimentacao: novaMovimentacao },
       { status: 201 }
     );
   } catch (error: any) {
