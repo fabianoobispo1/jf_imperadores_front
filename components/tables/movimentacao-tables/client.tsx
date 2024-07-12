@@ -65,7 +65,7 @@ export const MovimentacaoClient: React.FC = () => {
 
   return (
     <>
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between pb-4">
         <Heading
           title={"Movimentações"}
           description="Tela para gerenciar entrada e saida de valores."
@@ -78,8 +78,8 @@ export const MovimentacaoClient: React.FC = () => {
           <Plus className="mr-2 h-4 w-4" /> Adicionar
         </LoadingButton>
       </div>
-      <Separator />
-      <div className="flex gap-4 mb-4">
+      <Separator className='mb-4'/>
+      <div className="flex gap-4 my-4">
         
         <Select onValueChange={handleMonthChange} defaultValue={month.toString()}>
           <SelectTrigger>
