@@ -31,7 +31,7 @@ export default function Header() {
           
         </div>
         <div className="hidden lg:block">
-        <p>JF Imperadores</p>
+        <p className='text-3xl font-bold tracking-tight'>JF Imperadores</p>
         </div>
         
         <div className={cn('block lg:!hidden')}>

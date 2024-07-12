@@ -3,6 +3,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Movimentacoes } from './client';
+import { formatDate } from '@/lib/formaDate';
 
 export const columns = (handleDelete: (id: number) => void): ColumnDef<Movimentacoes>[] => [
    {
@@ -34,15 +35,18 @@ export const columns = (handleDelete: (id: number) => void): ColumnDef<Movimenta
   },
   {
     accessorKey: 'valor',
-    header: 'VALOR'
+    header: 'Valor',
+    cell: info => `R$ ${(info.getValue() as number).toFixed(2)}`, // Cast para number
   },
   {
     accessorKey: 'data_vencimento',
-    header: 'VENCIMENTO'
+    header: 'Data de Vencimento',
+    cell: info => formatDate(info.getValue() as string), // Cast para string
   },
   {
     accessorKey: 'data_pagamento',
-    header: 'PAGAMENTO'
+    header: 'Data de Pagamento',
+    cell: info => formatDate(info.getValue() as string), // Cast para string
   },
   {
     id: 'actions',

@@ -16,13 +16,9 @@ export async function POST(req: NextRequest) {
         nome: movimentacao.nome,
         descricao: movimentacao.descricao,
         data_pagamento: movimentacao.data_pagamento,
-        data_vencimento: movimentacao.data_vencimento,
         valor: movimentacao.valor
       },
     });
-
-    console.log(novaMovimentacao)
-    
 
     return NextResponse.json(
       { message: 'Movimentação cadastrada com sucesso.', movimentacao: novaMovimentacao },

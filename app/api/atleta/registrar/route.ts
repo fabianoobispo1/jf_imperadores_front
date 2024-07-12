@@ -40,18 +40,20 @@ export async function POST(req: NextRequest) {
     });
 
     //envio de email asim que cadastra um atleta com status de ativo
-    if ( atleta.status) {
+   console.log(atleta.ativo)
+    if (atleta.ativo === true) {
       //so descomentar
+      
       const mailerSend = new MailerSend({
         apiKey: process.env.MAILERSEND_API ?? ''
       });
   
       const sentFrom = new Sender("no-reply@jfimperadores.com.br", "Jf Imperadores");
-  
+     
       const recipients = [
         new Recipient(atleta.email, atleta.nome)
       ];
-  
+  console.log(recipients)
       const html = "<div><h1>Titulo</h1> <p>-</p> <p>Uma mensagem motivacional....</p></div>"
       const emailParams = new EmailParams()
         .setFrom(sentFrom)
@@ -61,7 +63,10 @@ export async function POST(req: NextRequest) {
         .setHtml(html)
   
      
-      await mailerSend.email.send(emailParams);
+      await mailerSend.email.send(emailParams) 
+      .then((response) => console.log(response.body))
+      .catch((error) => console.log(error));
+
     }   
 
     //

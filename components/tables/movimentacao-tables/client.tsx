@@ -1,6 +1,6 @@
 'use client';
+
 import { useEffect, useState } from 'react';
-import { DataTable } from '@/components/ui/data-table';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { Plus } from 'lucide-react';
@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { LoadingButton } from '@/components/ui/loading-button';
 import { DataTableMovimentacao } from './data-table-movimentacao';
+import { Spinner } from '@/components/ui/spinner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export type Movimentacoes = {
   id: number;
@@ -16,26 +18,27 @@ export type Movimentacoes = {
   tipo: string;
   valor: number;
   data_vencimento: string;
-  data_pagamento:string;
+  data_pagamento: string;
   created_at: string;
 }
-
 
 export const MovimentacaoClient: React.FC = () => {
   const router = useRouter();
   const [movimentacoes, setMovimentacoes] = useState<Movimentacoes[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
+  const [year, setYear] = useState<number>(new Date().getFullYear());
 
   useEffect(() => {
-    const fetchAtletas = async () => {
+    const fetchMovimentacoes = async () => {
+      setLoading(true);
       try {
-         const response = await fetch('/api/movimentacao/listar');
+        const response = await fetch(`/api/movimentacao/listar?month=${month}&year=${year}`);
         if (!response.ok) {
           throw new Error('Erro ao buscar dados');
         }
-        const data = await response.json();     
-        setMovimentacoes(data.movimentacao); 
-       
+        const data = await response.json();
+        setMovimentacoes(data.movimentacao);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
       } finally {
@@ -43,29 +46,20 @@ export const MovimentacaoClient: React.FC = () => {
       }
     };
 
-    fetchAtletas();
-  }, []);
+    fetchMovimentacoes();
+  }, [month, year]);
 
   const handleDelete = (id: number) => {
-    setMovimentacoes((prevAtletas) => prevAtletas.filter((atleta) => atleta.id !== id));
+    setMovimentacoes((prev) => prev.filter((item) => item.id !== id));
   };
 
-  if (loading) {
-    return(
-      <>
-      <div className="flex items-start justify-between">
-        <Heading
-          title={"Movimentações"}
-          description="Tela para gerenciar entrada e saida de valores."
-        />    
-      </div>
-      <Separator />
-      <div>Carregando...</div> {/* Você pode substituir isso por um spinner ou outra UI de carregamento */}
-      
-      </>
-      
-    ) 
-  }
+  const handleMonthChange = (value: string) => {
+    setMonth(Number(value));
+  };
+
+  const handleYearChange = (value: string) => {
+    setYear(Number(value));
+  };
 
   return (
     <>
@@ -83,12 +77,39 @@ export const MovimentacaoClient: React.FC = () => {
         </LoadingButton>
       </div>
       <Separator />
-      {loading? 
-      <div></div>
-      :
-       <DataTableMovimentacao searchKey="nome" columns={columns(handleDelete)} data={movimentacoes} /> 
-      }
-     
+      <div className="flex gap-4 mb-4">
+        
+        <Select onValueChange={handleMonthChange} defaultValue={month.toString()}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione o mês" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+              <SelectItem key={m} value={m.toString()}>
+                {m.toString().padStart(2, '0')}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select onValueChange={handleYearChange} defaultValue={year.toString()}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione o ano" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((y) => (
+              <SelectItem key={y} value={y.toString()}>
+                {y}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <Separator />
+      {loading ? (
+        <Spinner />
+      ) : (
+        <DataTableMovimentacao columns={columns(handleDelete)} data={movimentacoes} />
+      )}
     </>
   );
 };

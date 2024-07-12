@@ -1,5 +1,4 @@
 'use client';
-
 import {
   ColumnDef,
   flexRender,
@@ -7,7 +6,6 @@ import {
   getFilteredRowModel,
   useReactTable
 } from '@tanstack/react-table';
-
 import {
   Table,
   TableBody,
@@ -16,20 +14,16 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Input } from '../../../components/ui/input';
-import { Button } from '../../../components/ui/button';
 import { ScrollArea, ScrollBar } from '../../../components/ui/scroll-area';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  searchKey: string;
 }
 
 export function DataTableMovimentacao<TData, TValue>({
   columns,
-  data,
-  searchKey
+  data
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -43,14 +37,6 @@ export function DataTableMovimentacao<TData, TValue>({
 
   return (
     <>
-      <Input
-        placeholder={`Procurar por ${searchKey}...`}
-        value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
-        onChange={(event) =>
-          table.getColumn(searchKey)?.setFilterValue(event.target.value)
-        }
-        className="w-full md:max-w-sm"
-      />
       <ScrollArea className="h-[calc(80vh-220px)] rounded-md border">
         <Table className="relative">
           <TableHeader>
@@ -107,24 +93,6 @@ export function DataTableMovimentacao<TData, TValue>({
           {table.getFilteredSelectedRowModel().rows.length} de{' '}
           {table.getFilteredRowModel().rows.length} linha(s) selecionada.
         </div> */}
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Proxima
-          </Button>
-        </div>
       </div>
     </>
   );

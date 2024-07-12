@@ -2,8 +2,18 @@ import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const month = searchParams.get('month');
+  const year = searchParams.get('year');
+
   try {
     const movimentacao = await prisma.sFAMovimentacao.findMany({
+      where: {
+        data_vencimento: {
+          gte: new Date(`${year}-${month}-01`),
+          lt: new Date(`${year}-${String(Number(month) + 1).padStart(2, '0')}-01`),
+        },
+      },
       orderBy: {
         created_at: 'asc'
       }

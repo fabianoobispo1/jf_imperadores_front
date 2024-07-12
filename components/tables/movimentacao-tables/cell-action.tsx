@@ -9,10 +9,11 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 
-import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { Edit, MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Movimentacoes } from './client';
+import { PagamentoModal } from './pagamento-modal';
 
 interface CellActionProps {
   data: Movimentacoes;
@@ -39,6 +40,30 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onDelete }) => {
     setOpen(false)
   };
 
+  const onhandlepagamento = async () => {
+    setLoading(true)
+  /*   const response =  await fetch(`/api/atleta/remover/${data.id}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (response.status === 200) {
+      onDelete(data.id);
+    } */
+  
+    setLoading(false)    
+    setOpen(false)
+  };
+
+  const handleConfirm = (data: string) => {
+    setLoading(true)
+    console.log('Data confirmada:', data);
+
+    // Aqui você pode fazer o que quiser com a data, como enviá-la para uma API
+    setLoading(false)
+    setOpen(false); // Fecha o modal após a confirmação
+  };
+
   return (
     <>
       <AlertModal
@@ -47,6 +72,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onDelete }) => {
         onConfirm={onConfirm}
         loading={loading}
       />
+      <PagamentoModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={handleConfirm}
+        loading={loading}
+        id={data.id}
+        
+      />
+
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -58,9 +92,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onDelete }) => {
           <DropdownMenuLabel>Ações</DropdownMenuLabel>
 
           <DropdownMenuItem  
-            disabled={true}      
-            onClick={() =>{} /* router.push(`/dashboard/atleta/${data.id}`) */}
+            disabled={data.data_pagamento? true : false}
+            onClick={() => setOpen(true)}
           >
+
             <Edit className="mr-2 h-4 w-4" /> Foi Paga
           </DropdownMenuItem>
          {/*  <DropdownMenuItem

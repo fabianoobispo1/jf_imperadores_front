@@ -7,6 +7,7 @@ import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { LoadingButton } from '@/components/ui/loading-button';
+import { Spinner } from '@/components/ui/spinner';
 
 type Atletas = {
   id: number;
@@ -73,7 +74,7 @@ export const AtletaClient: React.FC = () => {
       </div>
       <Separator />
       {loading? 
-      <div></div>
+      <Spinner />
       :
         <DataTable searchKey="nome" columns={columns(handleDelete)} data={atletas} /> 
       }

@@ -6,15 +6,9 @@ const breadcrumbItems = [
 ];
 export default function page() {
   return (
-    <>
-
-      <div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
-        <BreadCrumb items={breadcrumbItems} />
-        <MovimentacaoClient />
-      </div>      
-    </>
+    <div className="flex-1 space-y-4  p-4 pt-6 md:p-8">
+      <BreadCrumb items={breadcrumbItems} />
+      <MovimentacaoClient />
+    </div>
   );
 }
-
-
-
