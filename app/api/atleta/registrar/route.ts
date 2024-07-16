@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         new Recipient(atleta.email, atleta.nome)
       ];
   console.log(recipients)
-      const html = "<div><h1>Titulo</h1> <p>-</p> <p>Uma mensagem motivacional....</p></div>"
+      const html = "<div><h1>Titulo Mensagem</h1> <p>-</p> <p>Uma mensagem motivacional....</p></div>"
       const emailParams = new EmailParams()
         .setFrom(sentFrom)
         .setTo(recipients)

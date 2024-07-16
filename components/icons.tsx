@@ -30,7 +30,8 @@ import {
   UserX2Icon,
   X,
   BookOpenCheck,
-  CircleDollarSign
+  CircleDollarSign,
+  Coins
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -144,5 +145,6 @@ export const Icons = {
   twitter: Twitter,
   check: Check,
   bookCheck: BookOpenCheck,
-  moeda: CircleDollarSign
+  moeda: CircleDollarSign,
+  coins: Coins
 };
