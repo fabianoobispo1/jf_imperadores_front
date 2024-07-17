@@ -145,7 +145,7 @@ export default function page() {
                   <Overview />
                 </CardContent>
               </Card> */}
-              <Card className="col-span-4 md:col-span-4">
+              <Card className="col-span-4 md:col-span-4 bg-transparent">
                 <CardHeader>
                   <CardTitle>Lista de sugestões</CardTitle>
                   <CardDescription>                    
