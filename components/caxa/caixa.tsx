@@ -17,6 +17,7 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { useEffect, useState } from 'react';
+import { Skeleton } from '../ui/skeleton';
 
 /* import { columns } from './columns'; */
 export type Caixa = {
@@ -37,6 +38,7 @@ export const Caixa: React.FC = () => {
   const [totalSaidaPago, setTotalSaidaPago] = useState(0);
   const [totalEntrada, setTotalEntrada] = useState(0);
   const [TotalEntradaPago, setTotalEntradaPago] = useState(0);
+  const [totalCaixa, setTotalCaixa] = useState(0);
 
   const fetchCaixa = async () => {
     setLoading(true);
@@ -54,6 +56,7 @@ export const Caixa: React.FC = () => {
       setTotalSaidaPago(data.caixa.totalSaidaPago);
       setTotalEntrada(data.caixa.totalEntrada);
       setTotalEntradaPago(data.caixa.totalEntradaPago);
+      setTotalCaixa(data.caixa.totalCaixa)
 
       console.log(caixa);
     } catch (error) {
@@ -81,8 +84,44 @@ export const Caixa: React.FC = () => {
       </div>
       <Separator />
 
-      <div className="grid gap-4 pt-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 py-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-transparent">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Caixa
+            </CardTitle>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="h-4 w-4 text-muted-foreground"
+            >
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {loading ?
+                <Skeleton className="h-5 w-[150px]" />
+                :
+                'R$ ' + totalCaixa.toFixed(2)
+              }
+            </div>
+            {/*  <p className="text-xs text-muted-foreground">
+              +20.1% from last month
+            </p> */}
+          </CardContent>
+        </Card>
+      </div>
+      <Separator />
+
+      <p className='py-2'>Totalizadores mês atual </p>
+      <div className="grid gap-4 pt-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total entrada pago
@@ -102,7 +141,11 @@ export const Caixa: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              R$ {TotalEntradaPago.toFixed(2)}
+              {loading ?
+                <Skeleton className="h-5 w-[150px]" />
+                :
+                'R$ ' + TotalEntradaPago.toFixed(2)
+              }
             </div>
             {/*  <p className="text-xs text-muted-foreground">
               +20.1% from last month
@@ -129,7 +172,11 @@ export const Caixa: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              R$ {totalEntrada.toFixed(2)}
+              {loading ?
+                <Skeleton className="h-5 w-[150px]" />
+                :
+                'R$ ' + totalEntrada.toFixed(2)
+              }
             </div>
             {/* <p className="text-xs text-muted-foreground">
               +180.1% from last month
@@ -156,7 +203,11 @@ export const Caixa: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              R$ {totalSaidaPago.toFixed(2)}
+              {loading ?
+                <Skeleton className="h-5 w-[150px]" />
+                :
+                'R$ ' + totalSaidaPago.toFixed(2)
+              }
             </div>
             {/* <p className="text-xs text-muted-foreground">
               +19% from last month
@@ -180,8 +231,13 @@ export const Caixa: React.FC = () => {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ {totalSaida.toFixed(2)}</div>
-       {/*      <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold">
+              {loading ?
+                <Skeleton className="h-5 w-[150px]" />
+                :
+                'R$ ' + totalSaida.toFixed(2)
+              }</div>
+            {/*      <p className="text-xs text-muted-foreground">
               +201 since last hour
             </p> */}
           </CardContent>

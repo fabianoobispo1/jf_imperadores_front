@@ -19,10 +19,19 @@ export async function GET(req: NextRequest) {
       }
     });
 
+    const totalCaixa = await prisma.sFACaixa.aggregate({
+      _sum: {
+        valor: true,
+      },
+    });
+  
+ 
+
 
 
    const  totalSaida = movimentacao
   .filter(movimentacao => movimentacao.tipo === 'Saida')
+  .filter(movimentacao => movimentacao.data_pagamento == null)
   .reduce((acc, movimentacao) => acc + (movimentacao.valor ?? 0), 0);
 
   const totalSaidaPago = movimentacao
@@ -32,6 +41,7 @@ export async function GET(req: NextRequest) {
 
   const totalEntrada = movimentacao
   .filter(movimentacao => movimentacao.tipo === 'Entrada')
+  .filter(movimentacao => movimentacao.data_pagamento == null)
   .reduce((acc, movimentacao) => acc + (movimentacao.valor ?? 0), 0);
 
   const totalEntradaPago = movimentacao
@@ -48,6 +58,7 @@ export async function GET(req: NextRequest) {
        totalSaidaPago: totalSaidaPago,
        totalEntrada: totalEntrada,
        totalEntradaPago: totalEntradaPago,
+       totalCaixa: totalCaixa._sum.valor
       } },
       { status: 200 }
     );

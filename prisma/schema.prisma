@@ -135,3 +135,13 @@ model SFAMovimentacao {
 
   @@map("sfa_movimentacao")
 }
+
+model SFACaixa {
+  id                  String    @id @default(uuid())
+  valor               Float?
+  data_mes_referencia DateTime?  
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @default(now())
+
+  @@map("sfa_caixa")
+}
