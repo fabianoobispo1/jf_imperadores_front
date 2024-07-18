@@ -111,11 +111,11 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
   const form = useForm<MovimentacaoFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nome: 'Teste',
-      descricao: 'Tteste Descrição',
+      nome: '',
+      descricao: '',
       data_vencimento: new Date(),
       data_pagamento: new Date("1900-01-01"),
-      valor: 55.10,
+      valor: 0,
       tipo: 'Entrada'
     }
   });

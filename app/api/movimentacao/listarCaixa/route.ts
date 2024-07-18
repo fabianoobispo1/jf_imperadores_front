@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
   .filter(movimentacao => movimentacao.tipo === 'Entrada')
   .reduce((acc, movimentacao) => acc + (movimentacao.valor ?? 0), 0);
 
-  const TotalEntradaPago = movimentacao
+  const totalEntradaPago = movimentacao
   .filter(movimentacao => movimentacao.tipo === 'Entrada')
   .filter(movimentacao => movimentacao.data_pagamento !== null)
   .reduce((acc, movimentacao) => acc + (movimentacao.valor ?? 0), 0);
@@ -43,11 +43,11 @@ export async function GET(req: NextRequest) {
 
 
     return NextResponse.json(
-      { message: 'Movimentação recuperada com sucesso.', Caixa: {
+      { message: 'Movimentação recuperada com sucesso.', caixa: {
        totalSaida: totalSaida,
        totalSaidaPago: totalSaidaPago,
        totalEntrada: totalEntrada,
-       TotalEntradaPago: TotalEntradaPago,
+       totalEntradaPago: totalEntradaPago,
       } },
       { status: 200 }
     );

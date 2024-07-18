@@ -31,7 +31,9 @@ import {
   X,
   BookOpenCheck,
   CircleDollarSign,
-  Coins
+  Coins,
+  ArrowBigUpDash,
+  ArrowBigDownDash
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -146,5 +148,7 @@ export const Icons = {
   check: Check,
   bookCheck: BookOpenCheck,
   moeda: CircleDollarSign,
-  coins: Coins
+  coins: Coins,
+  setaUp: ArrowBigUpDash,
+  setaDown: ArrowBigDownDash
 };

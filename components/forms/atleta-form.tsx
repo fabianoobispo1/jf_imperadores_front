@@ -116,16 +116,16 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
   const form = useForm<AtletaFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      cpf: '12345678910',
-      nome: 'Fabiano Bispo',
-      email: 'fbc623@gmail.com',
+      cpf: '',
+      nome: '',
+      email: '',
       data_nascimento: new Date(),
       data_inicio: new Date(),
-      setor: 'ataque',
-      posicao: 'OL',
-      numero: 73,
-      altura: 1.90,
-      peso: 160,
+      setor: '',
+      posicao: '',
+      numero: 0,
+      altura: 0,
+      peso: 0,
       ativo: 'true'
     }
   });

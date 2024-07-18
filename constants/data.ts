@@ -147,12 +147,12 @@ export const navItems: NavItem[] = [
     icon: 'dashboard',
     label: 'Dashboard'
   },
-/*   {
+  {
     title: 'Caixa',
     href: '/dashboard/caixa',
     icon: 'coins',
     label: 'Caixa'
-  }, */
+  },
   {
     title: 'Movimentação',
     href: '/dashboard/movimentacao',

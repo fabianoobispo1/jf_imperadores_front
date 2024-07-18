@@ -4,10 +4,11 @@ import { CellAction } from './cell-action';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Movimentacoes } from './client';
 import { formatDate } from '@/lib/formaDate';
+import { Icons } from '@/components/icons';
 
 export const columns = (onUpdate: () => void): ColumnDef<Movimentacoes>[] => [
-   {
-    id: 'select',
+/*    {
+    id: 'select', */
     /* header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
@@ -22,8 +23,14 @@ export const columns = (onUpdate: () => void): ColumnDef<Movimentacoes>[] => [
         aria-label="selecionar linha"
       />
     ), */
-    enableSorting: false,
+/*     enableSorting: false,
     enableHiding: false
+  }, */
+  {
+    accessorKey: 'tipo',
+    header: 'Tipo',
+    cell: info => info.getValue() == 'Entrada'?  <Icons.setaDown color='green'/>: <Icons.setaUp color='red'/>, // Cast para number
+    size: 50,
   },
   {
     accessorKey: 'nome',
