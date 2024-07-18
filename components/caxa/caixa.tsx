@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/card';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 /* import { columns } from './columns'; */
 export type Caixa = {
@@ -70,6 +71,15 @@ export const Caixa: React.FC = () => {
     fetchCaixa();
   }, [month, year]);
 
+  const handleMonthChange = (value: string) => {
+    setMonth(Number(value));
+  };
+
+  const handleYearChange = (value: string) => {
+    setYear(Number(value));
+  };
+
+
   return (
     <>
       <div className="flex items-start justify-between">
@@ -120,6 +130,34 @@ export const Caixa: React.FC = () => {
       <Separator />
 
       <p className='py-2'>Totalizadores mês atual </p>
+      <div className="flex gap-4 my-4">
+        
+        <Select onValueChange={handleMonthChange} defaultValue={month.toString()}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione o mês" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+              <SelectItem key={m} value={m.toString()}>
+                {m.toString().padStart(2, '0')}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select onValueChange={handleYearChange} defaultValue={year.toString()}>
+          <SelectTrigger>
+            <SelectValue placeholder="Selecione o ano" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map((y) => (
+              <SelectItem key={y} value={y.toString()}>
+                {y}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+  
       <div className="grid gap-4 pt-4 md:grid-cols-2 lg:grid-cols-4">
         <Card >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
