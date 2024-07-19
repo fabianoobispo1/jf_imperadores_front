@@ -9,10 +9,10 @@ export async function GET(
     const { key } = params;
 
     console.log(key)
-    utapi.deleteFiles(key)
-
+    const response = await utapi.deleteFiles(key)
+console.log(response)
     return NextResponse.json(
-        { message: 'Imagem Removida.' },
+        { message: response },
         { status: 200 }
       );
 
