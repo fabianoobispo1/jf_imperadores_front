@@ -71,17 +71,31 @@ export default function FileUpload({
           <UploadDropzone<OurFileRouter>
             className="ut-label:text-sm ut-allowed-content:ut-uploading:text-red-300 py-2 dark:bg-zinc-800"
             endpoint="imageUploader"
-            config={{ mode: 'auto' }}
+            config={{ mode: 'auto' }}        
             content={{
+              label: 'Selecione as fotos',
+              
               allowedContent({ isUploading }) {
-                if (isUploading)
+             
+                if (isUploading){
                   return (
                     <>
                       <p className="mt-2 animate-pulse text-sm text-slate-400">
-                        arregando...
+                        Carregando...
                       </p>
                     </>
                   );
+                }else{
+                  return (
+                    <>
+                      <p className="">
+                      Imagens até 4MB, max 3
+                      </p>
+                    </>
+                  );
+                }
+
+                  
               }
             }}
             onClientUploadComplete={(res) => {

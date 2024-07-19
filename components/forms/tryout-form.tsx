@@ -83,8 +83,9 @@ export const TryoutForm: React.FC = () => {
   const onSubmit = async (data: ProductFormValues) => {
 
       setLoading(true);
-      console.log(data)
-   
+      console.log(data.imgUrl[0].key)
+      console.log(data.imgUrl[0].fileKey)
+     
       setLoading(false);
 
   };
