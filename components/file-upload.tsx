@@ -1,6 +1,6 @@
 'use client';
-import { OurFileRouter } from '@/app/api/uploadthing/core';
-import { UploadDropzone } from '@uploadthing/react';
+import { OurFileRouter} from '@/app/api/uploadthing/core';
+import { UploadDropzone  } from '@uploadthing/react';
 import { Trash } from 'lucide-react';
 import Image from 'next/image';
 import { UploadFileResponse } from 'uploadthing/client';
@@ -20,11 +20,19 @@ export default function FileUpload({
   value
 }: ImageUploadProps) {
   const { toast } = useToast();
+
   const onDeleteFile = (key: string) => {
     const files = value;
     let filteredFiles = files.filter((item) => item.key !== key);
+
+    fetch(`/api/uploadthing/delete/${key}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
     onRemove(filteredFiles);
   };
+
   const onUpdateFile = (newFiles: UploadFileResponse[]) => {
     onChange([...value, ...newFiles]);
   };
@@ -70,7 +78,7 @@ export default function FileUpload({
                   return (
                     <>
                       <p className="mt-2 animate-pulse text-sm text-slate-400">
-                        Img Uploading...
+                        arregando...
                       </p>
                     </>
                   );

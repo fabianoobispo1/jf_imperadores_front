@@ -1,4 +1,5 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
+import { UTApi } from "uploadthing/server";
 
 const f = createUploadthing();
 
@@ -9,7 +10,7 @@ export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   imageUploader: f({ image: { maxFileSize: '4MB', maxFileCount: 3 } })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({}) => {
+    .middleware(async ({ }) => {
       // This code runs on your server before upload
       const user = await auth();
 
@@ -22,6 +23,9 @@ export const ourFileRouter = {
     .onUploadComplete(async () => {
       // This code RUNS ON YOUR SERVER after upload
     })
+
 } satisfies FileRouter;
+
+export const utapi = new UTApi();
 
 export type OurFileRouter = typeof ourFileRouter;
