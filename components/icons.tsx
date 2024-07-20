@@ -33,7 +33,8 @@ import {
   CircleDollarSign,
   Coins,
   ArrowBigUpDash,
-  ArrowBigDownDash
+  ArrowBigDownDash,
+  Dumbbell
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -150,5 +151,7 @@ export const Icons = {
   moeda: CircleDollarSign,
   coins: Coins,
   setaUp: ArrowBigUpDash,
-  setaDown: ArrowBigDownDash
+  setaDown: ArrowBigDownDash,
+  anilha: Dumbbell
 };
+
