@@ -145,3 +145,17 @@ model SFACaixa {
 
   @@map("sfa_caixa")
 }
+
+
+model CSExpenses {
+  id                    String    @id @default(uuid())
+  title                 String  
+  description           String?
+  date                  DateTime
+  amount                Decimal @db.Decimal(10,2)
+  paymentType           Int
+  created_at            DateTime  @default(now())
+  updated_at            DateTime  @default(now())
+
+  @@map("cs_expenses")
+}
