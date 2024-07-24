@@ -24,9 +24,10 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Loader2 } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
+import { Spinner } from '../ui/spinner';
 
 export const PerfilUser: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loadingFinal, setLoadingFinal] = useState(false);
   const [bloqueioProvider, setBloqueioProvider] = useState(false);
   const [umaVez, setUmaVez] = useState(true);
@@ -51,10 +52,13 @@ export const PerfilUser: React.FC = () => {
 
         const dataresponse = await response.json();
 
+        if(dataresponse.user.img_url === null){
+          dataresponse.user.img_url =''
+        }
+
         dataresponse.user.data_nascimento = adjustToLocalTimezone(
           dataresponse.user.data_nascimento
         ); // Ajustar a data ao fuso horário local
-
         form.reset(dataresponse.user);
         setLoading(false);
       };
@@ -68,7 +72,8 @@ export const PerfilUser: React.FC = () => {
   const defaultValues = {
     nome: '',
     email: '',
-    data_nascimento: new Date()
+    data_nascimento: new Date(),
+    img_url: ''
   };
 
   const form = useForm<PerfilFormValues>({
@@ -124,12 +129,7 @@ export const PerfilUser: React.FC = () => {
       <Separator />
 
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+       < Spinner />
       ) : (
         <Form {...form}>
           <form
@@ -214,6 +214,23 @@ export const PerfilUser: React.FC = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="img_url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Imagem link</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
             </div>
             <Button disabled={loadingFinal} className="ml-auto" type="submit">
               Salvar

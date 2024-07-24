@@ -43,7 +43,8 @@ export const perfilSchema = z.object({
   email: z.string().email({ message: 'Digite um email valido.' }),
   data_nascimento: z.date({
     required_error: 'campo requerido.'
-  })
+  }),
+  img_url: z.string()
 });
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;

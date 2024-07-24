@@ -21,6 +21,7 @@ model SFBUser {
   password_hash   String
   tipo            Role              @default(MEMBER)
   provider        String            @default("Credentials")
+  img_url         String? 
   sfbTodo         SFBTodo[]
   sfbCartao       SFBCartao[]
   sfbConta        SFBConta[]
@@ -110,6 +111,7 @@ model SFAUser {
   password_hash   String
   administrador   Boolean   @default(false)
   data_nascimento DateTime?
+  img_url         String? 
   created_at      DateTime  @default(now())
   provider        String    @default("Credentials")
   sfaTodo         SFATodo[]

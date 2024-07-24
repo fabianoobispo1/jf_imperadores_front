@@ -58,6 +58,7 @@ const authConfig = {
           administrador: usuario.administrador,
           provider: usuario.provider
         };
+        
         if (user) {
           // Any object returned will be saved in `user` property of the JWT
           return user;
@@ -78,6 +79,8 @@ const authConfig = {
       if (account?.provider === 'github' || account?.provider === 'google') {
         const provider = account?.provider;
         const email = profile?.email;
+        const img_url = profile?.image;
+        console.log(img_url)
         if (email) {
           let usuario = await prisma.sFAUser.findUnique({
             where: { email }
@@ -121,6 +124,7 @@ const authConfig = {
       return token;
     },
     async session({ session, token }) {
+
       if (token?.id) {
         session.user.id = String(token.id);
         session.user.administrador = token.administrador;
