@@ -79,7 +79,7 @@ const authConfig = {
       if (account?.provider === 'github' || account?.provider === 'google') {
         const provider = account?.provider;
         const email = profile?.email;
-        const img_url = profile?.image;
+        const img_url = profile?.picture;
         console.log(img_url)
         if (email) {
           let usuario = await prisma.sFAUser.findUnique({
@@ -102,7 +102,8 @@ const authConfig = {
               },
               data: {
                 password_hash: uuidv4(),
-                provider
+                provider,
+                img_url
               }
             });
           }
