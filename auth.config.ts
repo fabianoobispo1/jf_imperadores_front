@@ -79,8 +79,10 @@ const authConfig = {
       if (account?.provider === 'github' || account?.provider === 'google') {
         const provider = account?.provider;
         const email = profile?.email;
-        const img_url = profile?.picture;
-        console.log(img_url)
+        let img_url
+        
+   
+
         if (email) {
           let usuario = await prisma.sFAUser.findUnique({
             where: { email }
@@ -96,6 +98,17 @@ const authConfig = {
               }
             });
           } else {
+            if (usuario.img_url === ''|| usuario.img_url === null || usuario.img_url === undefined ){
+
+              if (account?.provider === 'github' ){
+                img_url = profile?.picture;
+              }else{
+                img_url = profile?.avatar_url;
+              }
+            }else{
+              img_url = ''
+            }
+            
             await prisma.sFAUser.update({
               where: {
                 email
