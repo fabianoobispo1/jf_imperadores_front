@@ -94,7 +94,8 @@ const authConfig = {
                 email,
                 nome: String(profile.name),
                 password_hash: uuidv4(),
-                provider
+                provider,
+                img_url: profile?.picture
               }
             });
           } else {

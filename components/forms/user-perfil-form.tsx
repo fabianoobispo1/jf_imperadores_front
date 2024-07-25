@@ -25,13 +25,17 @@ import { ptBR } from 'date-fns/locale';
 import { Loader2 } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { Spinner } from '../ui/spinner';
+import { Avatar, AvatarImage } from '../ui/avatar';
+import { AvatarFallback } from '@radix-ui/react-avatar';
+
+import AvatarUpload from '../avatar-upload';
 
 export const PerfilUser: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [loadingFinal, setLoadingFinal] = useState(false);
   const [bloqueioProvider, setBloqueioProvider] = useState(false);
   const [umaVez, setUmaVez] = useState(true);
-
+  const [imagemAvatar, setImagemAvatar] = useState('')
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -52,10 +56,11 @@ export const PerfilUser: React.FC = () => {
 
         const dataresponse = await response.json();
 
-        if(dataresponse.user.img_url === null){
-          dataresponse.user.img_url =''
+        dataresponse.user.img_url = [{fileUrl: dataresponse.user.img_url}]
+/*         if (dataresponse.user.img_url === null) {
+          dataresponse.user.img_url = ''
         }
-
+        setImagemAvatar(dataresponse.user.img_url) */
         dataresponse.user.data_nascimento = adjustToLocalTimezone(
           dataresponse.user.data_nascimento
         ); // Ajustar a data ao fuso horário local
@@ -73,7 +78,7 @@ export const PerfilUser: React.FC = () => {
     nome: '',
     email: '',
     data_nascimento: new Date(),
-    img_url: ''
+    img_url: []
   };
 
   const form = useForm<PerfilFormValues>({
@@ -129,7 +134,7 @@ export const PerfilUser: React.FC = () => {
       <Separator />
 
       {loading ? (
-       < Spinner />
+        < Spinner />
       ) : (
         <Form {...form}>
           <form
@@ -167,6 +172,32 @@ export const PerfilUser: React.FC = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="img_url"
+                render={({ field }) => (
+                  <FormItem>
+
+              <AvatarUpload
+                    onChange={field.onChange}
+                    value={field.value}
+                    onRemove={field.onChange}
+                  />
+
+                {/* <Avatar className="h-32 w-32 mt-4">
+                  <AvatarImage
+                    src={field.value}
+                    alt={field.value}
+                  />
+                  <AvatarFallback>{'Fabiano'}</AvatarFallback>
+                </Avatar> */}
+             
+
+                  </FormItem>
+                )}
+                />
+
+              
             </div>
 
             <div className="gap-4 md:grid md:grid-cols-3">
@@ -214,7 +245,7 @@ export const PerfilUser: React.FC = () => {
                   </FormItem>
                 )}
               />
-              <FormField
+             {/*  <FormField
                 control={form.control}
                 name="img_url"
                 render={({ field }) => (
@@ -229,7 +260,7 @@ export const PerfilUser: React.FC = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
             </div>
             <Button disabled={loadingFinal} className="ml-auto" type="submit">
@@ -237,7 +268,11 @@ export const PerfilUser: React.FC = () => {
             </Button>
           </form>
         </Form>
+
+
       )}
+
+
     </>
   );
 };

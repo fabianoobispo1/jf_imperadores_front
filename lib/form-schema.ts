@@ -36,6 +36,17 @@ export const profileSchema = z.object({
   )
 });
 
+const ImgSchema = z.object({
+  fileName: z.string(),
+  name: z.string(),
+  fileSize: z.number(),
+  size: z.number(),
+  fileKey: z.string(),
+  key: z.string(),
+  fileUrl: z.string(),
+  url: z.string()
+});
+
 export const perfilSchema = z.object({
   id: z.string(),
   administrador: z.boolean(),
@@ -44,8 +55,12 @@ export const perfilSchema = z.object({
   data_nascimento: z.date({
     required_error: 'campo requerido.'
   }),
-  img_url: z.string()
+  img_url: z
+  .array(ImgSchema) 
+  .max(1)
 });
+
+
 
 export type ProfileFormValues = z.infer<typeof profileSchema>;
 export type PerfilFormValues = z.infer<typeof perfilSchema>;
