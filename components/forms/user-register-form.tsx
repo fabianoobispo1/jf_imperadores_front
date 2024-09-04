@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useToast } from '../../components/ui/use-toast';
 import { LoadingButton } from '../ui/loading-button';
+import axios from "axios";
 
 const formSchema = z
   .object({
@@ -47,17 +48,40 @@ export default function UserRegisterForm() {
 
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
-    const response = await fetch('/api/usuario/registrar', {
+/////
+
+const body =
+        '{"nome": "' +
+        data.nome +
+        '","email": "' +
+        data.email +
+        '",  "password": "' +
+        data.password +
+        '" }';
+        const requisicaoApi = {
+          endpoint: "/sfa/usuario/adicionar",
+          method: "POST",
+          body: body,
+          isprivate: "false",
+        };
+        const response = await axios.post("/api/apiexterna", requisicaoApi);
+
+
+////
+
+
+   /*  const response = await fetch('/api/usuario/registrar', {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    });
+    }); */
     setLoading(false);
+    console.log(response.data)
 
-    if (response.status == 409) {
+    /* if (response.status == 409) {
       toast({
         title: 'Erro',
         variant: 'destructive',
@@ -77,7 +101,7 @@ export default function UserRegisterForm() {
         description: 'Erro interno'
       });
       console.log(response);
-    }
+    } */
   };
 
   return (
