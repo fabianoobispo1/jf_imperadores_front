@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
       "Content-Type": "application/json",
     };
   }
-
   let responseapi;
   if (method == "GET") {
     try {
