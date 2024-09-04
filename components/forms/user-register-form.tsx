@@ -49,7 +49,7 @@ export default function UserRegisterForm() {
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
 /////
-
+try {
 const body =
         '{"nome": "' +
         data.nome +
@@ -80,7 +80,10 @@ const body =
     }); */
     setLoading(false);
     console.log(response.data)
+  } catch (error: any) {
 
+    console.log('❗'+error)
+  }
     /* if (response.status == 409) {
       toast({
         title: 'Erro',
