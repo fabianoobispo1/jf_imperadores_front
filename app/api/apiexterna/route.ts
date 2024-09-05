@@ -99,11 +99,10 @@ export async function POST(request: NextRequest) {
       const responseBody = await responseapi.json();
       console.log(responseapi.status);
   
-      if (responseapi.status == 200 || responseapi.status == 201) {
-        console.log(responseBody);
+      if (responseapi) {       
         return NextResponse.json(
           { message: responseBody, success: true },
-          { status: 200 },
+          { status: responseapi.status },
         );
       } else {
         return NextResponse.json(
