@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "start": "next start",
+    "start": "next start -p 3001",
     "lint": "next lint",
     "format": "prettier . --write",
     "postinstall": "prisma generate",
