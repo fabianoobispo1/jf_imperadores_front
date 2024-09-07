@@ -9,12 +9,12 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useToast } from '../../components/ui/use-toast';
 import { LoadingButton } from '../ui/loading-button';
-import axios from 'axios';
 
 const formSchema = z
   .object({
@@ -31,6 +31,7 @@ const formSchema = z
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserRegisterForm() {
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const defaultValues = {
@@ -46,47 +47,36 @@ export default function UserRegisterForm() {
 
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
-    try {
-      const body =
-        '{"nome": "' +
-        data.nome +
-        '","email": "' +
-        data.email +
-        '",  "password": "' +
-        data.password +
-        '" }';
-      const requisicaoApi = {
-        endpoint: '/sfa/usuario/adicionar',
-        method: 'POST',
-        body: body,
-        isprivate: 'false'
-      };
-      const response = await axios.post('/api/apiexterna', requisicaoApi);
-      if (response.status == 201) {
-        toast({
-          title: 'ok',
-          description: 'Cadastro realizado.'
-        });
-        window.location.href = '/';
-        setLoading(false);
-      }
-    } catch (error: any) {
-      if (axios.isAxiosError(error) && error.response) {
-        const status = error.response.status;
-        const message = error.response.data?.message || 'Erro desconhecido';
-        toast({
-          title: 'Erro',
-          variant: 'destructive',
-          description: status + ' - ' + message.message
-        });
-      } else {
-        toast({
-          title: 'Erro',
-          variant: 'destructive',
-          description: '500 - Erro interno'
-        });
-      }
-      setLoading(false);
+    const response = await fetch('/api/usuario/registrar', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    setLoading(false);
+
+    if (response.status == 409) {
+      toast({
+        title: 'Erro',
+        variant: 'destructive',
+        description: 'Email já cadastrado.'
+      });
+    } else if (response.status == 201) {
+      toast({
+        title: 'ok',
+
+        description: 'Cadastro realizado.'
+      });
+      window.location.href = '/';
+    } else {
+      toast({
+        title: 'Erro',
+        variant: 'destructive',
+        description: 'Erro interno'
+      });
+      console.log(response);
     }
   };
 
