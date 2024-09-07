@@ -33,8 +33,8 @@ export default function AuthenticationModal() {
             </h1>
             <p className="text-sm text-muted-foreground">
               {button == 'Login'
-                ? 'Digite seu e-mail abaixo para criar sua conta'
-                : 'Digite seu e-mail abaixo para realizar login'}
+                ? 'Digite seu e-mail abaixo para criar sua conta.'
+                : 'Digite seu e-mail abaixo para realizar login.'}
             </p>
           </div>
           {button == 'Login' ? <UserRegisterForm /> : <UserAuthForm />}
