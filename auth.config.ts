@@ -71,6 +71,7 @@ const authConfig = {
       }
     })
   ],
+  trustHost: true,
   pages: {
     signIn: '/' //sigin page
   },
