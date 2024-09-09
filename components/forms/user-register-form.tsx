@@ -15,6 +15,8 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useToast } from '../../components/ui/use-toast';
 import { LoadingButton } from '../ui/loading-button';
+import axios from 'axios';
+
 
 const formSchema = z
   .object({
@@ -24,14 +26,14 @@ const formSchema = z
     confirmPassword: z.string().min(8, { message: 'Senha obrigatoria, min 8' })
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: "As senhas não coecindem",
     path: ['confirmPassword']
   });
 
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserRegisterForm() {
-  const searchParams = useSearchParams();
+
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const defaultValues = {
@@ -47,22 +49,64 @@ export default function UserRegisterForm() {
 
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
-    const response = await fetch('/api/usuario/registrar', {
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/adicionar`,
+        {
+          nome: data.nome,
+          email: data.email,
+          password: data.password,
+          img_url: '',
+          provider: 'PROVIDER'
+        }
+      );
+
+    if (response.status == 201 ){
+      toast({
+        title: 'ok',
+        description: 'Cadastro realizado. Direcionando ....'
+      });
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
+    }
+    } catch (error) {
+      // Verifica se o erro é do Axios
+      if (axios.isAxiosError(error)) {
+        // Se o backend enviar uma mensagem de erro customizada, podemos acessá-la
+        const message =
+          error.response?.data?.message || 'Ocorreu um erro inesperado.';
+
+        const codStatus = error.response?.status;
+        // Aqui você pode definir uma lógica para exibir a mensagem para o usuário
+
+        toast({
+          title: 'Erro',
+          variant: 'destructive',
+          description: codStatus + ' - ' + message
+        });
+      } else {
+        // Tratamento de outros tipos de erros que não sejam do Axios
+        toast({
+          title: 'Erro',
+          variant: 'destructive',
+          description: 'Erro inesperado. Tente novamente mais tarde.'
+        });
+      }
+    }
+
+    /*     const response = await fetch('/api/usuario/registrar', {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    });
+    }); */
     setLoading(false);
 
-    if (response.status == 409) {
-      toast({
-        title: 'Erro',
-        variant: 'destructive',
-        description: 'Email já cadastrado.'
-      });
+    /*     
     } else if (response.status == 201) {
       toast({
         title: 'ok',
@@ -70,14 +114,7 @@ export default function UserRegisterForm() {
         description: 'Cadastro realizado.'
       });
       window.location.href = '/';
-    } else {
-      toast({
-        title: 'Erro',
-        variant: 'destructive',
-        description: 'Erro interno'
-      });
-      console.log(response);
-    }
+    */
   };
 
   return (

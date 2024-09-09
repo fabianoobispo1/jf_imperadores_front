@@ -42,18 +42,53 @@ export default function UserAuthForm() {
 
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true);
-    const response = await fetch('/api/usuario/verificarlogin', {
+    console.log(data)
+
+    try {
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (result?.error) {
+        console.log(result);
+        toast({
+          title: 'Error',
+          variant: 'destructive',
+          description: 'Erro desconhecido'
+        });
+      } else {
+        setLoading(false);
+        window.location.href = result?.url ?? '/dashboard';
+      }
+
+
+      // Se houver um erro, ele estará no campo `error` do result
+      if (result?.error) {
+        console.error('Erro ao fazer login:', result.error);
+        alert(`Erro ao fazer login: ${result.error}`); // Mostra a mensagem do erro para o usuário
+      } else if (result?.ok) {
+        console.log('Login bem-sucedido', result);
+        // Redirecione ou execute ações adicionais
+      }
+    } catch (error: any) {
+      console.error('Erro inesperado durante o login:', error);
+      alert(`Erro inesperado: ${error.message || 'Erro desconhecido'}`);
+    }
+
+  /*   const response = await fetch('/api/usuario/verificarlogin', {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    });
+    }); */
 
-    const dataresponse = await response.json();
+    /* const dataresponse = await response.json(); */
 
-    if (response.status != 201) {
+   /*  if (response.status != 201) {
       toast({
         title: 'Erro',
         variant: 'destructive',
@@ -81,7 +116,9 @@ export default function UserAuthForm() {
         window.location.href = result?.url ?? '/dashboard';
       }
       setLoading(false);
-    }
+    } */
+
+      setLoading(false);
   };
 
   return (

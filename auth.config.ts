@@ -2,9 +2,16 @@ import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
-import prisma from './lib/prisma';
-import { v4 as uuidv4 } from 'uuid';
-import { compare } from 'bcryptjs';
+
+import https from 'https';
+import fetch from 'node-fetch';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_MINHA_BASE; // Base URL of your external API
+
+// Crie um agente HTTPS que ignora certificados autoassinados
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false
+});
 
 const authConfig = {
   providers: [
@@ -34,39 +41,56 @@ const authConfig = {
       },
 
       async authorize(credentials, req) {
-        let email;
-        if (credentials?.email) {
-          email = credentials?.email as string;
-        } else {
-          return null;
-        }
+        try {
+          const response = await fetch(
+            `${API_BASE_URL}/sfa/usuario/autenticacao`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: credentials?.email,
+                password: credentials?.password
+              }),
+              agent: httpsAgent // Adiciona o agente que ignora o erro do certificado
+            }
+          );
 
-        const usuario = await prisma.sFAUser.findUnique({
-          where: {
-            email
+          /* const response = await axios.post(
+            `${API_BASE_URL}/sfa/usuario/autenticacao`,
+            {
+              email: credentials?.email,
+              password: credentials?.password
+            }
+          ); */
+
+          const responseData = await response.json();
+          const usuario = responseData?.sfaUsuario;
+
+          if (usuario) {
+            return {
+              id: usuario.id,
+              name: usuario.nome,
+              email: usuario.email,
+              administrador: usuario.administrador,
+              provider: usuario.provider
+            };
           }
-        });
 
-        if (!usuario) {
           return null;
-        }
+        } catch (error: any) {
+          const errorMessage =
+            error?.response?.data?.message ||
+            'Erro desconhecido durante a autorização';
 
-        const user = {
-          id: usuario.id,
-          name: usuario.nome,
-          email: credentials?.email as string,
-          administrador: usuario.administrador,
-          provider: usuario.provider
-        };
-        
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
+          // Log do erro para debugging
 
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+          // Lança uma resposta customizada que o NextAuth pode entender
+          throw new Error(
+            JSON.stringify({
+              error: errorMessage,
+              status: error.response?.status || 400
+            })
+          );
         }
       }
     })
@@ -77,15 +101,29 @@ const authConfig = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
+      console.log('✔️');
       if (account?.provider === 'github' || account?.provider === 'google') {
         const provider = account?.provider;
         const email = profile?.email;
-        let img_url =''
-        
-   
+        let img_url = '';
 
-        if (email) {
-          let usuario = await prisma.sFAUser.findUnique({
+
+
+          if (email) {
+            const response = await fetch(
+              `${API_BASE_URL}/sfa/usuario/buscausuarioemail`,
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  email: email
+                }),
+                agent: httpsAgent // Adiciona o agente que ignora o erro do certificado
+              }
+            );
+            const responseData = await response.json();
+            console.log(responseData)
+         /* let usuario = await prisma.sFAUser.findUnique({
             where: { email }
           });
 
@@ -100,17 +138,20 @@ const authConfig = {
               }
             });
           } else {
-            if (usuario.img_url === ''|| usuario.img_url === null || usuario.img_url === undefined ){
-
-              if (account?.provider === 'google' ){
+            if (
+              usuario.img_url === '' ||
+              usuario.img_url === null ||
+              usuario.img_url === undefined
+            ) {
+              if (account?.provider === 'google') {
                 img_url = profile?.picture;
-              }else if (account?.provider === 'github' ){
+              } else if (account?.provider === 'github') {
                 if (typeof profile?.avatar_url === 'string') {
                   img_url = profile.avatar_url;
                 }
               }
             }
-          
+
             await prisma.sFAUser.update({
               where: {
                 email
@@ -125,9 +166,10 @@ const authConfig = {
 
           user.id = usuario.id;
           user.administrador = usuario.administrador;
-          user.provider = usuario.provider;
+          user.provider = usuario.provider;*/
         }
       }
+
       return true;
     },
     async jwt({ token, user }) {
@@ -140,7 +182,6 @@ const authConfig = {
       return token;
     },
     async session({ session, token }) {
-
       if (token?.id) {
         session.user.id = String(token.id);
         session.user.administrador = token.administrador;
