@@ -105,10 +105,12 @@ const authConfig = {
               if (account?.provider === 'google' ){
                 img_url = profile?.picture;
               }else if (account?.provider === 'github' ){
-                img_url = profile?.picture;
+                if (typeof profile?.avatar_url === 'string') {
+                  img_url = profile.avatar_url;
+                }
               }
             }
-            
+          
             await prisma.sFAUser.update({
               where: {
                 email
