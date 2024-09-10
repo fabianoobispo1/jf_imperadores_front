@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -16,6 +15,7 @@ import { Trash } from 'lucide-react';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
+
 
 interface Todo {
   id: string;
@@ -44,18 +44,17 @@ export function TodoList() {
   const loadTodos = async () => {
     setLoading(true);
 
-
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/listartodosusuario`,
       {
         headers: {
-          Authorization: `Bearer ${session?.user.tokenApi}`, // Adiciona o token no header
-        },
+          Authorization: `Bearer ${session?.user.tokenApi}`
+        }
       }
     );
-  
-    const  todos  = await response.data.sfaTodo
-    setTodos(todos);  
+
+    const todos = await response.data.sfaTodo;
+    setTodos(todos);
     setLoading(false);
   };
 
@@ -66,13 +65,19 @@ export function TodoList() {
       return;
     }
 
-    const response = await fetch('/api/todo/registrar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: newTodo, sfaUser_id: session?.user.id })
-    });
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/registrartodosusuario`,
+      {
+        text: newTodo
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.tokenApi}`
+        }
+      }
+    );
 
-    const { todo } = await response.json();
+    const todo = response.data.sfaTodo;
     setTodos([...todos, todo]);
     setNewTodo('');
     setLoading(false);
@@ -87,11 +92,19 @@ export function TodoList() {
     }
 
     const updatedTodo = { ...todo, isCompleted: !todo.isCompleted };
-    await fetch(`/api/todo/atualizar/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedTodo)
-    });
+
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/editartodosusuario/${id}`,
+      {
+        text: todo.text,
+        isCompleted: !todo.isCompleted
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.tokenApi}`
+        }
+      }
+    );
 
     setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo)));
     setLoadingTodo(false);
@@ -105,10 +118,15 @@ export function TodoList() {
       return;
     }
 
-    await fetch(`/api/todo/remover/${id}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/deletetodosusuario/${id}`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.tokenApi}`
+        }
+      }
+    );
 
     loadTodos();
     setLoadingTodo(false);
@@ -151,8 +169,10 @@ export function TodoList() {
                 <TableCell className="text-center">
                   {new Date(todo.created_at).toLocaleDateString()}
                 </TableCell>
-                <TableCell className="text-center">{todo.sfaUser?.nome || 'Desconhecido'}</TableCell>
-                <TableCell className="flex gap-2 items-center justify-center">
+                <TableCell className="text-center">
+                  {todo.sfaUser?.nome || 'Desconhecido'}
+                </TableCell>
+                <TableCell className="flex items-center justify-center gap-2">
                   <LoadingButton
                     className="w-32"
                     loading={loadingTodo}
@@ -162,7 +182,7 @@ export function TodoList() {
                   </LoadingButton>
                   <LoadingButton
                     loading={loadingTodo}
-                    variant={"destructive"}
+                    variant={'destructive'}
                     onClick={() => removeTodo(todo.id)}
                   >
                     <Trash className="h-4 w-4" />
