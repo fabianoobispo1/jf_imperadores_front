@@ -46,7 +46,7 @@ export default function UserAuthForm() {
 
     try {
       const result = await signIn('credentials', {
-        redirect: false,
+        redirect: true,
         email: data.email,
         password: data.password,
       });

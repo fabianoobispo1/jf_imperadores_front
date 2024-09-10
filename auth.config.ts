@@ -2,16 +2,10 @@ import { NextAuthConfig } from 'next-auth';
 import CredentialProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
-
-import https from 'https';
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_MINHA_BASE; // Base URL of your external API
 
-// Crie um agente HTTPS que ignora certificados autoassinados
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false
-});
 
 const authConfig = {
   providers: [
@@ -40,31 +34,19 @@ const authConfig = {
         }
       },
 
+      
       async authorize(credentials, req) {
+        
         try {
-          const response = await fetch(
-            `${API_BASE_URL}/sfa/usuario/autenticacao`,
-            {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                email: credentials?.email,
-                password: credentials?.password
-              }),
-              agent: httpsAgent // Adiciona o agente que ignora o erro do certificado
-            }
-          );
-
-          /* const response = await axios.post(
+          const response = await axios.post(
             `${API_BASE_URL}/sfa/usuario/autenticacao`,
             {
               email: credentials?.email,
               password: credentials?.password
             }
-          ); */
+          );
 
-          const responseData = await response.json();
-          const usuario = responseData?.sfaUsuario;
+          const usuario = response.data.sfaUsuario;
 
           if (usuario) {
             return {
@@ -72,19 +54,17 @@ const authConfig = {
               name: usuario.nome,
               email: usuario.email,
               administrador: usuario.administrador,
-              provider: usuario.provider
+              provider: usuario.provider,
+              tokenApi: response.data.token
             };
           }
 
           return null;
         } catch (error: any) {
+          console.log('🤞' + error);
           const errorMessage =
             error?.response?.data?.message ||
             'Erro desconhecido durante a autorização';
-
-          // Log do erro para debugging
-
-          // Lança uma resposta customizada que o NextAuth pode entender
           throw new Error(
             JSON.stringify({
               error: errorMessage,
@@ -101,29 +81,28 @@ const authConfig = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log('✔️');
+      console.log('signIn');
+      console.log(user);
       if (account?.provider === 'github' || account?.provider === 'google') {
         const provider = account?.provider;
         const email = profile?.email;
         let img_url = '';
 
-
-
-          if (email) {
-            const response = await fetch(
-              `${API_BASE_URL}/sfa/usuario/buscausuarioemail`,
-              {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  email: email
-                }),
-                agent: httpsAgent // Adiciona o agente que ignora o erro do certificado
-              }
-            );
-            const responseData = await response.json();
-            console.log(responseData)
-         /* let usuario = await prisma.sFAUser.findUnique({
+        /* if (email) {
+          const response = await fetch(
+            `${API_BASE_URL}/sfa/usuario/buscausuarioemail`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: email
+              }),
+              agent: httpsAgent // Adiciona o agente que ignora o erro do certificado
+            }
+          );
+          const responseData = await response.json();
+          console.log(responseData); */
+          /* let usuario = await prisma.sFAUser.findUnique({
             where: { email }
           });
 
@@ -167,17 +146,19 @@ const authConfig = {
           user.id = usuario.id;
           user.administrador = usuario.administrador;
           user.provider = usuario.provider;*/
-        }
+      /*   } */
       }
-
+   
       return true;
     },
     async jwt({ token, user }) {
       // First time JWT callback is run, user object is available
+      
       if (user) {
         token.id = user.id;
         token.administrador = user.administrador;
         token.provider = user.provider;
+        token.tokenApi = user.tokenApi;
       }
       return token;
     },
@@ -186,6 +167,7 @@ const authConfig = {
         session.user.id = String(token.id);
         session.user.administrador = token.administrador;
         session.user.provider = String(token.provider);
+        session.user.tokenApi = String(token.tokenApi);
       }
       return session;
     }

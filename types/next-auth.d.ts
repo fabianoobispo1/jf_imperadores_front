@@ -6,12 +6,14 @@ declare module 'next-auth' {
     user: {
       administrador: boolean;
       provider: string;
+      tokenApi: string;
     } & DefaultSession['user'];
   }
 
   interface User {
     administrador: boolean;
     provider: string;
+    tokenApi: string;
   }
 
   interface CredentialsInputs {
@@ -24,5 +26,6 @@ declare module 'next-auth/jwt' {
   interface JWT {
     administrador: boolean;
     provider: string;
+    tokenApi: string;
   }
 }

@@ -11,6 +11,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import axios from 'axios';
+import credentials from 'next-auth/providers/credentials';
 import { signOut, useSession, SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -20,28 +22,38 @@ export function UserNav() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [umaVez, setUmaVez] = useState(true);
-  const [img_url, setimg_url] = useState('')
+  const [img_url, setimg_url] = useState('');
 
   useEffect(() => {
-    console.log('navbar')
-   if (umaVez) {
+    if (umaVez) {
       setLoading(true);
 
+      /* console.log(session?.user.email); */
       const tste = async () => {
-        const response = await fetch('/api/usuario/recupera', {
+        /*   const response = await fetch('/api/usuario/recupera', {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ email: session?.user.email })
-        });
+        }); */
 
-        const dataresponse = await response.json();
-        setimg_url(dataresponse.user.img_url)
-     
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/buscausuarioemail`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}` // Adiciona o token no header
+            }
+          }
+        );
+
+        /*    const dataresponse = await response.json(); */
+       /*  console.log(response); */
+        setimg_url(response.data.sfaUsuario.img_url);
+
         setLoading(false);
-      }; 
+      };
 
       tste();
 
@@ -49,17 +61,13 @@ export function UserNav() {
     }
   }, [session, umaVez]);
 
-
   if (session) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage
-                src={img_url}
-                alt={session.user?.name ?? ''}
-              />
+              <AvatarImage src={img_url} alt={session.user?.name ?? ''} />
               <AvatarFallback>{session.user?.name?.[0]}</AvatarFallback>
             </Avatar>
           </Button>

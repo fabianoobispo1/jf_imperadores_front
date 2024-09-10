@@ -15,6 +15,7 @@ import { LoadingButton } from './ui/loading-button';
 import { Trash } from 'lucide-react';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import { useSession } from 'next-auth/react';
+import axios from 'axios';
 
 interface Todo {
   id: string;
@@ -42,9 +43,19 @@ export function TodoList() {
 
   const loadTodos = async () => {
     setLoading(true);
-    const response = await fetch('/api/todo/listar');
-    const { todos } = await response.json();
-    setTodos(todos);
+
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/listartodosusuario`,
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.tokenApi}`, // Adiciona o token no header
+        },
+      }
+    );
+  
+    const  todos  = await response.data.sfaTodo
+    setTodos(todos);  
     setLoading(false);
   };
 
