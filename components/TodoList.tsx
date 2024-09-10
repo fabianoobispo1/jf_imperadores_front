@@ -15,7 +15,7 @@ import { Trash } from 'lucide-react';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
-
+import { Spinner } from './ui/spinner';
 
 interface Todo {
   id: string;
@@ -33,6 +33,7 @@ export function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingInicial, setLoadingInicial] = useState<boolean>(true);
   const [loadingTodo, setLoadingTodo] = useState<boolean>(false);
 
   const { data: session } = useSession();
@@ -42,8 +43,9 @@ export function TodoList() {
   }, []);
 
   const loadTodos = async () => {
-    setLoading(true);
+    setLoadingInicial(true);
 
+ 
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/listartodosusuario`,
       {
@@ -54,8 +56,9 @@ export function TodoList() {
     );
 
     const todos = await response.data.sfaTodo;
+    console.log(todos);
     setTodos(todos);
-    setLoading(false);
+    setLoadingInicial(false);
   };
 
   const addTodo = async () => {
@@ -93,7 +96,7 @@ export function TodoList() {
 
     const updatedTodo = { ...todo, isCompleted: !todo.isCompleted };
 
-    await axios.post(
+    await axios.put(
       `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/editartodosusuario/${id}`,
       {
         text: todo.text,
@@ -146,52 +149,60 @@ export function TodoList() {
       </div>
 
       <ScrollArea className="h-[calc(80vh-220px)] w-full overflow-x-auto rounded-md border">
-        <Table className="relative">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-center">Sugestão</TableHead>
-              <TableHead className="text-center">Completou</TableHead>
-              <TableHead className="text-center">Criado em</TableHead>
-              <TableHead className="text-center">Criado por</TableHead>
-              <TableHead className="text-center">Opções</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {todos.map((todo) => (
-              <TableRow key={todo.id}>
-                <TableCell>{todo.text}</TableCell>
-                <TableCell className="text-center">
-                  <Checkbox
-                    checked={todo.isCompleted}
-                    onCheckedChange={() => toggleTodo(todo.id)}
-                  />
-                </TableCell>
-                <TableCell className="text-center">
-                  {new Date(todo.created_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell className="text-center">
-                  {todo.sfaUser?.nome || 'Desconhecido'}
-                </TableCell>
-                <TableCell className="flex items-center justify-center gap-2">
-                  <LoadingButton
-                    className="w-32"
-                    loading={loadingTodo}
-                    onClick={() => toggleTodo(todo.id)}
-                  >
-                    {todo.isCompleted ? 'Desfazer' : 'Completo'}
-                  </LoadingButton>
-                  <LoadingButton
-                    loading={loadingTodo}
-                    variant={'destructive'}
-                    onClick={() => removeTodo(todo.id)}
-                  >
-                    <Trash className="h-4 w-4" />
-                  </LoadingButton>
-                </TableCell>
+        {loadingInicial ? (
+          <div className="flex h-[calc(80vh-220px)] items-center justify-center ">
+            <Spinner />
+          </div>
+        ) : (
+          <Table className="relative">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-center">Sugestão</TableHead>
+                <TableHead className="text-center">Completou</TableHead>
+                <TableHead className="text-center">Criado em</TableHead>
+                {/* <TableHead className="text-center">Criado por</TableHead> */}
+                <TableHead className="text-center">Opções</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+
+            <TableBody>
+              {todos.map((todo) => (
+                <TableRow key={todo.id}>
+                  <TableCell>{todo.text}</TableCell>
+                  <TableCell className="text-center">
+                    <Checkbox
+                      checked={todo.isCompleted}
+                      onCheckedChange={() => toggleTodo(todo.id)}
+                    />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {new Date(todo.created_at).toLocaleDateString()}
+                  </TableCell>
+                 {/*  <TableCell className="text-center">
+                    {todo.sfaUser?.nome || 'Desconhecido'}
+                  </TableCell> */}
+                  <TableCell className="flex items-center justify-center gap-2">
+                    <LoadingButton
+                      className="w-32"
+                      loading={loadingTodo}
+                      onClick={() => toggleTodo(todo.id)}
+                    >
+                      {todo.isCompleted ? 'Desfazer' : 'Completo'}
+                    </LoadingButton>
+                    <LoadingButton
+                      loading={loadingTodo}
+                      variant={'destructive'}
+                      onClick={() => removeTodo(todo.id)}
+                    >
+                      <Trash className="h-4 w-4" />
+                    </LoadingButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </div>
