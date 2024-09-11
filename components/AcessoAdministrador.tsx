@@ -8,4 +8,5 @@ export default function AcessoAdministrador() {
     window.location.href = '/dashboard';
   }
   return <></>;
+  
 }
