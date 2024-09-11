@@ -39,8 +39,11 @@ export function UserNav() {
           body: JSON.stringify({ email: session?.user.email })
         }); */
 
-        const response = await axios.get(
+        const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/buscausuarioemail`,
+          {
+            email: session?.user.email
+          },
           {
             headers: {
               Authorization: `Bearer ${session?.user.tokenApi}` // Adiciona o token no header
@@ -49,7 +52,7 @@ export function UserNav() {
         );
 
         /*    const dataresponse = await response.json(); */
-       /*  console.log(response); */
+        /*  console.log(response); */
         setimg_url(response.data.sfaUsuario.img_url);
 
         setLoading(false);

@@ -6,7 +6,6 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_MINHA_BASE; // Base URL of your external API
 
-
 const authConfig = {
   providers: [
     GithubProvider({
@@ -34,9 +33,7 @@ const authConfig = {
         }
       },
 
-      
       async authorize(credentials, req) {
-        
         try {
           const response = await axios.post(
             `${API_BASE_URL}/sfa/usuario/autenticacao`,
@@ -87,48 +84,72 @@ const authConfig = {
         const provider = account?.provider;
         const email = profile?.email;
         let img_url = '';
+        if (account?.provider === 'google') {
+          img_url = profile?.picture;
+        } else if (account?.provider === 'github') {
+          if (typeof profile?.avatar_url === 'string') {
+            img_url = profile.avatar_url;
+          }
+        }
 
-        /* if (email) {
-          const response = await fetch(
-            `${API_BASE_URL}/sfa/usuario/buscausuarioemail`,
+      
+
+        //loga com usuario especial para login
+    
+        const responseUserAuth = await axios.post(
+          `${API_BASE_URL}/sfa/usuario/autenticacao`,
+          {
+            email: process.env.USER_LOGIN_AUTH,
+            password: process.env.PASS_LOGIN_AUTH
+          }
+        );
+        console.log(responseUserAuth.data.token);
+     
+        //verifica se existe email ja cadastrado -rota autenticada
+        let usuario
+        let exsiteusuario = false
+        try {
+        const responseUsuario = await axios.post(
+          `${API_BASE_URL}/sfa/usuario/buscausuarioemail`,
+          {
+            email
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${responseUserAuth.data.token}`
+            }
+          }
+        );
+        exsiteusuario=true
+        usuario = responseUsuario.data.sfaUsuario
+      } catch (error: any) {
+        exsiteusuario=false
+      }
+   
+
+        if (!exsiteusuario) {
+          //se nao existir realiza o cadastro 
+
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/adicionar`,
             {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                email: email
-              }),
-              agent: httpsAgent // Adiciona o agente que ignora o erro do certificado
+              email,
+              nome: String(profile?.name),
+              password: '12345678',
+              provider,
+              img_url
+       
             }
           );
-          const responseData = await response.json();
-          console.log(responseData); */
-          /* let usuario = await prisma.sFAUser.findUnique({
-            where: { email }
-          });
 
-          if (!usuario) {
-            usuario = await prisma.sFAUser.create({
-              data: {
-                email,
-                nome: String(profile.name),
-                password_hash: uuidv4(),
-                provider,
-                img_url: profile?.picture
-              }
-            });
-          } else {
-            if (
+             
+           } else {
+           /* if (
               usuario.img_url === '' ||
               usuario.img_url === null ||
               usuario.img_url === undefined
             ) {
-              if (account?.provider === 'google') {
-                img_url = profile?.picture;
-              } else if (account?.provider === 'github') {
-                if (typeof profile?.avatar_url === 'string') {
-                  img_url = profile.avatar_url;
-                }
-              }
+             
             }
 
             await prisma.sFAUser.update({
@@ -140,20 +161,20 @@ const authConfig = {
                 provider,
                 img_url
               }
-            });
+            });*/
           }
 
           user.id = usuario.id;
           user.administrador = usuario.administrador;
-          user.provider = usuario.provider;*/
-      /*   } */
+          user.provider = usuario.provider;
+       
       }
-   
+
       return true;
     },
     async jwt({ token, user }) {
       // First time JWT callback is run, user object is available
-      
+
       if (user) {
         token.id = user.id;
         token.administrador = user.administrador;
