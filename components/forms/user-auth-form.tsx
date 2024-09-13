@@ -18,6 +18,7 @@ import GitHubSignInButton from '../github-auth-button';
 import { useToast } from '../../components/ui/use-toast';
 import { LoadingButton } from '../../components/ui/loading-button';
 import GoogleSignInButton from '../google-auth-button';
+import axios from 'axios';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Digite um email valido.' }),
@@ -41,15 +42,30 @@ export default function UserAuthForm() {
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    
     setLoading(true);
-    console.log(data)
 
     try {
+        const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/preauth`,
+        {
+          email: data.email,
+          password: data.password
+        }
+      );
+
+      if(response.status == 201){
+        toast({
+          title: 'Erro',
+          variant: 'destructive',
+          description: response.data.message
+        });
+      }
+
+
       const result = await signIn('credentials', {
-        redirect: false,
+        redirect: true,
         email: data.email,
-        password: data.password,
+        password: data.password
       });
 
       if (result?.error) {
@@ -64,21 +80,55 @@ export default function UserAuthForm() {
         window.location.href = result?.url ?? '/dashboard';
       }
 
+      
+
+
+
+
+      console.log(response)
+
+    } catch (error) {
+      toast({
+        title: 'Erro',
+        variant: 'destructive',
+        description: 'Erro Interno.'
+      });
+      console.log(error)
+    }
+  
+    try {
+      /* const result = await signIn('credentials', {
+        redirect: true,
+        email: data.email,
+        password: data.password
+      });
+
+      if (result?.error) {
+        console.log(result);
+        toast({
+          title: 'Error',
+          variant: 'destructive',
+          description: 'Erro desconhecido'
+        });
+      } else {
+        setLoading(false);
+        window.location.href = result?.url ?? '/dashboard';
+      }
 
       // Se houver um erro, ele estará no campo `error` do result
       if (result?.error) {
         console.log('Erro ao fazer login:', result.error);
         alert(`Erro ao fazer login: ${result.error}`); // Mostra a mensagem do erro para o usuário
       } else if (result?.ok) {
-        console.log('Login bem-sucedido', result);
+        console.log('Login bem-sucedido', result); 
         // Redirecione ou execute ações adicionais
-      }
+      }*/
     } catch (error: any) {
-      console.error('Erro inesperado durante o login:', error);
-      alert(`Erro inesperado: ${error.message || 'Erro desconhecido'}`);
+/*       console.error('Erro inesperado durante o login:', error);
+      alert(`Erro inesperado: ${error.message || 'Erro desconhecido'}`); */
     }
 
-  /*   const response = await fetch('/api/usuario/verificarlogin', {
+    /*   const response = await fetch('/api/usuario/verificarlogin', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -89,7 +139,7 @@ export default function UserAuthForm() {
 
     /* const dataresponse = await response.json(); */
 
-   /*  if (response.status != 201) {
+    /*  if (response.status != 201) {
       toast({
         title: 'Erro',
         variant: 'destructive',
@@ -119,7 +169,7 @@ export default function UserAuthForm() {
       setLoading(false);
     } */
 
-      setLoading(false);
+    setLoading(false);
   };
 
   return (
