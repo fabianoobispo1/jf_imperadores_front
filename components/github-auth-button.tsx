@@ -32,7 +32,6 @@ export default function GitHubSignInButton() {
       className="w-full"
       variant="outline"
       type="button"
-disabled
       loading={loading}
       onClick={() => handleLogin()}
     >

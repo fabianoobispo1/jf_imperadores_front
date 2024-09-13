@@ -41,12 +41,13 @@ export default function UserAuthForm() {
   });
 
   const onSubmit = async (data: UserFormValue) => {
+    
     setLoading(true);
     console.log(data)
 
     try {
       const result = await signIn('credentials', {
-        redirect: true,
+        redirect: false,
         email: data.email,
         password: data.password,
       });
@@ -66,7 +67,7 @@ export default function UserAuthForm() {
 
       // Se houver um erro, ele estará no campo `error` do result
       if (result?.error) {
-        console.error('Erro ao fazer login:', result.error);
+        console.log('Erro ao fazer login:', result.error);
         alert(`Erro ao fazer login: ${result.error}`); // Mostra a mensagem do erro para o usuário
       } else if (result?.ok) {
         console.log('Login bem-sucedido', result);

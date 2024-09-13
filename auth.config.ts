@@ -3,6 +3,8 @@ import CredentialProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
 import axios from 'axios';
+//recuperar a mensagem de erro no front web
+//verificar o eemail antes de logar 
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_MINHA_BASE; // Base URL of your external API
 
@@ -92,10 +94,7 @@ const authConfig = {
           }
         }
 
-      
-
         //loga com usuario especial para login
-    
         const responseUserAuth = await axios.post(
           `${API_BASE_URL}/sfa/usuario/autenticacao`,
           {
@@ -103,33 +102,31 @@ const authConfig = {
             password: process.env.PASS_LOGIN_AUTH
           }
         );
-        console.log(responseUserAuth.data.token);
-     
+        console.log('realizou login auth');
         //verifica se existe email ja cadastrado -rota autenticada
-        let usuario
-        let exsiteusuario = false
+        let usuario;
+        let exsiteusuario = false;
         try {
-        const responseUsuario = await axios.post(
-          `${API_BASE_URL}/sfa/usuario/buscausuarioemail`,
-          {
-            email
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${responseUserAuth.data.token}`
+          const responseUsuario = await axios.post(
+            `${API_BASE_URL}/sfa/usuario/buscausuarioemail`,
+            {
+              email
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${responseUserAuth.data.token}`
+              }
             }
-          }
-        );
-        exsiteusuario=true
-        usuario = responseUsuario.data.sfaUsuario
-      } catch (error: any) {
-        exsiteusuario=false
-      }
-   
-
+          );
+          exsiteusuario = true;
+          usuario = responseUsuario.data.sfaUsuario;
+        } catch (error: any) {
+          exsiteusuario = false;
+        }
+        console.log('aqui');
         if (!exsiteusuario) {
-          //se nao existir realiza o cadastro 
-
+          //se nao existir realiza o cadastro
+          console.log('Cadastra');
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/adicionar`,
             {
@@ -138,43 +135,50 @@ const authConfig = {
               password: '12345678',
               provider,
               img_url
-       
             }
           );
-
-             
-           } else {
-           /* if (
-              usuario.img_url === '' ||
-              usuario.img_url === null ||
-              usuario.img_url === undefined
-            ) {
-             
-            }
-
-            await prisma.sFAUser.update({
-              where: {
-                email
-              },
-              data: {
-                password_hash: uuidv4(),
-                provider,
-                img_url
+        } else {
+          console.log('atualiza');
+          const response = await axios.put(
+            `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/editarusuario/${usuario.id}`,
+            {
+              nome: usuario.name,
+              email: usuario.email,
+              password: '12345678',
+              provider,
+              img_url
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${responseUserAuth.data.token}`
               }
-            });*/
-          }
+            }
+          );
+        }
 
-          user.id = usuario.id;
-          user.administrador = usuario.administrador;
-          user.provider = usuario.provider;
-       
+        //realiza o login coim o usuario para pegar o tokn da api
+        const responseUser = await axios.post(
+          `${API_BASE_URL}/sfa/usuario/autenticacao`,
+          {
+            email: usuario.email,
+            password: '12345678'
+          }
+        );
+
+        user.id = usuario.id;
+        user.administrador = usuario.administrador;
+        user.provider = usuario.provider;
+        user.tokenApi = responseUser.data.token;
       }
 
       return true;
     },
     async jwt({ token, user }) {
       // First time JWT callback is run, user object is available
-
+      console.log('✔');
+      console.log('JWT');
+      console.log(user);
+      console.log(token);
       if (user) {
         token.id = user.id;
         token.administrador = user.administrador;
@@ -184,12 +188,18 @@ const authConfig = {
       return token;
     },
     async session({ session, token }) {
+      console.log('✔');
+      console.log('ssion');
+      console.log(token);
       if (token?.id) {
         session.user.id = String(token.id);
         session.user.administrador = token.administrador;
         session.user.provider = String(token.provider);
         session.user.tokenApi = String(token.tokenApi);
       }
+      console.log('✔');
+      console.log('ssion');
+      console.log(session);
       return session;
     }
   },

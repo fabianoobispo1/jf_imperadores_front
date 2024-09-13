@@ -30,7 +30,6 @@ export default function GoogleSignInButton() {
       className="w-full"
       variant="outline"
       type="button"
-disabled
       loading={loading}
       onClick={() => handleLogin()}
     >
