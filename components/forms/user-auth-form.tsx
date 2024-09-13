@@ -59,6 +59,8 @@ export default function UserAuthForm() {
           variant: 'destructive',
           description: response.data.message
         });
+        setLoading(false);
+        return 
       }
 
 
