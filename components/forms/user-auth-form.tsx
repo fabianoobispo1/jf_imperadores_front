@@ -153,7 +153,7 @@ export default function UserAuthForm() {
       <GoogleSignInButton />
       <GitHubSignInButton />
 
-      {/*   <DbTestComponent /> */}
+
     </>
   );
 }

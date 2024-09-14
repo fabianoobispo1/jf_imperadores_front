@@ -4,7 +4,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
 import axios from 'axios';
 //recuperar a mensagem de erro no front web
-//verificar o eemail antes de logar 
+//verificar o eemail antes de logar
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_MINHA_BASE; // Base URL of your external API
 
@@ -60,7 +60,6 @@ const authConfig = {
 
           return null;
         } catch (error: any) {
-          console.log('🤞' + error);
           const errorMessage =
             error?.response?.data?.message ||
             'Erro desconhecido durante a autorização';
@@ -80,8 +79,6 @@ const authConfig = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log('signIn');
-      console.log(user);
       if (account?.provider === 'github' || account?.provider === 'google') {
         const provider = account?.provider;
         const email = profile?.email;
@@ -102,7 +99,7 @@ const authConfig = {
             password: process.env.PASS_LOGIN_AUTH
           }
         );
-        console.log('realizou login auth');
+
         //verifica se existe email ja cadastrado -rota autenticada
         let usuario;
         let exsiteusuario = false;
@@ -123,10 +120,10 @@ const authConfig = {
         } catch (error: any) {
           exsiteusuario = false;
         }
-        console.log('aqui');
+
         if (!exsiteusuario) {
           //se nao existir realiza o cadastro
-          console.log('Cadastra');
+
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/adicionar`,
             {
@@ -138,7 +135,6 @@ const authConfig = {
             }
           );
         } else {
-          console.log('atualiza');
           const response = await axios.put(
             `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/editarusuario/${usuario.id}`,
             {
@@ -175,10 +171,7 @@ const authConfig = {
     },
     async jwt({ token, user }) {
       // First time JWT callback is run, user object is available
-      console.log('✔');
-      console.log('JWT');
-      console.log(user);
-      console.log(token);
+
       if (user) {
         token.id = user.id;
         token.administrador = user.administrador;
@@ -188,18 +181,13 @@ const authConfig = {
       return token;
     },
     async session({ session, token }) {
-      console.log('✔');
-      console.log('ssion');
-      console.log(token);
       if (token?.id) {
         session.user.id = String(token.id);
         session.user.administrador = token.administrador;
         session.user.provider = String(token.provider);
         session.user.tokenApi = String(token.tokenApi);
       }
-      console.log('✔');
-      console.log('ssion');
-      console.log(session);
+
       return session;
     }
   },

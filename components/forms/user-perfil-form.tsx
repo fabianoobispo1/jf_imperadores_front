@@ -95,17 +95,20 @@ export const PerfilUser: React.FC = () => {
   const updateUserData = async (data: PerfilFormValues) => {
     setLoading(true);
     console.log(data);
+    
     try {
-      const response = await fetch(`/api/usuario/atualizar/${data.id}`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
+    
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/editarusuario/${data.id}`,
+       data,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
 
-      const result = await response.json();
+      const result = await response.data
       console.log('Update result:', result);
       setLoading(false);
     } catch (error) {

@@ -62,7 +62,7 @@ export default function UserRegisterForm() {
       if (response.status == 201) {
         toast({
           title: 'ok',
-          description: 'Cadastro realizado. Direcionando ....'
+          description: 'Cadastro realizado. Redirecionando ....'
         });
         setTimeout(() => {
           window.location.href = '/';
