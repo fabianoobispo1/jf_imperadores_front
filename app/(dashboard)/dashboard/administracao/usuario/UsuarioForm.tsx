@@ -5,7 +5,7 @@ import { Usuario, usuarioSchema } from './schemas/usuarioSchema';
 import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@radix-ui/react-checkbox';
 
@@ -31,9 +31,11 @@ export function UsuarioForm({ onSubmit, defaultValues, loading }: Props) {
       ...defaultValues
     }
   });
-
+  
   useEffect(() => {
+
     if (defaultValues) {
+   
       reset({
         id: defaultValues.id || '',
         nome: defaultValues.nome || '',
@@ -67,14 +69,17 @@ export function UsuarioForm({ onSubmit, defaultValues, loading }: Props) {
             type="text"
             placeholder="Nome do usuário"
             {...register('nome')}
-            color={errors.nome ? 'failure' : undefined}
-          />
+            color={errors.nome ? "failure" : undefined} // Modifica o estilo se houver erro
+            />
+            {errors.nome && (
+              <p className="text-sm text-red-500">{errors.nome.message}</p> // Exibe a mensagem de erro
+            )}
         </div>
 
         <div>
           <Label htmlFor="email">Email</Label>
           <Input
-            disabled
+                 disabled={defaultValues?.provider === 'github' || defaultValues?.provider === 'google'?true: false}
             id="email"
             type="email"
             placeholder="user@example.com"
@@ -93,9 +98,23 @@ export function UsuarioForm({ onSubmit, defaultValues, loading }: Props) {
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <Checkbox id="administrador" {...register('administrador')} />
+        <div>
           <Label htmlFor="administrador">Administrador</Label>
+          <select
+            id="administrador"
+            {...register('administrador', {
+              setValueAs: (v) => v === 'true', // Converte a string para booleano
+            })}
+            className={`'flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50' ${
+              errors.administrador ? 'border-red-500' : ''
+            }`}
+          >
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
+          </select>
+          {errors.administrador && (
+            <p className="text-red-500 text-sm">{errors.administrador.message}</p> // Exibe a mensagem de erro
+          )}
         </div>
       </div>
 
