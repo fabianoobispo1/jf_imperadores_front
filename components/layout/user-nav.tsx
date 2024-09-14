@@ -27,18 +27,7 @@ export function UserNav() {
   useEffect(() => {
     if (umaVez) {
       setLoading(true);
-
-      /* console.log(session?.user.email); */
       const tste = async () => {
-        /*   const response = await fetch('/api/usuario/recupera', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email: session?.user.email })
-        }); */
-
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/buscausuarioemail`,
           {

@@ -22,20 +22,18 @@ import { CalendarIcon } from '@radix-ui/react-icons';
 import { Calendar } from '../ui/calendar';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Loader2 } from 'lucide-react';
-import { Skeleton } from '../ui/skeleton';
+
 import { Spinner } from '../ui/spinner';
-import { Avatar, AvatarImage } from '../ui/avatar';
-import { AvatarFallback } from '@radix-ui/react-avatar';
 
 import AvatarUpload from '../avatar-upload';
+import axios from 'axios';
 
 export const PerfilUser: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [loadingFinal, setLoadingFinal] = useState(false);
   const [bloqueioProvider, setBloqueioProvider] = useState(false);
   const [umaVez, setUmaVez] = useState(true);
-  const [imagemAvatar, setImagemAvatar] = useState('')
+  const [imagemAvatar, setImagemAvatar] = useState('');
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -45,26 +43,26 @@ export const PerfilUser: React.FC = () => {
         setBloqueioProvider(true);
       }
       const tste = async () => {
-        const response = await fetch('/api/usuario/recupera', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email: session?.user.email })
-        });
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/perfil`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}` // Adiciona o token no header
+            }
+          }
+        );
 
-        const dataresponse = await response.json();
-
-        dataresponse.user.img_url = [{fileUrl: dataresponse.user.img_url}]
-/*         if (dataresponse.user.img_url === null) {
+        const dataresponse = response.data.sfaUsuario;
+        dataresponse.img_url = [{ fileUrl: dataresponse.img_url }];
+        /*         if (dataresponse.user.img_url === null) {
           dataresponse.user.img_url = ''
         }
         setImagemAvatar(dataresponse.user.img_url) */
-        dataresponse.user.data_nascimento = adjustToLocalTimezone(
-          dataresponse.user.data_nascimento
+        dataresponse.data_nascimento = adjustToLocalTimezone(
+          dataresponse.data_nascimento
         ); // Ajustar a data ao fuso horário local
-        form.reset(dataresponse.user);
+        console.log(dataresponse);
+        form.reset(dataresponse);
         setLoading(false);
       };
 
@@ -96,6 +94,7 @@ export const PerfilUser: React.FC = () => {
 
   const updateUserData = async (data: PerfilFormValues) => {
     setLoading(true);
+    console.log(data);
     try {
       const response = await fetch(`/api/usuario/atualizar/${data.id}`, {
         method: 'PUT',
@@ -116,7 +115,7 @@ export const PerfilUser: React.FC = () => {
   };
 
   const processForm: SubmitHandler<PerfilFormValues> = (data) => {
-    const formattedDate = format(new Date(data.data_nascimento), 'yyyy-MM-dd');
+    const formattedDate = format(new Date(data.data_nascimento||'01-01-2000'), 'yyyy-MM-dd');
     const formattedData = { ...data, data_nascimento: new Date(formattedDate) };
 
     console.log('data ==>', formattedData);
@@ -134,7 +133,7 @@ export const PerfilUser: React.FC = () => {
       <Separator />
 
       {loading ? (
-        < Spinner />
+        <Spinner />
       ) : (
         <Form {...form}>
           <form
@@ -164,7 +163,7 @@ export const PerfilUser: React.FC = () => {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
-                        disabled={loading || bloqueioProvider}
+                        /* disabled={loading || bloqueioProvider} */
                         {...field}
                       />
                     </FormControl>
@@ -177,27 +176,23 @@ export const PerfilUser: React.FC = () => {
                 name="img_url"
                 render={({ field }) => (
                   <FormItem>
+                  {/*   <AvatarUpload
+                   
+                      onChange={field.onChange}
+                      value={field.value}
+                      onRemove={field.onChange}
+                    /> */}
 
-              <AvatarUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                    onRemove={field.onChange}
-                  />
-
-                {/* <Avatar className="h-32 w-32 mt-4">
+                    {/* <Avatar className="h-32 w-32 mt-4">
                   <AvatarImage
                     src={field.value}
                     alt={field.value}
                   />
                   <AvatarFallback>{'Fabiano'}</AvatarFallback>
                 </Avatar> */}
-             
-
                   </FormItem>
                 )}
-                />
-
-              
+              />
             </div>
 
             <div className="gap-4 md:grid md:grid-cols-3">
@@ -245,7 +240,7 @@ export const PerfilUser: React.FC = () => {
                   </FormItem>
                 )}
               />
-             {/*  <FormField
+              {/*  <FormField
                 control={form.control}
                 name="img_url"
                 render={({ field }) => (
@@ -261,18 +256,16 @@ export const PerfilUser: React.FC = () => {
                   </FormItem>
                 )}
               /> */}
-
             </div>
-            <Button disabled={loadingFinal} className="ml-auto" type="submit">
+            <Button
+              /* disabled={loadingFinal}  */ className="ml-auto"
+              type="submit"
+            >
               Salvar
             </Button>
           </form>
         </Form>
-
-
       )}
-
-
     </>
   );
 };

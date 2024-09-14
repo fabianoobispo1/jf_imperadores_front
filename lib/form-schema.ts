@@ -48,16 +48,14 @@ const ImgSchema = z.object({
 });
 
 export const perfilSchema = z.object({
-  id: z.string(),
-  administrador: z.boolean(),
-  nome: z.string().min(3, { message: 'Nome requerido.' }),
-  email: z.string().email({ message: 'Digite um email valido.' }),
-  data_nascimento: z.date({
-    required_error: 'campo requerido.'
-  }),
+  id: z.string().optional(),
+  administrador: z.boolean().optional(),
+  nome: z.string().optional(),
+  email: z.string().optional(),
+  data_nascimento: z.date().optional(),
   img_url: z
   .array(ImgSchema) 
-  .max(1)
+  .max(1).optional()
 });
 
 

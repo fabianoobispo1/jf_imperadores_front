@@ -29,6 +29,9 @@ import {
   SelectTrigger,
   SelectValue
 } from '../ui/select';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+
 
 // Definindo tipos para colunas e cabeçalhos
 const columns = [
@@ -57,28 +60,29 @@ export function ModalUsuarios() {
   const [users, setUsers] = useState<any[]>([]);
   const [editedUser, setEditedUser] = useState<{ [key: string]: any }>({});
 
+  const { data: session } = useSession();
+
   const loadUserData = async () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/usuario/recuperalista', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/listausuarios`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
         }
-      });
+      );
 
-      const result = await response.json();
-      console.log('API Result:', result);
+      const result = response.data.sfaUsuario;
 
-      const userArray = result.user;
-      if (userArray.length > 0) {
-        const firstItem = userArray[0];
+      if (result.length > 0) {
+        const firstItem = result[0];
         const keys = Object.keys(firstItem);
         console.log('Extracted Keys:', keys);
       }
-      setUsers(userArray);
+      setUsers(result);
       setLoading(false);
     } catch (error) {
       console.error('Failed to list user data', error);
@@ -120,16 +124,19 @@ export function ModalUsuarios() {
         console.error('No changes to save');
         return;
       }
-      const response = await fetch(`/api/usuario/atualizar/${userId}`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(user)
-      });
 
-      if (response.ok) {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/editarusuario/${userId}`,
+       user,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
+
+      console.log(response)
+      if (response.status== 200) {
         // Atualizar o usuário na lista de usuários
         setUsers((prevUsers) =>
           prevUsers.map((u) => (u.id === userId ? { ...u, ...user } : u))

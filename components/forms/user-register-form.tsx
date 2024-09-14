@@ -16,7 +16,6 @@ import { useToast } from '../../components/ui/use-toast';
 import { LoadingButton } from '../ui/loading-button';
 import axios from 'axios';
 
-
 const formSchema = z
   .object({
     nome: z.string().min(3, { message: 'Digite seu nome.' }),
@@ -25,14 +24,13 @@ const formSchema = z
     confirmPassword: z.string().min(8, { message: 'Senha obrigatoria, min 8' })
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não coecindem",
+    message: 'As senhas não coecindem',
     path: ['confirmPassword']
   });
 
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserRegisterForm() {
-
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const defaultValues = {
@@ -61,15 +59,15 @@ export default function UserRegisterForm() {
         }
       );
 
-    if (response.status == 201 ){
-      toast({
-        title: 'ok',
-        description: 'Cadastro realizado. Direcionando ....'
-      });
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1500);
-    }
+      if (response.status == 201) {
+        toast({
+          title: 'ok',
+          description: 'Cadastro realizado. Direcionando ....'
+        });
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
+      }
     } catch (error) {
       // Verifica se o erro é do Axios
       if (axios.isAxiosError(error)) {
@@ -94,26 +92,7 @@ export default function UserRegisterForm() {
         });
       }
     }
-
-    /*     const response = await fetch('/api/usuario/registrar', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    }); */
     setLoading(false);
-
-    /*     
-    } else if (response.status == 201) {
-      toast({
-        title: 'ok',
-
-        description: 'Cadastro realizado.'
-      });
-      window.location.href = '/';
-    */
   };
 
   return (

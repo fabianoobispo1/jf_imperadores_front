@@ -10,7 +10,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -28,8 +27,6 @@ const formSchema = z.object({
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const defaultValues = {
@@ -45,7 +42,7 @@ export default function UserAuthForm() {
     setLoading(true);
 
     try {
-        const response = await axios.post(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/preauth`,
         {
           email: data.email,
@@ -53,16 +50,15 @@ export default function UserAuthForm() {
         }
       );
 
-      if(response.status == 201){
+      if (response.status == 201) {
         toast({
           title: 'Erro',
           variant: 'destructive',
           description: response.data.message
         });
         setLoading(false);
-        return 
+        return;
       }
-
 
       const result = await signIn('credentials', {
         redirect: true,
@@ -71,7 +67,6 @@ export default function UserAuthForm() {
       });
 
       if (result?.error) {
-        console.log(result);
         toast({
           title: 'Error',
           variant: 'destructive',
@@ -81,95 +76,13 @@ export default function UserAuthForm() {
         setLoading(false);
         window.location.href = result?.url ?? '/dashboard';
       }
-
-      
-
-
-
-
-      console.log(response)
-
     } catch (error) {
       toast({
         title: 'Erro',
         variant: 'destructive',
         description: 'Erro Interno.'
       });
-      console.log(error)
     }
-  
-    try {
-      /* const result = await signIn('credentials', {
-        redirect: true,
-        email: data.email,
-        password: data.password
-      });
-
-      if (result?.error) {
-        console.log(result);
-        toast({
-          title: 'Error',
-          variant: 'destructive',
-          description: 'Erro desconhecido'
-        });
-      } else {
-        setLoading(false);
-        window.location.href = result?.url ?? '/dashboard';
-      }
-
-      // Se houver um erro, ele estará no campo `error` do result
-      if (result?.error) {
-        console.log('Erro ao fazer login:', result.error);
-        alert(`Erro ao fazer login: ${result.error}`); // Mostra a mensagem do erro para o usuário
-      } else if (result?.ok) {
-        console.log('Login bem-sucedido', result); 
-        // Redirecione ou execute ações adicionais
-      }*/
-    } catch (error: any) {
-/*       console.error('Erro inesperado durante o login:', error);
-      alert(`Erro inesperado: ${error.message || 'Erro desconhecido'}`); */
-    }
-
-    /*   const response = await fetch('/api/usuario/verificarlogin', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    }); */
-
-    /* const dataresponse = await response.json(); */
-
-    /*  if (response.status != 201) {
-      toast({
-        title: 'Erro',
-        variant: 'destructive',
-        description: dataresponse.message
-      });
-
-      setLoading(false);
-    } else {
-      const result = await signIn('credentials', {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-        callbackUrl: callbackUrl ?? '/dashboard'
-      });
-
-      if (result?.error) {
-        console.log(result);
-        toast({
-          title: 'Error',
-          variant: 'destructive',
-          description: 'Erro desconhecido'
-        });
-      } else {
-        setLoading(false);
-        window.location.href = result?.url ?? '/dashboard';
-      }
-      setLoading(false);
-    } */
 
     setLoading(false);
   };

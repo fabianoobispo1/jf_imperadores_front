@@ -12,6 +12,12 @@ const nextConfig = {
         hostname: 'gravatar.com',
         pathname: '/**', // Permite qualquer caminho
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**', // Permite qualquer caminho
+      },
+     
     ],
   }
 };

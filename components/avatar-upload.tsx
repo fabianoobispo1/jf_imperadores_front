@@ -40,9 +40,9 @@ export default function AvatarUpload({
     <div>
       <div className="mb-4 flex items-center gap-4">
         {!!value.length &&
-          value?.map((item) => (
+          value?.map((item, index) => (
             <div
-              key={item.key}
+              key={item.key ||index}
               className="relative h-[200px] w-[200px] overflow-hidden rounded-md"
             >
               <div className="absolute right-2 top-2 z-10">
