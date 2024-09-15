@@ -5,8 +5,8 @@ import type { Metadata } from 'next';
 import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 import { auth } from '@/auth';
-/* import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/react'; */
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: 'Fabiano sistema',
@@ -29,8 +29,8 @@ export default async function RootLayout({
         <Providers session={session}>
           <Toaster />
           {children}
-      {/*     <Analytics />
-          <SpeedInsights /> */}
+          <Analytics />
+          <SpeedInsights />
         </Providers>
       </body>
     </html>

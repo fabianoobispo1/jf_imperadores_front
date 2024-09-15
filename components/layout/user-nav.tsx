@@ -27,24 +27,34 @@ export function UserNav() {
   useEffect(() => {
     if (umaVez) {
       setLoading(true);
+   
       const tste = async () => {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/buscausuarioemail`,
-          {
-            email: session?.user.email
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${session?.user.tokenApi}` // Adiciona o token no header
+
+        try {
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/buscausuarioemail`,
+            {
+              email: session?.user.email
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${session?.user.tokenApi}` // Adiciona o token no header
+              }
             }
-          }
-        );
+          );
+  
+          /*    const dataresponse = await response.json(); */
+          /*  console.log(response); */
+          setimg_url(response.data.sfaUsuario.img_url);
+  
+          setLoading(false);
+        } catch (error) {
+          signOut()
+          setLoading(false);
+        }
 
-        /*    const dataresponse = await response.json(); */
-        /*  console.log(response); */
-        setimg_url(response.data.sfaUsuario.img_url);
 
-        setLoading(false);
+       
       };
 
       tste();

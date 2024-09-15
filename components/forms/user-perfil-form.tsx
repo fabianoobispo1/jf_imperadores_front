@@ -20,7 +20,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { Calendar } from '../ui/calendar';
-import { format } from 'date-fns';
+import { format, formatISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { Spinner } from '../ui/spinner';
@@ -95,12 +95,11 @@ export const PerfilUser: React.FC = () => {
   const updateUserData = async (data: PerfilFormValues) => {
     setLoading(true);
     console.log(data);
-    
+
     try {
-    
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/editarusuario/${data.id}`,
-       data,
+        data,
         {
           headers: {
             Authorization: `Bearer ${session?.user.tokenApi}`
@@ -108,7 +107,7 @@ export const PerfilUser: React.FC = () => {
         }
       );
 
-      const result = await response.data
+      const result = await response.data;
       console.log('Update result:', result);
       setLoading(false);
     } catch (error) {
@@ -118,7 +117,10 @@ export const PerfilUser: React.FC = () => {
   };
 
   const processForm: SubmitHandler<PerfilFormValues> = (data) => {
-    const formattedDate = format(new Date(data.data_nascimento||'01-01-2000'), 'yyyy-MM-dd');
+    const formattedDate = format(
+      new Date(data.data_nascimento || '01-01-2000'),
+      'yyyy-MM-dd'
+    );
     const formattedData = { ...data, data_nascimento: new Date(formattedDate) };
 
     console.log('data ==>', formattedData);
@@ -166,7 +168,7 @@ export const PerfilUser: React.FC = () => {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
-                        /* disabled={loading || bloqueioProvider} */
+                        disabled={loading || bloqueioProvider}
                         {...field}
                       />
                     </FormControl>
@@ -179,7 +181,7 @@ export const PerfilUser: React.FC = () => {
                 name="img_url"
                 render={({ field }) => (
                   <FormItem>
-                  {/*   <AvatarUpload
+                    {/*   <AvatarUpload
                    
                       onChange={field.onChange}
                       value={field.value}
