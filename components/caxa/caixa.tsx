@@ -19,6 +19,8 @@ import {
 import { useEffect, useState } from 'react';
 import { Skeleton } from '../ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 /* import { columns } from './columns'; */
 export type Caixa = {
@@ -40,17 +42,24 @@ export const Caixa: React.FC = () => {
   const [totalEntrada, setTotalEntrada] = useState(0);
   const [TotalEntradaPago, setTotalEntradaPago] = useState(0);
   const [totalCaixa, setTotalCaixa] = useState(0);
-
+  const { data: session } = useSession();
+  
   const fetchCaixa = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/movimentacao/listarCaixa?month=${month}&year=${year}`
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/caixa/listar?month=${month}&year=${year}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
       );
-      if (!response.ok) {
+     
+      if (!response) {
         throw new Error('Erro ao buscar dados');
       }
-      const data = await response.json();
+      const data = response.data;
       console.log(data.caixa);
 
       setTotalSaida(data.caixa.totalSaida);

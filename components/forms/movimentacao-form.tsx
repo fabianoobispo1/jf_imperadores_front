@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useToast } from '../ui/use-toast';
+import { toast, useToast } from '../ui/use-toast';
 import { AlertModal } from '../modal/alert-modal';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { format } from 'date-fns';
@@ -34,6 +34,8 @@ import { Calendar } from '../ui/calendar';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { LoadingButton } from '../ui/loading-button';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
 
 const formSchema = z.object({
   nome: z.string().min(3, { message: 'Nome é obrigatorio' }),
@@ -65,6 +67,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
   const action = id === 'create' ? 'Salvar' : 'Salvar alterações';
   const [atleta, setAtleta] = useState<MovimentacaoFormValues | null>(null);
 
+  const { data: session } = useSession();
 
   /*   useEffect(() => {
       const fetchAtleta = async () => {
@@ -114,7 +117,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
       nome: '',
       descricao: '',
       data_vencimento: new Date(),
-      data_pagamento: new Date("1900-01-01"),
+      data_pagamento: new Date('1900-01-01'),
       valor: 0,
       tipo: 'Entrada'
     }
@@ -128,32 +131,46 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
       };
    */
 
-
     try {
       setLoading(true);
       if (id === 'create') {
         const finalData = {
           ...data,
-          data_vencimento: new Date(data.data_vencimento.setHours(0, 0, 0, 0)),
+          data_vencimento: new Date(data.data_vencimento.setHours(0, 0, 0, 0))
         };
-        /* console.log(finalData) */
-        const response = await fetch('/api/movimentacao/registrar', {
+        console.log(finalData);
+        /*   const response = await fetch('/api/movimentacao/registrar', {
           method: 'POST',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ movimentacao: finalData })
-        });
+        }); */
 
-        if (response.status == 201) {
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/movimentos/Registrarmovimento`,
+          {
+            nome: finalData.nome,
+            descricao: finalData.descricao,
+            tipo: finalData.tipo,
+            valor: finalData.valor,
+            data_vencimento: finalData.data_vencimento
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+
+        if (response.status == 200) {
           toast({
             title: 'OK',
             description: 'Movimentação Salva'
           });
           router.refresh();
           router.push(`/dashboard/movimentacao`);
-
         } else {
           toast({
             variant: 'destructive',
@@ -161,8 +178,6 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
             description: 'Erro desconhecido'
           });
         }
-
-
       } else {
         /*  setLoading(true);
          const response = await fetch(`/api/atleta/atualizar/${id}`, {
@@ -191,7 +206,6 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
          }
          setLoading(true); */
       }
-
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -270,7 +284,11 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
                 <FormItem>
                   <FormLabel>Descrição</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="descricao" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="descricao"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -339,7 +357,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
               )}
             />
 
-            {id !== 'create' &&
+            {id !== 'create' && (
               <FormField
                 control={form.control}
                 name="data_pagamento"
@@ -383,7 +401,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
                   </FormItem>
                 )}
               />
-            }
+            )}
 
             <FormField
               control={form.control}
@@ -417,7 +435,7 @@ export const MovimentacaoForm: React.FC<MovimentacaoFormProps> = ({ id }) => {
           </div>
           <LoadingButton type="submit" loading={loading}>
             {action}
-          </LoadingButton >
+          </LoadingButton>
         </form>
       </Form>
     </>

@@ -30,6 +30,8 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 const formSchema = z.object({
   data_pagamento: z.date({
@@ -49,7 +51,8 @@ interface DataPagamentoFormProps {
 export function Pagmodal({id, jaPago, onUpdate }:DataPagamentoFormProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  
+  const { data: session } = useSession();
+
   const form = useForm<DataPagamentoFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,18 +63,22 @@ export function Pagmodal({id, jaPago, onUpdate }:DataPagamentoFormProps) {
   const onSubmit = async (data: DataPagamentoFormValues) => { 
       setLoading(true);
 
-      const response = await fetch('/api/movimentacao/registrarpagamento', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id, data_pagamento: data.data_pagamento })
-      });
+    
       
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/movimentos/Registrarmovimentopagameento`,
+        {
+          id, data_pagamento: data.data_pagamento
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
 
 
-    if (response.ok) {
+    if (response.status == 200) {
       onUpdate(); 
       router.refresh();
     }

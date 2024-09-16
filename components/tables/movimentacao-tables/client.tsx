@@ -10,6 +10,8 @@ import { LoadingButton } from '@/components/ui/loading-button';
 import { DataTableMovimentacao } from './data-table-movimentacao';
 import { Spinner } from '@/components/ui/spinner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
 
 
 export type Movimentacoes = {
@@ -29,17 +31,28 @@ export const MovimentacaoClient: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [month, setMonth] = useState<number>(new Date().getMonth() + 1);
   const [year, setYear] = useState<number>(new Date().getFullYear());
-
+  const { data: session } = useSession();
 
   const fetchMovimentacoes = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/movimentacao/listar?month=${month}&year=${year}`);
-      if (!response.ok) {
+
+
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/movimentos/listar?month=${month}&year=${year}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
+
+      if (response.status != 200) {
         throw new Error('Erro ao buscar dados');
       }
-      const data = await response.json();
-      setMovimentacoes(data.movimentacao);
+      const data = await response.data;
+      console.log(data)
+      setMovimentacoes(data.sfaMovimentos);
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
     } finally {
