@@ -9,7 +9,10 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Atletas } from '@/constants/data';
+import axios from 'axios';
+import { id } from 'date-fns/locale';
 import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -22,14 +25,18 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onDelete }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
+  const { data: session } = useSession();
+  
   const onConfirm = async () => {
     setLoading(true)
-    const response =  await fetch(`/api/atleta/remover/${data.id}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-
+    const response =  await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/apagaratleta/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session?.user.tokenApi}`
+        }
+      }
+    );
     if (response.status === 200) {
       onDelete(data.id);
     }

@@ -25,15 +25,18 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useToast } from '../ui/use-toast';
+import { toast, useToast } from '../ui/use-toast';
 import { AlertModal } from '../modal/alert-modal';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { Calendar } from '../ui/calendar';
-import { ptBR } from 'date-fns/locale';
+import { id, ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { LoadingButton } from '../ui/loading-button';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import router from 'next/router';
 
 const formSchema = z.object({
   cpf: z.string().min(11, 'CPF inválido').max(11, 'CPF inválido'),
@@ -69,20 +72,20 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       : 'Editar informações de um atleta';
   const action = id === 'create' ? 'Salvar' : 'Salvar alterações';
   const [atleta, setAtleta] = useState<AtletaFormValues | null>(null);
-
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchAtleta = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/atleta/buscar/${id}`); 
+        const response = await fetch(`/api/atleta/buscar/${id}`);
         if (!response.ok) {
           throw new Error('Erro ao buscar dados');
         }
 
         const data = await response.json();
         const atletaData = data.atleta[0];
-        
+
         // Atualize o estado e o formulário
         setAtleta(atletaData);
         form.reset({
@@ -96,7 +99,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
           numero: atletaData.numero || 0,
           altura: atletaData.altura || 0,
           peso: atletaData.peso || 0,
-          ativo: atletaData.ativo ? 'true' : 'false',
+          ativo: atletaData.ativo ? 'true' : 'false'
         });
         setLoading(false);
       } catch (error) {
@@ -110,7 +113,6 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
     if (id !== 'create') {
       fetchAtleta();
     }
-  
   }, []);
 
   const form = useForm<AtletaFormValues>({
@@ -140,38 +142,41 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
 
     try {
       setLoading(true);
-      if (id === 'create') {        
-        const response = await fetch('/api/atleta/registrar', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
+      if (id === 'create') {
+        console.log('Adicionar: ');
+        console.log(finalData);
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/registraratleta`,
+          {
+            finalData
           },
-          body: JSON.stringify({ atleta: finalData })
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
 
-        if(response.status == 201){
+        if (response.status == 201) {
           toast({
             title: 'OK',
             description: 'Atleta Salvo'
           });
           router.refresh();
           router.push(`/dashboard/atleta`);
-
-        }else if(response.status == 409){
+        } else if (response.status == 409) {
           toast({
             variant: 'destructive',
             title: 'Atleta não salvo',
             description: 'Email já cadastrado'
           });
-        }else{
+        } else {
           toast({
             variant: 'destructive',
             title: 'Atleta não salvo',
             description: 'Erro desconhecido'
           });
         }
-       
       } else {
         setLoading(true);
         const response = await fetch(`/api/atleta/atualizar/${id}`, {
@@ -182,8 +187,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
           },
           body: JSON.stringify({ atleta: finalData })
         });
-  
-        
+
         if (response.ok) {
           toast({
             title: 'OK',
@@ -191,7 +195,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
           });
           router.refresh();
           router.push(`/dashboard/atleta`);
-        }else{
+        } else {
           toast({
             variant: 'destructive',
             title: 'Atleta não alterado',
@@ -200,7 +204,6 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
         }
         setLoading(true);
       }
-   
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -214,14 +217,20 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
 
   const onDelete = async () => {
     try {
-      setLoading(true)
-      const response =  await fetch(`/api/atleta/remover/${id}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });      
-        setLoading(false)    
-        setOpen(false)
-         
+      setLoading(true);
+
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/apagaratleta/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
+
+      setLoading(false);
+      setOpen(false);
+
       router.refresh();
       router.push(`/dashboard/atleta`);
     } catch (error: any) {
@@ -456,7 +465,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="peso"
               render={({ field }) => (
@@ -505,9 +514,9 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
               )}
             />
           </div>
-          <LoadingButton  type="submit" loading={loading}>
+          <LoadingButton type="submit" loading={loading}>
             {action}
-          </LoadingButton >
+          </LoadingButton>
         </form>
       </Form>
     </>

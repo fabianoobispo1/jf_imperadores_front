@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import { columns } from './columns';
 import { LoadingButton } from '@/components/ui/loading-button';
 import { Spinner } from '@/components/ui/spinner';
+import { useSession } from 'next-auth/react';
+import axios from 'axios';
 
 type Atletas = {
   id: number;
@@ -22,18 +24,28 @@ export const AtletaClient: React.FC = () => {
   const router = useRouter();
   const [atletas, setAtletas] = useState<Atletas[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchAtletas = async () => {
       try {
-        const response = await fetch('/api/atleta/listar'); // Altere o endpoint conforme necessário
-        if (!response.ok) {
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/listaratletas`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+
+        if (response.status != 200) {
           throw new Error('Erro ao buscar dados');
         }
-        const data = await response.json();
+        const data = response.data.sfaAtleta
 
           // Mapear os dados para substituir o valor booleano do campo "ativo" por uma string
-          const atletasFormatados = data.atletas.map((atleta: any) => ({
+          const atletasFormatados = data.sfaAtleta.map((atleta: any) => ({
             ...atleta,
             ativo: atleta.ativo ? 'Sim' : 'Não'
           }));
