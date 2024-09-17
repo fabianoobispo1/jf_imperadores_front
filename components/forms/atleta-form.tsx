@@ -50,7 +50,7 @@ const formSchema = z.object({
   posicao: z.string(),
   numero: z.coerce.number(),
   altura: z.coerce.number(),
-  peso: z.coerce.number(),
+  pesso: z.coerce.number(),
   ativo: z.enum(['true', 'false'])
 });
 
@@ -98,7 +98,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
           posicao: atletaData.posicao || '',
           numero: atletaData.numero || 0,
           altura: atletaData.altura || 0,
-          peso: atletaData.peso || 0,
+          pesso: atletaData.pesso || 0,
           ativo: atletaData.ativo ? 'true' : 'false'
         });
         setLoading(false);
@@ -127,7 +127,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       posicao: '',
       numero: 0,
       altura: 0,
-      peso: 0,
+      pesso: 0,
       ativo: 'true'
     }
   });
@@ -147,9 +147,9 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
         console.log(finalData);
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/registraratleta`,
-          {
+          
             finalData
-          },
+          ,
           {
             headers: {
               Authorization: `Bearer ${session?.user.tokenApi}`
@@ -157,26 +157,14 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
           }
         );
 
-        if (response.status == 201) {
+        if (response.status == 200) {
           toast({
             title: 'OK',
             description: 'Atleta Salvo'
           });
           router.refresh();
           router.push(`/dashboard/atleta`);
-        } else if (response.status == 409) {
-          toast({
-            variant: 'destructive',
-            title: 'Atleta não salvo',
-            description: 'Email já cadastrado'
-          });
-        } else {
-          toast({
-            variant: 'destructive',
-            title: 'Atleta não salvo',
-            description: 'Erro desconhecido'
-          });
-        }
+        } 
       } else {
         setLoading(true);
         const response = await fetch(`/api/atleta/atualizar/${id}`, {
@@ -205,10 +193,11 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
         setLoading(true);
       }
     } catch (error: any) {
+console.log(error)
       toast({
         variant: 'destructive',
-        title: 'Ah, ah! Algo deu errado.',
-        description: 'Houve um problema com a requisição'
+        title: 'Erro',
+        description:  error.response.data.message?? 'Houve um problema com a requisição'
       });
     } finally {
       setLoading(false);
@@ -467,10 +456,10 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
             />
             <FormField
               control={form.control}
-              name="peso"
+              name="pesso"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Peso</FormLabel>
+                  <FormLabel>pesso</FormLabel>
                   <FormControl>
                     <Input
                       type="number"

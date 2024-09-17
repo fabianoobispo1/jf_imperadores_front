@@ -42,14 +42,17 @@ export const AtletaClient: React.FC = () => {
         if (response.status != 200) {
           throw new Error('Erro ao buscar dados');
         }
-        const data = response.data.sfaAtleta
-
+      
+        const data = response.data
+        console.log(data)
+        console.log(data.sfaAtleta)
           // Mapear os dados para substituir o valor booleano do campo "ativo" por uma string
           const atletasFormatados = data.sfaAtleta.map((atleta: any) => ({
             ...atleta,
             ativo: atleta.ativo ? 'Sim' : 'Não'
           }));
 
+          console.log(atletasFormatados)
         setAtletas(atletasFormatados);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
