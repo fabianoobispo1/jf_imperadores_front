@@ -37,6 +37,7 @@ import { LoadingButton } from '../ui/loading-button';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import router from 'next/router';
+import { headers } from 'next/headers';
 
 const formSchema = z.object({
   cpf: z.string().min(11, 'CPF inválido').max(11, 'CPF inválido'),
@@ -78,14 +79,20 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
     const fetchAtleta = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/atleta/buscar/${id}`);
-        if (!response.ok) {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/listaratleta/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+
+        if (response.status != 200) {
           throw new Error('Erro ao buscar dados');
         }
 
-        const data = await response.json();
-        const atletaData = data.atleta[0];
-
+        const atletaData = response.data.sfaAtleta;
         // Atualize o estado e o formulário
         setAtleta(atletaData);
         form.reset({
@@ -147,9 +154,8 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
         console.log(finalData);
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/registraratleta`,
-          
-            finalData
-          ,
+
+          finalData,
           {
             headers: {
               Authorization: `Bearer ${session?.user.tokenApi}`
@@ -164,19 +170,23 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
           });
           router.refresh();
           router.push(`/dashboard/atleta`);
-        } 
+        }
       } else {
         setLoading(true);
-        const response = await fetch(`/api/atleta/atualizar/${id}`, {
-          method: 'PUT',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ atleta: finalData })
-        });
 
-        if (response.ok) {
+       const response =  await axios.put(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/atualizaratleta/${id}`,
+          
+            finalData
+          ,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+
+        if (response.status == 200) {
           toast({
             title: 'OK',
             description: 'Atleta alterado'
@@ -193,11 +203,12 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
         setLoading(true);
       }
     } catch (error: any) {
-console.log(error)
+      console.log(error);
       toast({
         variant: 'destructive',
         title: 'Erro',
-        description:  error.response.data.message?? 'Houve um problema com a requisição'
+        description:
+          error.response.data.message ?? 'Houve um problema com a requisição'
       });
     } finally {
       setLoading(false);

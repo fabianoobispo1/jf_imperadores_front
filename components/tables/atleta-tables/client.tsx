@@ -44,15 +44,14 @@ export const AtletaClient: React.FC = () => {
         }
       
         const data = response.data
-        console.log(data)
-        console.log(data.sfaAtleta)
+      
           // Mapear os dados para substituir o valor booleano do campo "ativo" por uma string
           const atletasFormatados = data.sfaAtleta.map((atleta: any) => ({
             ...atleta,
             ativo: atleta.ativo ? 'Sim' : 'Não'
           }));
 
-          console.log(atletasFormatados)
+      
         setAtletas(atletasFormatados);
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
