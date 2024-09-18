@@ -7,19 +7,20 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { Usuario } from './schemas/usuarioSchema';
+import { Exercicio } from './schemas/exercicioSchema';
 import { Button } from '@/components/ui/button';
+import { Trash } from 'lucide-react';
 
 type Props = {
-  usuarios: Usuario[];
-  onEdit: (usuario: Usuario) => void;
+  exercicios: Exercicio[];
+  onEdit: (exercicio: Exercicio) => void;
   onDelete: (id: string) => void;
 };
 
-export function ExercicioTable({ usuarios , onEdit, onDelete }: Props) {
+export function ExercicioTable({ exercicios , onEdit, onDelete }: Props) {
   return (
     <div className="pt-2">
-      {usuarios.length === 0 ? (
+      {exercicios.length === 0 ? (
         <div className="flex h-full items-center justify-center">
           <p className="text-gray-500">Nenhum exercício encontrado.</p>
         </div>
@@ -29,31 +30,34 @@ export function ExercicioTable({ usuarios , onEdit, onDelete }: Props) {
             <TableHeader>
               <TableRow>
                 <TableHead className="text-center">Nome</TableHead>
-                <TableHead className="text-center">Email</TableHead>
-                <TableHead className="text-center">Administrador</TableHead>
-                <TableHead className="text-center">Criado em</TableHead>
-                <TableHead className="text-center">Opções</TableHead>
+                <TableHead className="text-center">Descrição</TableHead>
+                <TableHead className="text-center">imagem</TableHead>
+                <TableHead className="text-center">video</TableHead>
+                <TableHead className="text-end">Opções</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {usuarios.map((usuario) => (
-                <TableRow key={usuario.id}>
-                  <TableCell>{usuario.nome}</TableCell>
-                  <TableCell>{usuario.nome}</TableCell>
-                  <TableCell className="text-center">
-                    {' '}
-                    {usuario.administrador ? 'Sim' : 'Não'}
-                  </TableCell>
-                  <TableCell className="text-center">
-                  {usuario.created_at ? new Date(usuario.created_at).toLocaleDateString() : '-'}
-                  </TableCell>
-                  <TableCell className="text-center">
+              {exercicios.map((exercicio) => (
+                <TableRow key={exercicio.id}>
+                  <TableCell>{exercicio.nome}</TableCell>
+                  <TableCell>{exercicio.descricao}</TableCell>
+                  <TableCell>{exercicio.url_img}</TableCell>
+                  <TableCell>{exercicio.url_video}</TableCell>
+                  <TableCell className="text-center flex gap-4 justify-end">
                     <Button
                       className="border-none focus:border-none focus:ring-0"
-                      onClick={() => onEdit(usuario)}
+                      onClick={() => onEdit(exercicio)}
                     >
                       Editar
                     </Button>
+                    <Button
+                    className="border-none focus:border-none focus:ring-0"
+                    onClick={() => onDelete(exercicio.id!)}
+                    color="failure"
+                    
+                  >
+                     <Trash className="h-4 w-4" />
+                  </Button>
                   </TableCell>
                 </TableRow>
               ))}

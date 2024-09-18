@@ -4,7 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/components/ui/use-toast';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Usuario } from './schemas/usuarioSchema';
+import { Exercicio } from './schemas/exercicioSchema';
 import { useSession } from 'next-auth/react';
 import { Spinner } from '@/components/ui/spinner';
 import { ExercicioForm } from './ExercicioForm';
@@ -15,8 +15,8 @@ const breadcrumbItems = [
   { title: 'Exercícios', link: '/dashboard/administracao/exercícios' }
 ];
 export default function Page() {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [editingUsuario, setEditingUsuario] = useState<Usuario | null>(null);
+  const [exercicios, setExercicios] = useState<Exercicio[]>([]);
+  const [editingUsuario, setEditingUsuario] = useState<Exercicio | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const { data: session } = useSession();
@@ -28,17 +28,18 @@ export default function Page() {
   const loadExercicios = async () => {
     setLoading(true);
     try {
-      /*    const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/usuario/listausuarios`,
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/exercicio/listarexercicio`,
         {
           headers: {
             Authorization: `Bearer ${session?.user.tokenApi}`
           }
         }
       );
-      const usuario = response.data.sfaUsuario || [];
-      setUsuarios(usuario); */
-      setUsuarios([]);
+
+      const exercicio = response.data.sfaExercicio || [];
+      console.log(exercicio);
+      setExercicios(exercicio);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
     } finally {
@@ -46,8 +47,11 @@ export default function Page() {
     }
   };
 
-  const handleAddOrUpdate = async (usuario: Usuario, resetForm: () => void) => {
-    console.log(usuario);
+  const handleAddOrUpdate = async (
+    exercicio: Exercicio,
+    resetForm: () => void
+  ) => {
+    console.log(exercicio);
     if (editingUsuario) {
       try {
         /* const body = {
@@ -77,16 +81,42 @@ export default function Page() {
         /*   console.log(error.response.data.message);
         toast.error(error.response.data.message || "Erro 500"); */
       }
-    } /*else {
+    } else {
+      setLoading(true);
       try {
-        const body = {
-          endpoint: "/toronCategoriaregister",
-          method: "POST",
-          body: '{"categoria": "' + category.categoria + '"}',
-          isprivate: "true",
-        };
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/exercicio/registrarexercicio`,
+          exercicio,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+        if (response.status != 201) {
+          toast({
+            title: 'Erro',
+            variant: 'destructive',
+            description:
+              response.status + ' - ' + response.data ?? 'Desconhecido'
+          });
+        }
 
-        const response = await axios.post("/api/apiexterna", body);
+        resetForm();
+        setEditingUsuario(null);
+        await loadExercicios();
+        toast({
+          title: 'ok',
+          description: 'Cadastro realizado ....'
+        });
+      } catch (error: any) {
+        /*       toast.error(error.response.data.message || "Erro 500"); */
+      } finally {
+        setLoading(false);
+      }
+      /*  try {
+       
+
 
         if (!response.data.message.toronCategoria) {
           toast.error(response.data.message.message);
@@ -100,43 +130,55 @@ export default function Page() {
         console.log(error.response.data.message);
         toast.error(error.response.data.message || "Erro 500");
       }
-
+ */
       //await addCategory(category.categoria);
-    } */
-
-    resetForm();
+    }
+    /*    resetForm();
     setEditingUsuario(null);
     await loadExercicios();
     toast({
       title: 'ok',
       description: 'Cadastro Atualizado ....'
-    });
+    }); */
   };
 
-  const handleEdit = (usuario: Usuario) => {
+  const handleEdit = (usuario: Exercicio) => {
     setEditingUsuario(usuario);
   };
 
   const handleDelete = async (id: string) => {
-    /*   try {
-      const body = {
-        endpoint: `/toronCategoriadelete`,
-        method: "DELETE",
-        isprivate: "true",
-        body: '{"id": "' + id + '"}',
-      };
-      const response = await axios.post("/api/apiexterna", body);
-      if (!response.data.message.toronCategoria) {
-        toast.error(response.data.message.message);
-        
-      } else { 
-        await loadCategorias();
-        toast.success("Categoria apagada.");
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/exercicio/deletexercicio/${id}`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
+
+      if (response.status != 200) {
+        toast({
+          title: 'Erro',
+          variant: 'destructive',
+          description:
+            response.status + ' - ' + response.data ?? 'Desconhecido'
+        });
       }
+
+      
+        await loadExercicios();
+        toast({
+          title: 'ok',
+          description: 'Cadastro removido ....'
+        });
+    
     } catch (error: any) {
-      console.log(error.response.data.message);
-      toast.error(error.response.data.message || "Erro 500");
-    } */
+      /*       toast.error(error.response.data.message || "Erro 500"); */
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -158,7 +200,7 @@ export default function Page() {
             </div>
           ) : (
             <ExercicioTable
-              usuarios={usuarios}
+              exercicios={exercicios}
               onEdit={handleEdit}
               onDelete={handleDelete}
             />

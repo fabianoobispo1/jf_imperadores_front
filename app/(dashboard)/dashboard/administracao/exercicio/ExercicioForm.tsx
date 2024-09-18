@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Usuario, usuarioSchema } from './schemas/usuarioSchema';
+import { Exercicio, exercicioSchema } from './schemas/exercicioSchema';
 import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -10,8 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@radix-ui/react-checkbox';
 
 type Props = {
-  onSubmit: (data: Usuario, resetForm: () => void) => void;
-  defaultValues?: Partial<Usuario>;
+  onSubmit: (data: Exercicio, resetForm: () => void) => void;
+  defaultValues?: Partial<Exercicio>;
   loading: boolean;
 };
 export function ExercicioForm({ onSubmit, defaultValues, loading }: Props) {
@@ -20,39 +20,33 @@ export function ExercicioForm({ onSubmit, defaultValues, loading }: Props) {
     handleSubmit,
     reset,
     formState: { errors }
-  } = useForm<Usuario>({
-    resolver: zodResolver(usuarioSchema),
+  } = useForm<Exercicio>({
+    resolver: zodResolver(exercicioSchema),
     defaultValues: {
       id: '',
       nome: '',
-      email: '',
-      data_nascimento: '',
-      administrador: false,
+      descricao: '',
+      url_img: '',
+      url_video: '',
       ...defaultValues
     }
   });
-  
-  useEffect(() => {
 
+  useEffect(() => {
     if (defaultValues) {
-   
       reset({
         id: defaultValues.id || '',
         nome: defaultValues.nome || '',
-        email: defaultValues.email || '',
-        data_nascimento: defaultValues.data_nascimento
-          ? new Date(defaultValues.data_nascimento).toISOString().split('T')[0]
-          : '',
-        administrador: defaultValues.administrador || false,
-        provider: defaultValues.provider ||'',
-        img_url: defaultValues.img_url||''
+        descricao: defaultValues.descricao || '',
+        url_img: defaultValues.url_img || '',
+        url_video: defaultValues.url_video || ''
       });
     }
     console.log(defaultValues);
   }, [defaultValues, reset]);
 
   // Chame a função onSubmit passada como props
-  const onSubmitHandler = (data: Usuario) => {
+  const onSubmitHandler = (data: Exercicio) => {
     onSubmit(data, () => reset()); // Isso garante que o onSubmit seja chamado e o formulário seja resetado
   };
 
@@ -67,54 +61,48 @@ export function ExercicioForm({ onSubmit, defaultValues, loading }: Props) {
           <Input
             id="nome"
             type="text"
-            placeholder="Nome do usuário"
+            placeholder="Nome do exrcício"
             {...register('nome')}
-            color={errors.nome ? "failure" : undefined} // Modifica o estilo se houver erro
-            />
-            {errors.nome && (
-              <p className="text-sm text-red-500">{errors.nome.message}</p> // Exibe a mensagem de erro
-            )}
-        </div>
-
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-                 disabled={defaultValues?.provider === 'github' || defaultValues?.provider === 'google'?true: false}
-            id="email"
-            type="email"
-            placeholder="user@example.com"
-            {...register('email')}
-            color={errors.email ? 'failure' : undefined}
+            color={errors.nome ? 'failure' : undefined} // Modifica o estilo se houver erro
           />
-        </div>
-
-        <div>
-          <Label htmlFor="data_nascimento">Data Nascimento</Label>
-          <Input
-            id="data_nascimento"
-            type="date"
-            {...register('data_nascimento')}
-            color={errors.data_nascimento ? 'failure' : undefined}
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="administrador">Administrador</Label>
-          <select
-            id="administrador"
-            {...register('administrador', {
-              setValueAs: (v) => v === 'true', // Converte a string para booleano
-            })}
-            className={`'flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50' ${
-              errors.administrador ? 'border-red-500' : ''
-            }`}
-          >
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-          {errors.administrador && (
-            <p className="text-red-500 text-sm">{errors.administrador.message}</p> // Exibe a mensagem de erro
+          {errors.nome && (
+            <p className="text-sm text-red-500">{errors.nome.message}</p> // Exibe a mensagem de erro
           )}
+        </div>
+
+        <div>
+          <Label htmlFor="descricao">Descrição</Label>
+          <Input
+            id="descricao"
+            type="descricao"
+            placeholder="Uma breve deescrição"
+            {...register('descricao')}
+            color={errors.descricao ? 'failure' : undefined}
+          />
+           {errors.nome && (
+            <p className="text-sm text-red-500">{errors.nome.message}</p> // Exibe a mensagem de erro
+          )}
+        </div>
+
+        <div>
+          <Label htmlFor="url_img">Imagem</Label>
+          <Input
+            id="url_img"
+            type="url_img"
+            placeholder="Link de uma imagem"
+            {...register('url_img')}
+            color={errors.url_img ? 'failure' : undefined}
+          />
+        </div>
+        <div>
+          <Label htmlFor="url_video">Video</Label>
+          <Input
+            id="url_video"
+            type="url_video"
+            placeholder="Link de um video"
+            {...register('url_video')}
+            color={errors.url_video ? 'failure' : undefined}
+          />
         </div>
       </div>
 
