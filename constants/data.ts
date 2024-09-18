@@ -176,8 +176,26 @@ export const navItems: NavItem[] = [
     icon: 'profile',
     label: 'profile'
   },
+  {
+    title: 'Administração',
+    href: '/dashboard/administracao',
+    icon: 'settings',
+    label: 'administracao'
+  },
+  {
+    title: 'Ficha exercícios ',
+    href: '/dashboard/fichaexercicios',
+    icon: 'post',
+    label: 'post'
+  }, 
+  {
+    title: 'Login',
+    href: '/',
+    icon: 'login',
+    label: 'login'
+  },
 
- /*  {
+  /* {
     title: 'User',
     href: '/dashboard/user',
     icon: 'user',
@@ -190,8 +208,8 @@ export const navItems: NavItem[] = [
     icon: 'post',
     label: 'post',
     disabled: true
-  }, */
-  /*   {
+  }, 
+     {
     title: 'Employee',
     href: '/dashboard/employee',
     icon: 'employee',
@@ -209,16 +227,5 @@ export const navItems: NavItem[] = [
     icon: 'kanban',
     label: 'kanban'
   }, */
-  {
-    title: 'Administração',
-    href: '/dashboard/administracao',
-    icon: 'settings',
-    label: 'administracao'
-  },
-  {
-    title: 'Login',
-    href: '/',
-    icon: 'login',
-    label: 'login'
-  }
+ 
 ];
