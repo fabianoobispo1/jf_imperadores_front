@@ -215,7 +215,7 @@ export default function Page() {
         <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
           <BreadCrumb items={breadcrumbItems} />
           <h1 className="text-xl font-bold">Gerenciamento de ficha de exercícios</h1>
-
+{atleta.length}
 
    {/*        <ExercicioForm
             loading={loading}
