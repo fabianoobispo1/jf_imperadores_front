@@ -97,7 +97,6 @@ export default function Page() {
     setLoadingFicha(false);
   };
 
-
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
@@ -133,45 +132,51 @@ export default function Page() {
           </div>
         ) : (
           <Tabs defaultValue="Segunda" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="Segunda">Segunda</TabsTrigger>
-            <TabsTrigger value="Terça">Terça</TabsTrigger>
-            <TabsTrigger value="Quarta">Quarta</TabsTrigger>
-            <TabsTrigger value="Quinta">Quinta</TabsTrigger>
-            <TabsTrigger value="Sexta">Sexta</TabsTrigger>
-            <TabsTrigger value="Sábado">Sábado</TabsTrigger>
-            <TabsTrigger value="Domingo">Domingo</TabsTrigger>
-          </TabsList>
-        
-          {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => (
-            <TabsContent key={dia} value={dia} className="space-y-4">
-              {console.log(`Rendering ${dia}...`)}
-              {fichas
-                .filter((ficha) => {
-                  const match = ficha.diaSemana === dia;
-                  console.log(`Filtering ${ficha.diaSemana}: ${match}`);
-                  return match;
-                })
-                .map((ficha) => (
-                  <div key={ficha.id}>
-                    <h3>{dia}</h3>
-                    {ficha.exercicios.length > 0 ? (
-                      ficha.exercicios.map((exercicio) => (
-                        <div key={exercicio.id}>
-                          <p>Exercício: {exercicio.nomeExercicio}</p>
-                          <p>Repetições: {exercicio.repeticoes}</p>
-                          <p>Carga: {exercicio.carga}kg</p>
-                        </div>
-                      ))
-                    ) : (
-                      <p>Nenhum exercício para este dia.</p>
-                    )}
-                  </div>
-                ))}
-            </TabsContent>
-          ))}
-        </Tabs>
-        
+            <TabsList>
+              <TabsTrigger value="Segunda">Segunda</TabsTrigger>
+              <TabsTrigger value="Terça">Terça</TabsTrigger>
+              <TabsTrigger value="Quarta">Quarta</TabsTrigger>
+              <TabsTrigger value="Quinta">Quinta</TabsTrigger>
+              <TabsTrigger value="Sexta">Sexta</TabsTrigger>
+              <TabsTrigger value="Sábado">Sábado</TabsTrigger>
+              <TabsTrigger value="Domingo">Domingo</TabsTrigger>
+            </TabsList>
+
+            {[
+              'Segunda',
+              'Terça',
+              'Quarta',
+              'Quinta',
+              'Sexta',
+              'Sábado',
+              'Domingo'
+            ].map((dia) => (
+              <TabsContent key={dia} value={dia} className="space-y-4">
+                {fichas
+                  .filter((ficha) => {
+                    const match = ficha.diaSemana === dia;
+
+                    return match;
+                  })
+                  .map((ficha) => (
+                    <div key={ficha.id}>
+                      <h3>{dia}</h3>
+                      {ficha.exercicios.length > 0 ? (
+                        ficha.exercicios.map((exercicio) => (
+                          <div key={exercicio.id}>
+                            <p>Exercício: {exercicio.nomeExercicio}</p>
+                            <p>Repetições: {exercicio.repeticoes}</p>
+                            <p>Carga: {exercicio.carga}kg</p>
+                          </div>
+                        ))
+                      ) : (
+                        <p>Nenhum exercício para este dia.</p>
+                      )}
+                    </div>
+                  ))}
+              </TabsContent>
+            ))}
+          </Tabs>
         )}
       </div>
     </ScrollArea>
