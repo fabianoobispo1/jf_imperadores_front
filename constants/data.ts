@@ -177,17 +177,17 @@ export const navItems: NavItem[] = [
     label: 'profile'
   },
   {
-    title: 'Administração',
-    href: '/dashboard/administracao',
-    icon: 'settings',
-    label: 'administracao'
-  },
-  {
     title: 'Ficha exercícios ',
     href: '/dashboard/fichaexercicios',
     icon: 'post',
     label: 'post'
   }, 
+  {
+    title: 'Administração',
+    href: '/dashboard/administracao',
+    icon: 'settings',
+    label: 'administracao'
+  },
   {
     title: 'Login',
     href: '/',
