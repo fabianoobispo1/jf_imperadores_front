@@ -4,33 +4,62 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/components/ui/use-toast';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-/* import { Exercicio } from './schemas/exercicioSchema'; */
+
 import { useSession } from 'next-auth/react';
 import { Spinner } from '@/components/ui/spinner';
-import { Exercicio } from '../exercicio/schemas/exercicioSchema';
-/* import { ExercicioForm } from './ExercicioForm';
-import { ExercicioTable } from './ExercicioTable'; */
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 
 const breadcrumbItems = [
   { title: 'Administrção', link: '/dashboard/administracao' },
   { title: 'Ficha Exercícios', link: '/dashboard/administracao/fichaexercicio' }
 ];
+
+interface Exercicio {
+  id: string;
+  repeticoes: string;
+  carga: number;
+  nomeExercicio: string;
+}
+
+interface Ficha {
+  diaSemana: string;
+  exercicios: Exercicio[];
+  id: string;
+}
+
+interface Atleta {
+  id: string;
+  nome: string;
+}
+
 export default function Page() {
-  const [atleta, setAtleta] = useState([])
-  const [exercicios, setExercicios] = useState<Exercicio[]>([]);
-  const [editingUsuario, setEditingUsuario] = useState<Exercicio | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [atleta, setAtleta] = useState<Atleta[]>([
+    { id: '90e83701-f943-4d25-b86c-22cf1b9c1106', nome: 'Fabiano Bispo' }
+  ]);
+  const [fichas, setFichas] = useState<Ficha[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [atletaSelecionado, setAtletaSelecionado] = useState<string>();
+  const [loadingFicha, setLoadingFicha] = useState<boolean>(true);
 
   const { data: session } = useSession();
 
   useEffect(() => {
-    loadAtletas();
+    //loadAtletas();
   }, []);
 
   const loadAtletas = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
+      /*      const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/listaratletas`,
         {
           headers: {
@@ -38,206 +67,113 @@ export default function Page() {
           }
         }
       );
-   
 
-  /*     const exercicio = response.data.sfaExercicio || [];
-      console.log(exercicio); */
-      const test = response.data.sfaAtleta|| []
-      
-      setAtleta(test);
+       setAtleta(response.data.sfaAtleta || []); */
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
+  };
 
-  }
+  const handleAtletaChange = async (value: string) => {
+    setLoadingFicha(true);
+    setAtletaSelecionado(value);
 
-  const loadExercicios = async () => {
-    setLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/exercicio/listarexercicio`,
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/ficaexercicio/listarexercicios?atleta_id=${value}`,
         {
           headers: {
             Authorization: `Bearer ${session?.user.tokenApi}`
           }
         }
       );
-
-      const exercicio = response.data.sfaExercicio || [];
-      console.log(exercicio);
-      setExercicios(exercicio);
+      console.log(response.data.fichas);
+      setFichas(response.data.fichas || []);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
-    } finally {
-      setLoading(false);
     }
+
+    setLoadingFicha(false);
   };
 
-  const handleAddOrUpdate = async (
-    exercicio: Exercicio,
-    resetForm: () => void
-  ) => {
-    console.log(exercicio);
-    if (editingUsuario) {
-      try {
-        /* const body = {
-          endpoint: `/alterarusuarioadmintoron`,
-          method: "POST",
-          body:
-            '{"toronUsuario_id": "' +
-            usuario.id +
-            '","toronUsuarioAdmin": ' +
-            usuario.administrador +
-            '}',
-          isprivate: "true",
-        };
-
-        const response = await axios.post("/api/apiexterna", body);
-
-        if (!response.data.message.toronUsuario) {
-          toast.error(response.data.message.message);
-    
-        }  else {
-          resetForm();
-          setEditingUsuario(null);
-          await loadCategorias();
-          toast.success("Usuario alterado.");
-        } */
-      } catch (error: any) {
-        /*   console.log(error.response.data.message);
-        toast.error(error.response.data.message || "Erro 500"); */
-      }
-    } else {
-      setLoading(true);
-      try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/exercicio/registrarexercicio`,
-          exercicio,
-          {
-            headers: {
-              Authorization: `Bearer ${session?.user.tokenApi}`
-            }
-          }
-        );
-        if (response.status != 201) {
-          toast({
-            title: 'Erro',
-            variant: 'destructive',
-            description:
-              response.status + ' - ' + response.data ?? 'Desconhecido'
-          });
-        }
-
-        resetForm();
-        setEditingUsuario(null);
-        await loadExercicios();
-        toast({
-          title: 'ok',
-          description: 'Cadastro realizado ....'
-        });
-      } catch (error: any) {
-        /*       toast.error(error.response.data.message || "Erro 500"); */
-      } finally {
-        setLoading(false);
-      }
-      /*  try {
-       
-
-
-        if (!response.data.message.toronCategoria) {
-          toast.error(response.data.message.message);
-        } else {
-          resetForm();
-          setEditingCategory(null);
-          await loadCategorias();
-          toast.success("Categoria cadastrada.");
-        }
-      } catch (error: any) {
-        console.log(error.response.data.message);
-        toast.error(error.response.data.message || "Erro 500");
-      }
- */
-      //await addCategory(category.categoria);
-    }
-    /*    resetForm();
-    setEditingUsuario(null);
-    await loadExercicios();
-    toast({
-      title: 'ok',
-      description: 'Cadastro Atualizado ....'
-    }); */
-  };
-
-  const handleEdit = (usuario: Exercicio) => {
-    setEditingUsuario(usuario);
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/exercicio/deletexercicio/${id}`,
-
-        {
-          headers: {
-            Authorization: `Bearer ${session?.user.tokenApi}`
-          }
-        }
-      );
-
-      if (response.status != 200) {
-        toast({
-          title: 'Erro',
-          variant: 'destructive',
-          description:
-            response.status + ' - ' + response.data ?? 'Desconhecido'
-        });
-      }
-
-      
-        await loadExercicios();
-        toast({
-          title: 'ok',
-          description: 'Cadastro removido ....'
-        });
-    
-    } catch (error: any) {
-      /*       toast.error(error.response.data.message || "Erro 500"); */
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
-    <>
-      <ScrollArea className="h-full">
-        <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-          <BreadCrumb items={breadcrumbItems} />
-          <h1 className="text-xl font-bold">Gerenciamento de ficha de exercícios</h1>
-{atleta.length}
+    <ScrollArea className="h-full">
+      <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+        <BreadCrumb items={breadcrumbItems} />
+        <h1 className="text-xl font-bold">
+          Gerenciamento de ficha de exercícios
+        </h1>
 
-   {/*        <ExercicioForm
-            loading={loading}
-            onSubmit={handleAddOrUpdate}
-            defaultValues={editingUsuario ?? undefined}
-          /> */}
-          <></>
+        {loading ? (
+          <div className="flex h-full items-center justify-center">
+            <Spinner />
+          </div>
+        ) : (
+          <Select onValueChange={handleAtletaChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione o atleta" />
+            </SelectTrigger>
+            <SelectContent>
+              {atleta.map((atleta) => (
+                <SelectItem key={atleta.id} value={atleta.id}>
+                  {atleta.nome}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
 
-          {loading ? (
-            <div className="flex h-full items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-           /*  <ExercicioTable
-              exercicios={exercicios}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            /> */
+        <Separator />
+
+        {loadingFicha ? (
+          <div className="flex h-full items-center justify-center">
             <></>
-          )}
-        </div>
-      </ScrollArea>
-    </>
+          </div>
+        ) : (
+          <Tabs defaultValue="Segunda" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="Segunda">Segunda</TabsTrigger>
+            <TabsTrigger value="Terça">Terça</TabsTrigger>
+            <TabsTrigger value="Quarta">Quarta</TabsTrigger>
+            <TabsTrigger value="Quinta">Quinta</TabsTrigger>
+            <TabsTrigger value="Sexta">Sexta</TabsTrigger>
+            <TabsTrigger value="Sábado">Sábado</TabsTrigger>
+            <TabsTrigger value="Domingo">Domingo</TabsTrigger>
+          </TabsList>
+        
+          {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => (
+            <TabsContent key={dia} value={dia} className="space-y-4">
+              {console.log(`Rendering ${dia}...`)}
+              {fichas
+                .filter((ficha) => {
+                  const match = ficha.diaSemana === dia;
+                  console.log(`Filtering ${ficha.diaSemana}: ${match}`);
+                  return match;
+                })
+                .map((ficha) => (
+                  <div key={ficha.id}>
+                    <h3>{dia}</h3>
+                    {ficha.exercicios.length > 0 ? (
+                      ficha.exercicios.map((exercicio) => (
+                        <div key={exercicio.id}>
+                          <p>Exercício: {exercicio.nomeExercicio}</p>
+                          <p>Repetições: {exercicio.repeticoes}</p>
+                          <p>Carga: {exercicio.carga}kg</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>Nenhum exercício para este dia.</p>
+                    )}
+                  </div>
+                ))}
+            </TabsContent>
+          ))}
+        </Tabs>
+        
+        )}
+      </div>
+    </ScrollArea>
   );
 }
