@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { FichaExercicioTable } from './FichaExercicioTable';
 
 const breadcrumbItems = [
   { title: 'Administrção', link: '/dashboard/administracao' },
@@ -43,7 +44,7 @@ interface Atleta {
 
 export default function Page() {
   const [atleta, setAtleta] = useState<Atleta[]>([
-    { id: '90e83701-f943-4d25-b86c-22cf1b9c1106', nome: 'Fabiano Bispo' }
+   /*  { id: '90e83701-f943-4d25-b86c-22cf1b9c1106', nome: 'Fabiano Bispo' } */
   ]);
   const [fichas, setFichas] = useState<Ficha[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -53,13 +54,13 @@ export default function Page() {
   const { data: session } = useSession();
 
   useEffect(() => {
-    //loadAtletas();
+  loadAtletas();
   }, []);
 
   const loadAtletas = async () => {
     setLoading(true);
     try {
-      /*      const response = await axios.get(
+           const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/listaratletas`,
         {
           headers: {
@@ -68,7 +69,7 @@ export default function Page() {
         }
       );
 
-       setAtleta(response.data.sfaAtleta || []); */
+       setAtleta(response.data.sfaAtleta || []);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
     }
@@ -124,9 +125,22 @@ export default function Page() {
           </Select>
         )}
 
-        <Separator />
+     
 
         {loadingFicha ? (
+            <div className="flex h-full items-center justify-center">
+              <Spinner />
+            </div>
+          ) : (
+            <></>
+           /*  <FichaExercicioTable
+              fichaExercicios={exercicios}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            /> */
+          )}
+
+     {/*    {loadingFicha ? (
           <div className="flex h-full items-center justify-center">
             <></>
           </div>
@@ -177,7 +191,7 @@ export default function Page() {
               </TabsContent>
             ))}
           </Tabs>
-        )}
+        )} */}
       </div>
     </ScrollArea>
   );
