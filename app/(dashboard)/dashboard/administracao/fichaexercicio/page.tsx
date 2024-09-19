@@ -1,7 +1,6 @@
 'use client';
 import BreadCrumb from '@/components/breadcrumb';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { toast } from '@/components/ui/use-toast';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -15,27 +14,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { FichaExercicioTable } from './FichaExercicioTable';
+import { FichaExercicio } from './schemas/fichaExercicioSchema';
+import { FichaExercicioForm } from './FichaExercicioForm';
 
 const breadcrumbItems = [
   { title: 'Administrção', link: '/dashboard/administracao' },
   { title: 'Ficha Exercícios', link: '/dashboard/administracao/fichaexercicio' }
 ];
-
-interface Exercicio {
-  id: string;
-  repeticoes: string;
-  carga: number;
-  nomeExercicio: string;
-}
-
-interface Ficha {
-  diaSemana: string;
-  exercicios: Exercicio[];
-  id: string;
-}
 
 interface Atleta {
   id: string;
@@ -43,10 +30,9 @@ interface Atleta {
 }
 
 export default function Page() {
-  const [atleta, setAtleta] = useState<Atleta[]>([
-   /*  { id: '90e83701-f943-4d25-b86c-22cf1b9c1106', nome: 'Fabiano Bispo' } */
-  ]);
-  const [fichas, setFichas] = useState<Ficha[]>([]);
+  const [atleta, setAtleta] = useState<Atleta[]>([]);
+  const [fichas, setFichas] = useState<FichaExercicio[]>([]);
+  const [editFicha, setEditFicha] = useState<FichaExercicio | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [atletaSelecionado, setAtletaSelecionado] = useState<string>();
   const [loadingFicha, setLoadingFicha] = useState<boolean>(true);
@@ -54,13 +40,13 @@ export default function Page() {
   const { data: session } = useSession();
 
   useEffect(() => {
-  loadAtletas();
+    loadAtletas();
   }, []);
 
   const loadAtletas = async () => {
     setLoading(true);
     try {
-           const response = await axios.get(
+      const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/listaratletas`,
         {
           headers: {
@@ -69,7 +55,7 @@ export default function Page() {
         }
       );
 
-       setAtleta(response.data.sfaAtleta || []);
+      setAtleta(response.data.sfaAtleta || []);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
     }
@@ -89,13 +75,32 @@ export default function Page() {
           }
         }
       );
-      console.log(response.data.fichas);
-      setFichas(response.data.fichas || []);
+      console.log(response.data);
+      setFichas(response.data || []);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
     }
 
     setLoadingFicha(false);
+  };
+
+  const handleEdit = (fichaexercicio: FichaExercicio) => {
+    console.log(fichaexercicio);
+    setEditFicha(fichaexercicio);
+  };
+
+  const handleDelete = async (id: string) => {
+    console.log(id);
+  };
+
+  const handleAddOrUpdate = async (
+    fichaexercicio: FichaExercicio,
+    resetForm: () => void
+  ) => {
+    console.log(fichaexercicio);
+
+    resetForm();
+    setEditFicha(null);
   };
 
   return (
@@ -125,73 +130,25 @@ export default function Page() {
           </Select>
         )}
 
-     
-
         {loadingFicha ? (
-            <div className="flex h-full items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <></>
-           /*  <FichaExercicioTable
-              fichaExercicios={exercicios}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            /> */
-          )}
-
-     {/*    {loadingFicha ? (
           <div className="flex h-full items-center justify-center">
-            <></>
+            <Spinner />
           </div>
         ) : (
-          <Tabs defaultValue="Segunda" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="Segunda">Segunda</TabsTrigger>
-              <TabsTrigger value="Terça">Terça</TabsTrigger>
-              <TabsTrigger value="Quarta">Quarta</TabsTrigger>
-              <TabsTrigger value="Quinta">Quinta</TabsTrigger>
-              <TabsTrigger value="Sexta">Sexta</TabsTrigger>
-              <TabsTrigger value="Sábado">Sábado</TabsTrigger>
-              <TabsTrigger value="Domingo">Domingo</TabsTrigger>
-            </TabsList>
+          <>
+            <FichaExercicioForm
+              loading={loading}
+              onSubmit={handleAddOrUpdate}
+              defaultValues={editFicha ?? undefined}
+            />
 
-            {[
-              'Segunda',
-              'Terça',
-              'Quarta',
-              'Quinta',
-              'Sexta',
-              'Sábado',
-              'Domingo'
-            ].map((dia) => (
-              <TabsContent key={dia} value={dia} className="space-y-4">
-                {fichas
-                  .filter((ficha) => {
-                    const match = ficha.diaSemana === dia;
-
-                    return match;
-                  })
-                  .map((ficha) => (
-                    <div key={ficha.id}>
-                      <h3>{dia}</h3>
-                      {ficha.exercicios.length > 0 ? (
-                        ficha.exercicios.map((exercicio) => (
-                          <div key={exercicio.id}>
-                            <p>Exercício: {exercicio.nomeExercicio}</p>
-                            <p>Repetições: {exercicio.repeticoes}</p>
-                            <p>Carga: {exercicio.carga}kg</p>
-                          </div>
-                        ))
-                      ) : (
-                        <p>Nenhum exercício para este dia.</p>
-                      )}
-                    </div>
-                  ))}
-              </TabsContent>
-            ))}
-          </Tabs>
-        )} */}
+            <FichaExercicioTable
+              fichaExercicios={fichas}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </>
+        )}
       </div>
     </ScrollArea>
   );

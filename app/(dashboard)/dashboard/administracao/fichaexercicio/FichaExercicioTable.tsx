@@ -17,7 +17,11 @@ type Props = {
   onDelete: (id: string) => void;
 };
 
-export function FichaExercicioTable({ fichaExercicios , onEdit, onDelete }: Props) {
+export function FichaExercicioTable({
+  fichaExercicios,
+  onEdit,
+  onDelete
+}: Props) {
   return (
     <div className="pt-2">
       {fichaExercicios.length === 0 ? (
@@ -38,13 +42,14 @@ export function FichaExercicioTable({ fichaExercicios , onEdit, onDelete }: Prop
             </TableHeader>
             <TableBody>
               {fichaExercicios.map((exercicio) => (
-                <TableRow key={exercicio.id}>
-                  <TableCell>{exercicio.atleta_id}</TableCell>
-                  <TableCell>{exercicio.exercicio_id}</TableCell>
+                <TableRow key={exercicio.fichaId}>
                   <TableCell>{exercicio.diaSemana}</TableCell>
+                  {/*          <TableCell>{exercicio.nomeExercicio}</TableCell>
+                  <TableCell>{exercicio.exercicioId}</TableCell>
+         
                   <TableCell>{exercicio.repeticoes}</TableCell>
-                  <TableCell>{exercicio.carga}</TableCell>
-                  <TableCell className="text-center flex gap-4 justify-end">
+                  <TableCell>{exercicio.carga}</TableCell> */}
+                  <TableCell className="flex justify-end gap-4 text-center">
                     <Button
                       className="border-none focus:border-none focus:ring-0"
                       onClick={() => onEdit(exercicio)}
@@ -52,13 +57,12 @@ export function FichaExercicioTable({ fichaExercicios , onEdit, onDelete }: Prop
                       Editar
                     </Button>
                     <Button
-                    className="border-none focus:border-none focus:ring-0"
-                    onClick={() => onDelete(exercicio.id!)}
-                    color="failure"
-                    
-                  >
-                     <Trash className="h-4 w-4" />
-                  </Button>
+                      className="border-none focus:border-none focus:ring-0"
+                      onClick={() => onDelete(exercicio.fichaId!)}
+                      color="failure"
+                    >
+                      <Trash className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
