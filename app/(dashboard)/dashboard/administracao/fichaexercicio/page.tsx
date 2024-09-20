@@ -18,6 +18,8 @@ import { Separator } from '@/components/ui/separator';
 import { FichaExercicioTable } from './FichaExercicioTable';
 import { FichaExercicio } from './schemas/fichaExercicioSchema';
 import { FichaExercicioForm } from './FichaExercicioForm';
+import { Exercicio } from '../exercicio/schemas/exercicioSchema';
+import { toast } from '@/components/ui/use-toast';
 
 const breadcrumbItems = [
   { title: 'Administrção', link: '/dashboard/administracao' },
@@ -32,6 +34,7 @@ interface Atleta {
 export default function Page() {
   const [atleta, setAtleta] = useState<Atleta[]>([]);
   const [fichas, setFichas] = useState<FichaExercicio[]>([]);
+  const [exercicios, setExercicios] = useState([]);
   const [editFicha, setEditFicha] = useState<FichaExercicio | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [atletaSelecionado, setAtletaSelecionado] = useState<string>();
@@ -54,7 +57,6 @@ export default function Page() {
           }
         }
       );
-
       setAtleta(response.data.sfaAtleta || []);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
@@ -75,8 +77,24 @@ export default function Page() {
           }
         }
       );
-      console.log(response.data);
       setFichas(response.data || []);
+    } catch (error: any) {
+      /*       toast.error(error.response.data.message || "Erro 500"); */
+    }
+
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/exercicio/listarexercicio`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
+
+      const exercicio = response.data.sfaExercicio || [];
+      console.log(exercicio);
+      setExercicios(exercicio);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
     }
@@ -98,9 +116,57 @@ export default function Page() {
     resetForm: () => void
   ) => {
     console.log(fichaexercicio);
+    if (editFicha) {
 
-    resetForm();
-    setEditFicha(null);
+    }else{
+      if(!atletaSelecionado){
+        return
+      }
+      setLoading(true);
+      try {
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/ficaexercicio/registrarexercicio`,
+        {
+        atleta_id: atletaSelecionado,
+          diaSemana: fichaexercicio.diaSemana,
+          exercicio_id: fichaexercicio.exercicioId,
+          repeticoes: fichaexercicio.repeticoes,
+          carga: fichaexercicio.carga
+        },
+          
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+        if (response.status != 201) {
+          toast({
+            title: 'Erro',
+            variant: 'destructive',
+            description:
+              response.status + ' - ' + response.data ?? 'Desconhecido'
+          });
+        }
+
+        resetForm();
+        setEditFicha(null);
+        await handleAtletaChange(atletaSelecionado);
+        toast({
+          title: 'ok',
+          description: 'Cadastro realizado ....'
+        });
+      } catch (error: any) {
+        /*       toast.error(error.response.data.message || "Erro 500"); */
+      } finally {
+        setLoading(false);
+      }
+
+
+      resetForm();
+      setEditFicha(null);
+    }
+  
   };
 
   return (
@@ -140,6 +206,7 @@ export default function Page() {
               loading={loading}
               onSubmit={handleAddOrUpdate}
               defaultValues={editFicha ?? undefined}
+              exercicios={exercicios}
             />
 
             <FichaExercicioTable
