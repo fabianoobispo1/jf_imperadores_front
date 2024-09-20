@@ -8,7 +8,7 @@ export const usuarioSchema = z.object({
   administrador: z.boolean().optional(), // `administrador` por padrao e adicionado com false
   provider: z.string().optional(),
   img_url: z.string().optional(),
-  created_at: z.string().date().optional(),
+  created_at: z.string().optional(),
 });
 
 

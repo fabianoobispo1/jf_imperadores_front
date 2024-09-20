@@ -17,6 +17,31 @@ export const BotoesAdministracao: React.FC = () => {
       >
         Usuarios
       </Button>
+
+      <p className="mb-2 text-gray-500 dark:text-gray-400">
+        Tela para listar e cadastrar exercícios.
+      </p>
+      <Button
+        onClick={() => {
+          router.push(`/dashboard/administracao/exercicio`);
+        }}
+      >
+        
+        Exercícios
+      </Button>
+
+      <p className="mb-2 text-gray-500 dark:text-gray-400">
+        Tela para listar e cadastrar ficha de exercícios.
+      </p>
+      <Button
+        onClick={() => {
+          router.push(`/dashboard/administracao/fichaexercicio`);
+        }}
+      >
+        
+        Ficha Exercícios
+      </Button>
+      
     </>
   );
 };

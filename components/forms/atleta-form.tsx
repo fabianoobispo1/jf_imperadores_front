@@ -25,15 +25,19 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useToast } from '../ui/use-toast';
+import { toast, useToast } from '../ui/use-toast';
 import { AlertModal } from '../modal/alert-modal';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { Calendar } from '../ui/calendar';
-import { ptBR } from 'date-fns/locale';
+import { id, ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { LoadingButton } from '../ui/loading-button';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import router from 'next/router';
+import { headers } from 'next/headers';
 
 const formSchema = z.object({
   cpf: z.string().min(11, 'CPF inválido').max(11, 'CPF inválido'),
@@ -47,7 +51,7 @@ const formSchema = z.object({
   posicao: z.string(),
   numero: z.coerce.number(),
   altura: z.coerce.number(),
-  peso: z.coerce.number(),
+  pesso: z.coerce.number(),
   ativo: z.enum(['true', 'false'])
 });
 
@@ -69,20 +73,26 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       : 'Editar informações de um atleta';
   const action = id === 'create' ? 'Salvar' : 'Salvar alterações';
   const [atleta, setAtleta] = useState<AtletaFormValues | null>(null);
-
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchAtleta = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/atleta/buscar/${id}`); 
-        if (!response.ok) {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/listaratleta/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+
+        if (response.status != 200) {
           throw new Error('Erro ao buscar dados');
         }
 
-        const data = await response.json();
-        const atletaData = data.atleta[0];
-        
+        const atletaData = response.data.sfaAtleta;
         // Atualize o estado e o formulário
         setAtleta(atletaData);
         form.reset({
@@ -95,8 +105,8 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
           posicao: atletaData.posicao || '',
           numero: atletaData.numero || 0,
           altura: atletaData.altura || 0,
-          peso: atletaData.peso || 0,
-          ativo: atletaData.ativo ? 'true' : 'false',
+          pesso: atletaData.pesso || 0,
+          ativo: atletaData.ativo ? 'true' : 'false'
         });
         setLoading(false);
       } catch (error) {
@@ -110,7 +120,6 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
     if (id !== 'create') {
       fetchAtleta();
     }
-  
   }, []);
 
   const form = useForm<AtletaFormValues>({
@@ -125,7 +134,7 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
       posicao: '',
       numero: 0,
       altura: 0,
-      peso: 0,
+      pesso: 0,
       ativo: 'true'
     }
   });
@@ -140,58 +149,51 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
 
     try {
       setLoading(true);
-      if (id === 'create') {        
-        const response = await fetch('/api/atleta/registrar', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ atleta: finalData })
-        });
+      if (id === 'create') {
+        console.log('Adicionar: ');
+        console.log(finalData);
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/registraratleta`,
 
-        if(response.status == 201){
+          finalData,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+
+        if (response.status == 200) {
           toast({
             title: 'OK',
             description: 'Atleta Salvo'
           });
           router.refresh();
           router.push(`/dashboard/atleta`);
-
-        }else if(response.status == 409){
-          toast({
-            variant: 'destructive',
-            title: 'Atleta não salvo',
-            description: 'Email já cadastrado'
-          });
-        }else{
-          toast({
-            variant: 'destructive',
-            title: 'Atleta não salvo',
-            description: 'Erro desconhecido'
-          });
         }
-       
       } else {
         setLoading(true);
-        const response = await fetch(`/api/atleta/atualizar/${id}`, {
-          method: 'PUT',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ atleta: finalData })
-        });
-  
-        
-        if (response.ok) {
+
+       const response =  await axios.put(
+          `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/atualizaratleta/${id}`,
+          
+            finalData
+          ,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.tokenApi}`
+            }
+          }
+        );
+
+        if (response.status == 200) {
           toast({
             title: 'OK',
             description: 'Atleta alterado'
           });
           router.refresh();
           router.push(`/dashboard/atleta`);
-        }else{
+        } else {
           toast({
             variant: 'destructive',
             title: 'Atleta não alterado',
@@ -200,12 +202,13 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
         }
         setLoading(true);
       }
-   
     } catch (error: any) {
+      console.log(error);
       toast({
         variant: 'destructive',
-        title: 'Ah, ah! Algo deu errado.',
-        description: 'Houve um problema com a requisição'
+        title: 'Erro',
+        description:
+          error.response.data.message ?? 'Houve um problema com a requisição'
       });
     } finally {
       setLoading(false);
@@ -214,14 +217,20 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
 
   const onDelete = async () => {
     try {
-      setLoading(true)
-      const response =  await fetch(`/api/atleta/remover/${id}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });      
-        setLoading(false)    
-        setOpen(false)
-         
+      setLoading(true);
+
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/atleta/apagaratleta/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
+
+      setLoading(false);
+      setOpen(false);
+
       router.refresh();
       router.push(`/dashboard/atleta`);
     } catch (error: any) {
@@ -456,12 +465,12 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
-              name="peso"
+              name="pesso"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Peso</FormLabel>
+                  <FormLabel>pesso</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -505,9 +514,9 @@ export const AtletaForm: React.FC<AtletaFormProps> = ({ id }) => {
               )}
             />
           </div>
-          <LoadingButton  type="submit" loading={loading}>
+          <LoadingButton type="submit" loading={loading}>
             {action}
-          </LoadingButton >
+          </LoadingButton>
         </form>
       </Form>
     </>
