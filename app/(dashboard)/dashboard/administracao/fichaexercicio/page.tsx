@@ -117,23 +117,22 @@ export default function Page() {
   ) => {
     console.log(fichaexercicio);
     if (editFicha) {
-
-    }else{
-      if(!atletaSelecionado){
-        return
+    } else {
+      if (!atletaSelecionado) {
+        return;
       }
       setLoading(true);
       try {
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/ficaexercicio/registrarexercicio`,
-        {
-        atleta_id: atletaSelecionado,
-          diaSemana: fichaexercicio.diaSemana,
-          exercicio_id: fichaexercicio.exercicioId,
-          repeticoes: fichaexercicio.repeticoes,
-          carga: fichaexercicio.carga
-        },
-          
+          {
+            atleta_id: atletaSelecionado,
+            diaSemana: fichaexercicio.diaSemana,
+            exercicio_id: fichaexercicio.exercicioId,
+            repeticoes: fichaexercicio.repeticoes,
+            carga: fichaexercicio.carga
+          },
+
           {
             headers: {
               Authorization: `Bearer ${session?.user.tokenApi}`
@@ -149,7 +148,7 @@ export default function Page() {
           });
         }
 
-        resetForm();
+        //resetForm();
         setEditFicha(null);
         await handleAtletaChange(atletaSelecionado);
         toast({
@@ -162,11 +161,9 @@ export default function Page() {
         setLoading(false);
       }
 
-
-      resetForm();
+      //resetForm();
       setEditFicha(null);
     }
-  
   };
 
   return (

@@ -3,30 +3,66 @@
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
 import { useRouter } from 'next/navigation';
-import { TodoList } from '@/components/TodoList';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent
-} from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Overview } from '@/components/overview';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { FichaExercicio } from '../../administracao/fichaexercicio/schemas/fichaExercicioSchema';
+
+interface FichaExercicioExibir extends FichaExercicio {
+  posicaoEspecifica: string;
+  descricao: string;
+  nomeExercicio: string;
+  url_img: string;
+  url_video: string;
+}
+
 export const FichaExercicios: React.FC = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [fichas, setFichas] = useState<FichaExercicioExibir[]>([]);
+
+  const { data: session } = useSession();
+  useEffect(() => {
+    loadAtletas();
+  }, []);
+
+  const loadAtletas = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/ficaexercicio/listarexerciciosemail?email=${session?.user.email}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.tokenApi}`
+          }
+        }
+      );
+      setFichas(response.data || []);
+      console.log(response.data);
+    } catch (error: any) {
+      /*       toast.error(error.response.data.message || "Erro 500"); */
+    }
+    setLoading(false);
+  };
+
+  const renderFichasPorDia = (dia: string) => {
+    return fichas
+      .filter((ficha) => ficha.diaSemana === dia)
+      .map((ficha) => (
+        <div key={ficha.fichaId} className="rounded border p-4">
+          <h3>{ficha.nomeExercicio}</h3>
+          <p>{ficha.repeticoes}</p>
+          <p>{ficha.carga}</p>
+          {/* Adicione mais campos conforme necessário */}
+        </div>
+      ));
+  };
 
   return (
     <>
       <div className="flex items-start justify-between">
         <Heading title={'Seus exercícios'} description="...." />
-        {/*  <LoadingButton
-          
-          className="text-xs md:text-sm"
-          onClick={() => router.push(`/dashboard/atleta/create`)}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Adicionar
-        </LoadingButton> */}
       </div>
       <Separator />
       <div className="pt-4">
@@ -41,25 +77,25 @@ export const FichaExercicios: React.FC = () => {
             <TabsTrigger value="domingo">Domingo</TabsTrigger>
           </TabsList>
           <TabsContent value="segunda" className="space-y-4">
-            segunda
+            {renderFichasPorDia('Segunda')}
           </TabsContent>
           <TabsContent value="terca" className="space-y-4">
-            terca
+            {renderFichasPorDia('Terça')}
           </TabsContent>
           <TabsContent value="quarta" className="space-y-4">
-            quarta
+            {renderFichasPorDia('Quarta')}
           </TabsContent>
           <TabsContent value="quinta" className="space-y-4">
-            quinta
+            {renderFichasPorDia('Quinta')}
           </TabsContent>
           <TabsContent value="sexta" className="space-y-4">
-            sexta
+            {renderFichasPorDia('Sexta')}
           </TabsContent>
           <TabsContent value="sabado" className="space-y-4">
-            sabado
+            {renderFichasPorDia('Sabado')}
           </TabsContent>
           <TabsContent value="domingo" className="space-y-4">
-            domingo
+            {renderFichasPorDia('Domingo')}
           </TabsContent>
         </Tabs>
       </div>
