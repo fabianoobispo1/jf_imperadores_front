@@ -10,6 +10,8 @@ import {
 import { Exercicio } from './schemas/exercicioSchema';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
+import { Modal } from '@/components/ui/modal';
+import { useState } from 'react';
 
 type Props = {
   exercicios: Exercicio[];
@@ -18,6 +20,24 @@ type Props = {
 };
 
 export function ExercicioTable({ exercicios , onEdit, onDelete }: Props) {
+
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
+  const extractYouTubeID = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|embed\/|watch\?v=|\/videos\/|watch\?v%3D|watch\?v%3D|watch\?list=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
+  
+  const handleVideoOpen = (url_video: string) => {
+    setSelectedVideo(url_video);
+  };
+
+  const handleModalClose = () => {
+    setSelectedVideo(null);
+  };
+  
   return (
     <div className="pt-2">
       {exercicios.length === 0 ? (
@@ -42,7 +62,18 @@ export function ExercicioTable({ exercicios , onEdit, onDelete }: Props) {
                   <TableCell>{exercicio.nome}</TableCell>
                   <TableCell>{exercicio.descricao}</TableCell>
                   <TableCell>{exercicio.url_img}</TableCell>
-                  <TableCell>{exercicio.url_video}</TableCell>
+                 
+                  {/* Exibir URL do vídeo */}
+                  <TableCell>
+                    {exercicio.url_video =='' ? <></> : <Button
+                      className="border-none focus:border-none focus:ring-0"
+                      onClick={() => handleVideoOpen(exercicio.url_video||'')}
+                    >
+                      Ver Vídeo
+                    </Button>}
+
+                    
+                  </TableCell>
                   <TableCell className="text-center flex gap-4 justify-end">
                     <Button
                       className="border-none focus:border-none focus:ring-0"
@@ -64,6 +95,24 @@ export function ExercicioTable({ exercicios , onEdit, onDelete }: Props) {
             </TableBody>
           </Table>
         </div>
+      )}
+     
+      {selectedVideo && (
+        <Modal
+          title="Exibir Vídeo"
+          description=""
+          isOpen={!!selectedVideo}
+          onClose={handleModalClose}
+        >
+           <iframe
+            width="450"
+            height="300"
+            src={`https://www.youtube.com/embed/${extractYouTubeID(selectedVideo)}`}
+         
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </Modal>
       )}
     </div>
   );

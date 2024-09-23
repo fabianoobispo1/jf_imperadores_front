@@ -11,6 +11,14 @@ import { FichaExercicio } from './schemas/fichaExercicioSchema';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
 
+interface FichaExercicioExibir extends FichaExercicio {
+  posicaoEspecifica?: string;
+  descricao?: string;
+  nomeExercicio?: string;
+  url_img?: string;
+  url_video?: string;
+}
+
 type Props = {
   fichaExercicios: FichaExercicio[];
   onEdit: (fichaexercicio: FichaExercicio) => void;
@@ -34,17 +42,20 @@ export function FichaExercicioTable({
             <TableHeader>
               <TableRow>
                 <TableHead className="text-center">Nome</TableHead>
-                <TableHead className="text-center">Descrição</TableHead>
-                <TableHead className="text-center">imagem</TableHead>
+                <TableHead className="text-center">Reptição</TableHead>
+                <TableHead className="text-center">Carga</TableHead>
                 <TableHead className="text-center">video</TableHead>
                 <TableHead className="text-end">Opções</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {fichaExercicios.map((exercicio) => (
-                <TableRow key={exercicio.fichaId}>
-                  <TableCell>{exercicio.diaSemana}</TableCell>
-                  {/*          <TableCell>{exercicio.nomeExercicio}</TableCell>
+              {fichaExercicios.map((exercicio: FichaExercicioExibir) => (
+                <TableRow key={exercicio.id}>
+                  <TableCell>{exercicio.nomeExercicio}</TableCell>
+                  <TableCell>{exercicio.repeticoes}</TableCell>
+                  <TableCell>{exercicio.carga}</TableCell>
+                  <TableCell>{exercicio.url_video}</TableCell>
+                  {/*          <TableCell>{exercicio.0nomeExercicio}</TableCell>
                   <TableCell>{exercicio.exercicioId}</TableCell>
          
                   <TableCell>{exercicio.repeticoes}</TableCell>

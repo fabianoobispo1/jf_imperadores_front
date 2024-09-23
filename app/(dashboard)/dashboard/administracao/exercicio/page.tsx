@@ -38,7 +38,7 @@ export default function Page() {
       );
 
       const exercicio = response.data.sfaExercicio || [];
-      console.log(exercicio);
+    
       setExercicios(exercicio);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
@@ -54,6 +54,46 @@ export default function Page() {
     console.log(exercicio);
     if (editingUsuario) {
       try {
+        https://www.youtube.com/watch?v=rM6SDUdl9fs?atleta_id=${value}`,
+
+
+
+        try {
+          const response = await axios.put(
+            `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/exrcicio/editarexrcicio/${exercicio.id}`,
+            exercicio,
+            {
+              headers: {
+                Authorization: `Bearer ${session?.user.tokenApi}`
+              }
+            }
+          );
+          console.log(response)
+          if (response.status != 200) {
+            toast({
+              title: 'Erro',
+              variant: 'destructive',
+              description:
+                response.status + ' - ' + response.data ?? 'Desconhecido'
+            });
+          }
+          setEditingUsuario(null);
+          resetForm();
+         
+          await loadExercicios();
+          toast({
+            title: 'ok',
+            description: 'Cadastro atualizado ....'
+          });
+        } catch (error: any) {
+          /*       toast.error(error.response.data.message || "Erro 500"); */
+        } finally {
+          setLoading(false);
+        }
+
+
+
+
         /* const body = {
           endpoint: `/alterarusuarioadmintoron`,
           method: "POST",

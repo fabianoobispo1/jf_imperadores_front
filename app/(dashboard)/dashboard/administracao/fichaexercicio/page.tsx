@@ -18,7 +18,7 @@ import { Separator } from '@/components/ui/separator';
 import { FichaExercicioTable } from './FichaExercicioTable';
 import { FichaExercicio } from './schemas/fichaExercicioSchema';
 import { FichaExercicioForm } from './FichaExercicioForm';
-import { Exercicio } from '../exercicio/schemas/exercicioSchema';
+
 import { toast } from '@/components/ui/use-toast';
 
 const breadcrumbItems = [
@@ -93,7 +93,7 @@ export default function Page() {
       );
 
       const exercicio = response.data.sfaExercicio || [];
-      console.log(exercicio);
+      console.log(response.data.sfaExercicio);
       setExercicios(exercicio);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
@@ -173,7 +173,7 @@ export default function Page() {
         <h1 className="text-xl font-bold">
           Gerenciamento de ficha de exercícios
         </h1>
-
+        <Separator />
         {loading ? (
           <div className="flex h-full items-center justify-center">
             <Spinner />
@@ -205,7 +205,7 @@ export default function Page() {
               defaultValues={editFicha ?? undefined}
               exercicios={exercicios}
             />
-
+            <Separator />
             <FichaExercicioTable
               fichaExercicios={fichas}
               onEdit={handleEdit}
