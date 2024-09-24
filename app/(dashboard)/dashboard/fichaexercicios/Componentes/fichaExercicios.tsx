@@ -52,7 +52,7 @@ export const FichaExercicios: React.FC = () => {
       .filter((ficha) => ficha.diaSemana === dia)
       .map((ficha) => (
         <div key={ficha.fichaId}>
-          <div className="flex flex-row gap-16 pb-4">
+          <div className="flex flex-row justify-between pb-4 ">
             <div>
               <p>◾ {ficha.nomeExercicio}</p>
               <p>Repetições: {ficha.repeticoes}</p>
