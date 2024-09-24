@@ -84,7 +84,7 @@ export function ExercicioForm({ onSubmit, defaultValues, loading }: Props) {
           )}
         </div>
 
-        <div>
+      {/*   <div>
           <Label htmlFor="url_img">Imagem</Label>
           <Input
             id="url_img"
@@ -93,7 +93,7 @@ export function ExercicioForm({ onSubmit, defaultValues, loading }: Props) {
             {...register('url_img')}
             color={errors.url_img ? 'failure' : undefined}
           />
-        </div>
+        </div> */}
         <div>
           <Label htmlFor="url_video">Video</Label>
           <Input

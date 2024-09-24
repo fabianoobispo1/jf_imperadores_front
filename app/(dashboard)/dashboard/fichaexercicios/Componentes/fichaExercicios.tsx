@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { FichaExercicio } from '../../administracao/fichaexercicio/schemas/fichaExercicioSchema';
+import { VideoModalButton } from '@/components/VideoModalButton';
 
 interface FichaExercicioExibir extends FichaExercicio {
   posicaoEspecifica: string;
@@ -50,11 +51,24 @@ export const FichaExercicios: React.FC = () => {
     return fichas
       .filter((ficha) => ficha.diaSemana === dia)
       .map((ficha) => (
-        <div key={ficha.fichaId} className="rounded border p-4">
-          <h3>{ficha.nomeExercicio}</h3>
-          <p>{ficha.repeticoes}</p>
-          <p>{ficha.carga}</p>
-          {/* Adicione mais campos conforme necessário */}
+        <div key={ficha.fichaId}>
+          <div className="flex flex-row gap-16 pb-4">
+            <div>
+              <p>◾ {ficha.nomeExercicio}</p>
+              <p>Repetições: {ficha.repeticoes}</p>
+              <p>Carga: {ficha.carga}</p>
+            </div>
+            <div>
+              {ficha.url_video == '' ? (
+                <></>
+              ) : (
+                <VideoModalButton
+                  videoUrl={ficha.url_video || ''}
+                  videoTitle={ficha.nomeExercicio || ''}
+                />
+              )}
+            </div>
+          </div>
         </div>
       ));
   };

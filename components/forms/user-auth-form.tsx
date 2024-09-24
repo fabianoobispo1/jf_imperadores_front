@@ -151,7 +151,7 @@ export default function UserAuthForm() {
       </div>
       {/* mudar o nome do componete */}
       <GoogleSignInButton />
-      <GitHubSignInButton />
+  {/*     <GitHubSignInButton /> */}
 
 
     </>

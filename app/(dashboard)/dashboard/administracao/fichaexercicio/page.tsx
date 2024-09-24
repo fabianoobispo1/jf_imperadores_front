@@ -77,7 +77,26 @@ export default function Page() {
           }
         }
       );
-      setFichas(response.data || []);
+
+      // Definir a ordem dos dias da semana
+      const diasDaSemana = [
+        'Domingo',
+        'Segunda',
+        'Terça',
+        'Quarta',
+        'Quinta',
+        'Sexta',
+        'Sábado'
+      ];
+
+      // Ordenar os dados pelo campo diaSemana
+      const fichasOrdenadas = (response.data || []).sort((a: any, b: any) => {
+        return (
+          diasDaSemana.indexOf(a.diaSemana) - diasDaSemana.indexOf(b.diaSemana)
+        );
+      });
+
+      setFichas(fichasOrdenadas || []);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */
     }
@@ -93,7 +112,6 @@ export default function Page() {
       );
 
       const exercicio = response.data.sfaExercicio || [];
-      console.log(response.data.sfaExercicio);
       setExercicios(exercicio);
     } catch (error: any) {
       /*       toast.error(error.response.data.message || "Erro 500"); */

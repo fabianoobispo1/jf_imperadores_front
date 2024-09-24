@@ -10,6 +10,7 @@ import {
 import { FichaExercicio } from './schemas/fichaExercicioSchema';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
+import { VideoModalButton } from '@/components/VideoModalButton';
 
 interface FichaExercicioExibir extends FichaExercicio {
   posicaoEspecifica?: string;
@@ -41,9 +42,10 @@ export function FichaExercicioTable({
           <Table className="relative">
             <TableHeader>
               <TableRow>
-                <TableHead className="text-center">Nome</TableHead>
-                <TableHead className="text-center">Reptição</TableHead>
-                <TableHead className="text-center">Carga</TableHead>
+                <TableHead >Dia</TableHead>
+                <TableHead >Nome</TableHead>
+                <TableHead >Reptição</TableHead>
+                <TableHead >Carga</TableHead>
                 <TableHead className="text-center">video</TableHead>
                 <TableHead className="text-end">Opções</TableHead>
               </TableRow>
@@ -51,10 +53,20 @@ export function FichaExercicioTable({
             <TableBody>
               {fichaExercicios.map((exercicio: FichaExercicioExibir) => (
                 <TableRow key={exercicio.id}>
+                  <TableCell>{exercicio.diaSemana}</TableCell>
                   <TableCell>{exercicio.nomeExercicio}</TableCell>
                   <TableCell>{exercicio.repeticoes}</TableCell>
                   <TableCell>{exercicio.carga}</TableCell>
-                  <TableCell>{exercicio.url_video}</TableCell>
+                  <TableCell className=" text-center">
+                    {exercicio.url_video == '' ? (
+                      <></>
+                    ) : (
+                      <VideoModalButton
+                        videoUrl={exercicio.url_video || ''}
+                        videoTitle={exercicio.nomeExercicio || ''}
+                      />
+                    )}
+                  </TableCell>
                   {/*          <TableCell>{exercicio.0nomeExercicio}</TableCell>
                   <TableCell>{exercicio.exercicioId}</TableCell>
          
