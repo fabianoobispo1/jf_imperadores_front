@@ -4,7 +4,8 @@ import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'JF Imperadores',
-  description: 'Pagina inicial JF Imperadores'
+  description: 'Pagina inicial JF Imperadores',
+  keywords: 'imperadores, jf imperadores, jfimperadores, futebolamericano, futebol ameriacno, fabr, juiz de fora imperadores, time imperadores, time jfimperadores, time jf imperadores'
 };
 
 export default function HomePage() {
