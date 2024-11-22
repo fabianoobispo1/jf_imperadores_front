@@ -131,6 +131,7 @@ export default function UserAuthForm() {
             )}
           />
           <LoadingButton
+            disabled
             loading={loading}
             className="ml-auto w-full"
             type="submit"
@@ -150,10 +151,8 @@ export default function UserAuthForm() {
         </div>
       </div>
       {/* mudar o nome do componete */}
-      <GoogleSignInButton />
-  {/*     <GitHubSignInButton /> */}
-
-
+      {/* <GoogleSignInButton /> */}
+      {/*     <GitHubSignInButton /> */}
     </>
   );
 }
