@@ -82,13 +82,27 @@ export const FichaExercicios: React.FC = () => {
       <div className="pt-4">
         <Tabs defaultValue="segunda" className="space-y-4">
           <TabsList>
-            <TabsTrigger className='px-2' value="segunda">Segunda</TabsTrigger>
-            <TabsTrigger className='px-2' value="terca">Terça</TabsTrigger>
-            <TabsTrigger className='px-2' value="quarta">Quarta</TabsTrigger>
-            <TabsTrigger className='px-2' value="quinta">Quinta</TabsTrigger>
-            <TabsTrigger className='px-2' value="sexta">Sexta</TabsTrigger>
-            <TabsTrigger className='px-2' value="sabado">Sabado</TabsTrigger>
-            <TabsTrigger className='px-2' value="domingo">Domingo</TabsTrigger>
+            <TabsTrigger className="px-2" value="segunda">
+              Segunda
+            </TabsTrigger>
+            <TabsTrigger className="px-2" value="terca">
+              Terça
+            </TabsTrigger>
+            <TabsTrigger className="px-2" value="quarta">
+              Quarta
+            </TabsTrigger>
+            <TabsTrigger className="px-2" value="quinta">
+              Quinta
+            </TabsTrigger>
+            <TabsTrigger className="px-2" value="sexta">
+              Sexta
+            </TabsTrigger>
+            <TabsTrigger className="px-2" value="sabado">
+              Sabado
+            </TabsTrigger>
+            <TabsTrigger className="px-2" value="domingo">
+              Domingo
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="segunda" className="space-y-4">
             {renderFichasPorDia('Segunda')}

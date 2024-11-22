@@ -5,7 +5,8 @@ import Image from 'next/image';
 export const metadata: Metadata = {
   title: 'JF Imperadores',
   description: 'Pagina inicial JF Imperadores',
-  keywords: 'imperadores, jf imperadores, jfimperadores, futebolamericano, futebol ameriacno, fabr, juiz de fora imperadores, time imperadores, time jfimperadores, time jf imperadores'
+  keywords:
+    'imperadores, jf imperadores, jfimperadores, futebolamericano, futebol ameriacno, fabr, juiz de fora imperadores, time imperadores, time jfimperadores, time jf imperadores'
 };
 
 export default function HomePage() {
@@ -33,9 +34,7 @@ export default function HomePage() {
           >
             <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
           </svg>
-  {/*         JF Imperadores */}
-
-  
+          {/*         JF Imperadores */}
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
