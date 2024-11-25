@@ -17,6 +17,14 @@ Este é um modelo inicial usando as seguintes ferramentas:
 - Formatting - [Prettier](https://prettier.io)
   -->
 
+
+- Linktree - 
+Ao utilizar o https://linktr.ee/
+apos fazer o cadastro, pede um username
+para ficar  https://linktr.ee/fabianoobispo
+e depois escolhe o tema, basicamente ordenado em linhas, foto, nome, descricao, grupo de links de outras redes com icones, uns tem um item de About(sobre), e os links, que pode ou nao tem icones ou ate imagens
+
+
 ## Contato
 
 <div> 
