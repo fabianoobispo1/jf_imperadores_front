@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="flex h-screen items-center justify-center ">
-      <Redirecionador link={'https://jfimperadores.lojavirtualnuvem.com.br'} />
+      {/* <Redirecionador link={'https://jfimperadores.lojavirtualnuvem.com.br'} /> */}
       <p>Linktree</p>
       {/*  <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-zinc-900" />
