@@ -9,7 +9,7 @@ export default async function PublicLayout({
 }) {
   const session = await auth()
 
-  if (session?.user) redirect('/home')
+  if (session?.user) redirect('/admin')
 
   return <div>{children}</div>
 }
