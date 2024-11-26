@@ -1,10 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-import HeaderDesktop from './HeaderDesktop'
-import HeaderMobile from './buttomMenu'
+import HeaderMobile from './HeaderMobile'
+import BottomMenu from './buttomMenu'
 
-export default function HeaderLayout() {
+export default function DinamicLayout() {
   const [isMobile, setIsMobile] = useState(false)
 
   // Verifica a largura da janela
@@ -19,5 +19,16 @@ export default function HeaderLayout() {
     return () => window.removeEventListener('resize', handleResize) // Remove listener na desmontagem
   }, [])
 
-  return <>{isMobile ? <HeaderMobile /> : <HeaderDesktop />}</>
+  return (
+    <>
+      {isMobile ? (
+        <>
+          <HeaderMobile />
+          <BottomMenu />
+        </>
+      ) : (
+        <></>
+      )}
+    </>
+  )
 }

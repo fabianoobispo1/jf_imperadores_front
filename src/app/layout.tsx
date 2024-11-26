@@ -6,8 +6,6 @@ import ConvexClientProvider from '@/providers/ConvexClientProvider'
 import AuthProvider from '@/providers/AuthProvider'
 import '@uploadthing/react/styles.css'
 import ThemeProvider from '@/components/layout/ThemeToggle/theme-provider'
-import { auth } from '@/auth/auth'
-import Header from '@/components/layout/header'
 
 export const metadata: Metadata = {
   title: 'Principal',
@@ -21,7 +19,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await auth()
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
@@ -32,13 +29,7 @@ export default async function RootLayout({
           <NextTopLoader showSpinner={false} />
           <ConvexClientProvider>
             <AuthProvider>
-              {session ? <Header /> : <></>}
-
-              <div className="flex h-screen overflow-hidden">
-                {/*  {session ? <Sidebar /> : <></>} */}
-
-                <main className="flex-1 overflow-hidden pt-16">{children}</main>
-              </div>
+              <main className="">{children}</main>
             </AuthProvider>
           </ConvexClientProvider>
         </ThemeProvider>
