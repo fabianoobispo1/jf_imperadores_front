@@ -13,6 +13,10 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as links from "../links.js";
+import type * as socialIcons from "../socialIcons.js";
+import type * as telaLinks from "../telaLinks.js";
+import type * as todo from "../todo.js";
 import type * as user from "../user.js";
 
 /**
@@ -24,6 +28,10 @@ import type * as user from "../user.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  links: typeof links;
+  socialIcons: typeof socialIcons;
+  telaLinks: typeof telaLinks;
+  todo: typeof todo;
   user: typeof user;
 }>;
 export declare const api: FilterApi<
