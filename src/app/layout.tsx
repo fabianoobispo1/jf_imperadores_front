@@ -8,7 +8,6 @@ import '@uploadthing/react/styles.css'
 import ThemeProvider from '@/components/layout/ThemeToggle/theme-provider'
 import { auth } from '@/auth/auth'
 import Header from '@/components/layout/header'
-import Sidebar from '@/components/layout/sidebar'
 
 export const metadata: Metadata = {
   title: 'Principal',
