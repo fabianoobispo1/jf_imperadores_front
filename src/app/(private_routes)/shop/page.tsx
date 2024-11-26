@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import MenuLateral from '@/components/layout/MenuLateral'
 
 export default function Shop() {
   const [isMobile, setIsMobile] = useState(false)
@@ -32,9 +33,7 @@ export default function Shop() {
       ) : (
         <div className="flex h-screen">
           {/* Menu lateral */}
-          <div className="fixed bottom-0 left-0 top-0 z-20 w-40 lg:w-48 border-r bg-background/95 backdrop-blur">
-            menu lateral
-          </div>
+          <MenuLateral />
 
           {/* Conteúdo principal */}
           <div className="flex-1 ml-40 lg:ml-48 mr-72 lg:mr-96 xl:mr-[516px]">
