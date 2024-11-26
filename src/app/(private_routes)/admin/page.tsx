@@ -32,7 +32,8 @@ export default function Admin() {
         </main>
       ) : (
         <div className="flex h-screen">
-         
+          {/* Menu lateral */}
+          <MenuLateral />
 
           {/* Conteúdo principal */}
           <div className="flex-1 ml-40 lg:ml-48 mr-72 lg:mr-96 xl:mr-[516px]">
