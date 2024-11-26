@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import MenuLateral from '@/components/layout/MenuLateral'
+import AdminPage from '@/components/layout/admin/AdminPage'
 
 export default function Admin() {
   const [isMobile, setIsMobile] = useState(false)
@@ -25,10 +26,11 @@ export default function Admin() {
     <>
       {isMobile ? (
         <main className="fixed top-14 w-full h-full">
-          <ScrollArea className=" flex flex-col justify-end  p-4  bg-slate-500">
+          <AdminPage />
+          {/*  <ScrollArea className=" flex flex-col justify-end  p-4  bg-slate-500">
             <p>Admin</p>
             <Button onClick={() => signOut()}>Log out</Button>
-          </ScrollArea>
+          </ScrollArea> */}
         </main>
       ) : (
         <div className="flex h-screen">
