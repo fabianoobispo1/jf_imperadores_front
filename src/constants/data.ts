@@ -111,12 +111,24 @@ export type Employee = {
 }
 
 export const navItems: NavItem[] = [
-  /*   {
-    title: 'Plano Homologação',
-    href: '/dashboard/planohmg',
-    icon: 'post',
-    label: 'post'
-  }, */
+  {
+    title: 'Links',
+    href: '/admin',
+    icon: 'rows3',
+    label: 'Links',
+  },
+  {
+    title: 'Shop',
+    href: '/shop',
+    icon: 'shop',
+    label: 'Shop',
+  },
+  {
+    title: 'Aparência',
+    href: '/aparencia',
+    icon: 'telescope',
+    label: 'Aparência',
+  },
   /* {
     title: 'Perfil',
     href: '/dashboard/perfil',

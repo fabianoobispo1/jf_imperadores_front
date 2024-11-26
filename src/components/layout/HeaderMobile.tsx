@@ -10,7 +10,7 @@ export default function HeaderMobile() {
       <nav className="flex h-14 items-center justify-between px-4">
         {/* Logo ou Menu Esquerdo */}
         <div>
-          <Link href={'/dashboard'}>
+          <Link href={'/admin'}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"

@@ -31,6 +31,9 @@ import {
   X,
   Wallet,
   Dumbbell,
+  Store,
+  Rows3,
+  Telescope,
 } from 'lucide-react'
 
 export type Icon = LucideIcon
@@ -145,4 +148,7 @@ export const Icons = {
   check: Check,
   carteira: Wallet,
   altere: Dumbbell,
+  shop: Store,
+  rows3: Rows3,
+  telescope: Telescope,
 }
