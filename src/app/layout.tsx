@@ -36,7 +36,7 @@ export default async function RootLayout({
               {session ? <Header /> : <></>}
 
               <div className="flex h-screen overflow-hidden">
-                {session ? <Sidebar /> : <></>}
+                {/*  {session ? <Sidebar /> : <></>} */}
 
                 <main className="flex-1 overflow-hidden pt-16">{children}</main>
               </div>
