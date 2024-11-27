@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/form'
 
 import { LoadingButton } from '../../components/ui/loading-button'
-import GitHubSignInButton from '../github-auth-button'
+/* import GitHubSignInButton from '../github-auth-button' */
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Digite um email valido.' }),
@@ -114,7 +114,7 @@ export default function UserAuthForm() {
         </form>
       </Form>
 
-      <GitHubSignInButton />
+      {/* <GitHubSignInButton /> */}
     </>
   )
 }
