@@ -10,14 +10,14 @@ export const create = mutation({
     return telaLinks
   },
 })
-export const getTelaLinksByNome = query({
+export const getTelaLinksByUser = query({
   args: {
-    nome: v.string(),
+    userId: v.id('user'), // Define o argumento como ID da tabela 'user'
   },
-  handler: async ({ db }, { nome }) => {
+  handler: async ({ db }, { userId }) => {
     const telaLinks = await db
       .query('telaLinks')
-      .withIndex('by_nome', (q) => q.eq('nome', nome))
+      .withIndex('by_user', (q) => q.eq('userId', userId))
       .collect()
 
     return telaLinks

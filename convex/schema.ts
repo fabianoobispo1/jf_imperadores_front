@@ -29,6 +29,7 @@ export const telaLinksSchema = {
   background: v.string(),
   created_at: v.number(), // Timestamp para data de criação
   updated_at: v.number(), // Timestamp para data de atualização
+  userId: v.id('user'),
 }
 
 export const socialIconsSchema = {
@@ -54,7 +55,9 @@ export default defineSchema({
     .index('by_email', ['email'])
     .index('by_username', ['nome']),
   todo: defineTable(todoSchema).index('by_user', ['userId']), // Índice para buscar todos de um usuário
-  telaLinks: defineTable(telaLinksSchema).index('by_nome', ['nome']),
+  telaLinks: defineTable(telaLinksSchema)
+    .index('by_nome', ['nome'])
+    .index('by_user', ['userId']),
   socialIcons: defineTable(socialIconsSchema).index('by_telaLinks', [
     'telaLinksId',
   ]),

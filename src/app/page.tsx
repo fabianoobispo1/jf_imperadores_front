@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-import { ScrollArea } from '@/components/ui/scroll-area'
+import LinkTree from '@/components/layout/LinkTree'
 
 export const metadata: Metadata = {
   title: 'Principal',
@@ -10,9 +10,5 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
-  return (
-    <ScrollArea className="h-full">
-      <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">Pagina inicial</div>
-    </ScrollArea>
-  )
+  return <LinkTree nomeTela="teste" />
 }
