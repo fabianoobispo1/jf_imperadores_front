@@ -7,15 +7,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 import { api } from '../../../../convex/_generated/api'
 
@@ -113,24 +108,12 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
             <div>{telaLinks?.telaLinks[0].bio}</div>
             <div>sociais</div>
           </div>
-
-          <Drawer>
-            <DrawerTrigger>Open</DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                <DrawerDescription>
-                  This action cannot be undone.
-                </DrawerDescription>
-              </DrawerHeader>
-              <DrawerFooter>
-                <Button>Submit</Button>
-                <DrawerClose>
-                  <Button variant="outline">Cancel</Button>
-                </DrawerClose>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+          <Popover>
+            <PopoverTrigger className="bg-slate-300 h-8 w-8 rounded-full flex items-center justify-center">
+              ...
+            </PopoverTrigger>
+            <PopoverContent>Place content for the popover here.</PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
