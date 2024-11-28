@@ -25,10 +25,17 @@ export default function AdminPage({ isMobile }: AdminPageProps) {
   }
 
   return (
-    <div className={cn(isMobile, {})}>
-      <div className="bg-teal-200 h-28 flex flex-col justify-center gap-4 items-start p-2">
+    <div className={cn(isMobile ? '' : 'p-2 px-4')}>
+      <div
+        className={cn(
+          isMobile
+            ? '  h-28 flex flex-col justify-center gap-4 items-start p-2'
+            : ' h-24 flex justify-between items-center rounded-3xl p-2',
+          'bg-teal-200 ',
+        )}
+      >
         <p>
-          <span>🔥 Your Linktree is live: </span>
+          <span>🔥 Esse é o link: </span>
           <Link
             className="underline"
             href="https://linktree.jfimperadores.com.br"
