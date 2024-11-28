@@ -57,7 +57,8 @@ export default defineSchema({
   todo: defineTable(todoSchema).index('by_user', ['userId']), // Índice para buscar todos de um usuário
   telaLinks: defineTable(telaLinksSchema)
     .index('by_nome', ['nome'])
-    .index('by_user', ['userId']),
+    .index('by_user', ['userId'])
+    .searchIndex('search_by_user', { searchField: 'userId' }),
   socialIcons: defineTable(socialIconsSchema).index('by_telaLinks', [
     'telaLinksId',
   ]),

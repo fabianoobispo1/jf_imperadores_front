@@ -10,16 +10,18 @@ export const create = mutation({
     return telaLinks
   },
 })
+
+// this query will get the podcast by the authorId.
 export const getTelaLinksByUser = query({
   args: {
-    userId: v.id('user'), // Define o argumento como ID da tabela 'user'
+    userId: v.string(),
   },
-  handler: async ({ db }, { userId }) => {
-    const telaLinks = await db
+  handler: async (ctx, args) => {
+    const telaLinks = await ctx.db
       .query('telaLinks')
-      .withIndex('by_user', (q) => q.eq('userId', userId))
+      .filter((q) => q.eq(q.field('userId'), args.userId))
       .collect()
 
-    return telaLinks
+    return { telaLinks }
   },
 })

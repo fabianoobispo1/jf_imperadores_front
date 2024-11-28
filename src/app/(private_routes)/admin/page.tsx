@@ -1,11 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 import MenuLateral from '@/components/layout/MenuLateral'
 import AdminPage from '@/components/layout/admin/AdminPage'
+import { Spinner } from '@/components/ui/spinner'
 
 export default function Admin() {
   const [isMobile, setIsMobile] = useState(false)
+  const { data: session } = useSession()
 
   // Verifica a largura da janela
   useEffect(() => {
@@ -18,33 +21,32 @@ export default function Admin() {
 
     return () => window.removeEventListener('resize', handleResize) // Remove listener na desmontagem
   }, [])
+  if (session) {
+    return (
+      <>
+        {isMobile ? (
+          <main className="fixed top-14 w-full h-full">
+            <AdminPage isMobile={isMobile} user={session.user} />
+          </main>
+        ) : (
+          <div className="flex h-screen">
+            {/* Menu lateral */}
+            <MenuLateral />
 
-  return (
-    <>
-      {isMobile ? (
-        <main className="fixed top-14 w-full h-full">
-          <AdminPage isMobile={isMobile} />
-          {/*  <ScrollArea className=" flex flex-col justify-end  p-4  bg-slate-500">
-            <p>Admin</p>
-            <Button onClick={() => signOut()}>Log out</Button>
-          </ScrollArea> */}
-        </main>
-      ) : (
-        <div className="flex h-screen">
-          {/* Menu lateral */}
-          <MenuLateral />
+            {/* Conteúdo principal */}
+            <div className="flex-1 ml-40 lg:ml-48 mr-72 lg:mr-96 xl:mr-[516px]">
+              <AdminPage isMobile={isMobile} user={session.user} />
+            </div>
 
-          {/* Conteúdo principal */}
-          <div className="flex-1 ml-40 lg:ml-48 mr-72 lg:mr-96 xl:mr-[516px]">
-            <AdminPage isMobile={isMobile} />
+            {/* Visualização */}
+            <div className="fixed bottom-0 right-0 top-0 z-20 w-72 lg:w-96 xl:w-[516px] border-l bg-background/95 backdrop-blur">
+              visualizacao
+            </div>
           </div>
-
-          {/* Visualização */}
-          <div className="fixed bottom-0 right-0 top-0 z-20 w-72 lg:w-96 xl:w-[516px] border-l bg-background/95 backdrop-blur">
-            visualizacao
-          </div>
-        </div>
-      )}
-    </>
-  )
+        )}
+      </>
+    )
+  } else {
+    return <Spinner />
+  }
 }
