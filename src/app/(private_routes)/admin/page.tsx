@@ -1,9 +1,6 @@
 'use client'
-import { signOut } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import MenuLateral from '@/components/layout/MenuLateral'
 import AdminPage from '@/components/layout/admin/AdminPage'
 
@@ -26,7 +23,7 @@ export default function Admin() {
     <>
       {isMobile ? (
         <main className="fixed top-14 w-full h-full">
-          <AdminPage />
+          <AdminPage isMobile={isMobile} />
           {/*  <ScrollArea className=" flex flex-col justify-end  p-4  bg-slate-500">
             <p>Admin</p>
             <Button onClick={() => signOut()}>Log out</Button>
@@ -39,12 +36,7 @@ export default function Admin() {
 
           {/* Conteúdo principal */}
           <div className="flex-1 ml-40 lg:ml-48 mr-72 lg:mr-96 xl:mr-[516px]">
-            <ScrollArea className="h-full bg-slate-300 flex items-end">
-              <div className="flex flex-col justify-end space-y-4 p-4 pt-6 md:p-8 bg-slate-500">
-                <p>Admin</p>
-                <Button onClick={() => signOut()}>Log out</Button>
-              </div>
-            </ScrollArea>
+            <AdminPage isMobile={isMobile} />
           </div>
 
           {/* Visualização */}
