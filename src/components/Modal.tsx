@@ -3,38 +3,51 @@
 import { ReactNode } from 'react'
 import clsx from 'clsx' // Biblioteca opcional para manipular classes dinamicamente
 
+import { cn } from '@/lib/utils'
+
 interface ModalProps {
   exibeModal: boolean // Controla a visibilidade do modal
   onClose: () => void // Função para fechar o modal
   title?: string // Título do modal (opcional)
   children: ReactNode // Conteúdo do modal
+  isMobile?: boolean
 }
 
-export function Modal({ exibeModal, onClose, title, children }: ModalProps) {
+export function Modal({
+  exibeModal,
+  onClose,
+  title,
+  children,
+  isMobile,
+}: ModalProps) {
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       onClose()
     }
   }
 
+  /*   cn(
+    isMobile
+      ? '  h-28 flex flex-col justify-center gap-4 items-start p-2'
+      : ' h-24 flex justify-between items-center rounded-3xl p-2',
+    'bg-teal-200 ',
+  ) */
   return (
     <div
-      className={clsx(
+      className={cn(
+        exibeModal ? 'opacity-100 visible' : 'opacity-0 invisible',
         'fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300',
-        {
-          'opacity-100 visible': exibeModal, // Modal visível
-          'opacity-0 invisible': !exibeModal, // Modal escondido
-        },
       )}
       onClick={handleOverlayClick}
     >
       <div
-        className={clsx(
-          'relative w-full max-w-lg rounded-lg bg-white p-6 shadow-lg transition-transform duration-300',
-          {
-            'scale-100': exibeModal, // Escala normal ao exibir
-            'scale-95': !exibeModal, // Escala reduzida ao esconder
-          },
+        className={cn(
+          exibeModal ? 'scale-100' : 'scale-95',
+
+          isMobile
+            ? 'fixed bottom-0 left-0  right-0 m-0 rounded-t-lg' // Estilo para mobile
+            : 'relative w-full max-w-lg ', // Estilo para desktop
+          'rounded-lg  p-6 shadow-lg bg-white transition-transform duration-300',
         )}
       >
         {/* Cabeçalho do modal */}
