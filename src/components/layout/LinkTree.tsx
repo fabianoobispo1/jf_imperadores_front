@@ -7,5 +7,9 @@ interface Props {
 }
 
 export default function LinkTree({ nomeTela }: Props) {
-  return <ScrollArea className="h-full felx">{nomeTela}</ScrollArea>
+  return (
+    <ScrollArea className="h-full felx bg-background/95">
+      <p className="hidden">{nomeTela}</p>
+    </ScrollArea>
+  )
 }
