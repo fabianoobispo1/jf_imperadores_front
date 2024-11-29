@@ -24,7 +24,7 @@ export default function Aparencia() {
   return (
     <>
       {isMobile ? (
-        <main className="fixed top-14 w-full h-full">
+        <main className=" w-full h-[calc(100vh-54px-54px)] mt-14 mb-14 ">
           <ScrollArea className=" flex flex-col justify-end  p-4  bg-slate-500">
             <p>Aparencia</p>
             <Button onClick={() => signOut()}>Log out</Button>

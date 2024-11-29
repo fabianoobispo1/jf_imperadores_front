@@ -25,7 +25,7 @@ export default function Admin() {
     return (
       <>
         {isMobile ? (
-          <main className="fixed top-14 w-full h-full">
+          <main className=" w-full h-[calc(100vh-54px-54px)] mt-14 mb-14 ">
             <AdminPage isMobile={isMobile} user={session.user} />
           </main>
         ) : (

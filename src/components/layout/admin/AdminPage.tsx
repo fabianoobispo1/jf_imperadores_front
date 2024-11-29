@@ -26,12 +26,25 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
   const [buttonText, setButtonText] = useState('copie sua URL')
   const [exibeModal, setExibeModal] = useState(false)
 
+  const [exibeModalImagem, setExibeModalImagem] = useState(false)
+  const [exibeModalNomeBio, setExibeModalNomeBio] = useState(false)
+  const [exibeModalIconeSocial, setExibeModalIconeSocial] = useState(false)
+
   const handleOpenModalImagem = () => {
     setExibeModal(false) // Fecha o modal principal
     setExibeModalImagem(true) // Abre o modal de imagem
   }
 
-  const [exibeModalImagem, setExibeModalImagem] = useState(false)
+  const handleOpenModalNomeBio = () => {
+    setExibeModal(false) // Fecha o modal principal
+    setExibeModalNomeBio(true) // Abre o modal de NomeBio
+  }
+
+  const handleOpenModalIconeSocial = () => {
+    setExibeModal(false) // Fecha o modal principal
+    setExibeModalIconeSocial(true) // Abre o modal de IconeSocial
+  }
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(
@@ -134,10 +147,18 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
               >
                 Editar Imagem
               </Button>
-              <Button className="w-full" variant="secondary">
+              <Button
+                className="w-full"
+                onClick={handleOpenModalNomeBio}
+                variant="secondary"
+              >
                 Editar Nome e Bio
               </Button>
-              <Button className="w-full" variant="secondary">
+              <Button
+                className="w-full"
+                onClick={handleOpenModalIconeSocial}
+                variant="secondary"
+              >
                 Editar Icones Sociais
               </Button>
             </div>
@@ -149,6 +170,20 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
             title="Modal Imagem"
           >
             <p>Modal Imagem</p>
+          </Modal>
+          <Modal
+            exibeModal={exibeModalNomeBio}
+            onClose={() => setExibeModalNomeBio(false)}
+            title="Modal Nome Bio"
+          >
+            <p>Modal NomeBio</p>
+          </Modal>
+          <Modal
+            exibeModal={exibeModalIconeSocial}
+            onClose={() => setExibeModalIconeSocial(false)}
+            title="Modal Icone Social"
+          >
+            <p>Modal IconeSocial</p>
           </Modal>
         </div>
       </div>
