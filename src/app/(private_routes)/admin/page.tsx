@@ -39,7 +39,7 @@ export default function Admin() {
             </div>
 
             {/* Visualização */}
-            <div className="fixed bottom-0 right-0 top-0 z-20 w-72 lg:w-96 xl:w-[516px] border-l bg-background/95 backdrop-blur">
+            <div className="fixed bottom-0 right-0 top-0 z-21 w-72 lg:w-96 xl:w-[516px] border-l bg-background/95 backdrop-blur">
               visualizacao
             </div>
           </div>

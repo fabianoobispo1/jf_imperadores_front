@@ -2,15 +2,22 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useQuery } from 'convex/react'
+import { Ellipsis } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Modal } from '@/components/Modal'
 
 import { api } from '../../../../convex/_generated/api'
 
@@ -27,7 +34,7 @@ interface AdminPageProps {
 
 const AdminPage = ({ isMobile, user }: AdminPageProps) => {
   const [buttonText, setButtonText] = useState('copie sua URL')
-
+  const [exibeModal, setExibeModal] = useState(false)
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(
@@ -108,12 +115,70 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
             <div>{telaLinks?.telaLinks[0].bio}</div>
             <div>sociais</div>
           </div>
-          <Popover>
+          {/* <Popover>
             <PopoverTrigger className="bg-slate-300 h-8 w-8 rounded-full flex items-center justify-center">
-              ...
+              <Ellipsis />
             </PopoverTrigger>
             <PopoverContent>Place content for the popover here.</PopoverContent>
-          </Popover>
+          </Popover> */}
+          setAberModal
+          <Button
+            className=" h-8 w-8 rounded-full flex items-center justify-center"
+            onClick={() => setExibeModal(true)}
+          >
+            <p>
+              <Ellipsis className="h-4 w-4" />
+            </p>
+          </Button>
+          <Modal
+            exibeModal={exibeModal}
+            onClose={() => setExibeModal(false)}
+            title="Meu Modal"
+          >
+            <p>Este é o conteúdo do modal.</p>
+          </Modal>
+          <Dialog>
+            <DialogTrigger
+              asChild
+              className="bg-slate-300 hover:bg-slate-500 h-8 w-8 rounded-full flex items-center justify-center"
+            >
+              <Ellipsis className="h-4 w-4" />
+            </DialogTrigger>
+            <DialogContent className="fixed bottom-0 w-full">
+              <DialogHeader>
+                <DialogTitle></DialogTitle>
+                <DialogDescription></DialogDescription>
+              </DialogHeader>
+              <div className="flex items-center flex-col justify-center gap-4 w-full">
+                {/* <div className="grid flex-1 gap-2">
+                  <Label htmlFor="link" className="sr-only">
+                    Link
+                  </Label>
+                  <Input
+                    id="link"
+                    defaultValue="https://ui.shadcn.com/docs/installation"
+                    readOnly
+                  />
+                </div>
+                <Button type="submit" size="sm" className="px-3">
+                  <span className="sr-only">Copy</span>
+                  <Copy />
+                </Button> */}
+                <Button className="w-full" variant="secondary">
+                  Editar Imagem
+                </Button>
+                <Button className="w-full" variant="secondary">
+                  Editar Nome e Bio
+                </Button>
+                <Button className="w-full" variant="secondary">
+                  Editar Icones Sociais
+                </Button>
+              </div>
+              <DialogFooter className="sm:justify-start">
+                <DialogClose asChild></DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

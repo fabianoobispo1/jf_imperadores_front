@@ -13,7 +13,7 @@ export default function BottomMenu() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-20 border-t bg-background/95 backdrop-blur">
+    <div className="fixed bottom-0 left-0 right-0 z-21 border-t bg-background/95 backdrop-blur">
       <nav className="flex h-14  items-center justify-between ">
         {/* Garante espaçamento dinâmico entre os itens */}
         {navItems.map((item, index) => {

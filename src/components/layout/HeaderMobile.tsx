@@ -6,7 +6,7 @@ import { UserNav } from './user-nav'
 
 export default function HeaderMobile() {
   return (
-    <div className="supports-backdrop-blur:bg-background/60 fixed left-0 right-0 top-0 z-20 border-b bg-background/95 backdrop-blur">
+    <div className="fixed supports-backdrop-blur:bg-background/60  left-0 right-0 top-0 z-21 border-b bg-background/95 backdrop-blur">
       <nav className="flex h-14 items-center justify-between px-4">
         {/* Logo ou Menu Esquerdo */}
         <div>
