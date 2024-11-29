@@ -88,26 +88,23 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
               : '',
           )}
         >
-          <div>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                console.log('Botao trocar imagem')
-              }}
-              className="relative h-8 w-8 rounded-full"
-            >
-              <Avatar className="h-14 w-14">
-                <AvatarImage
-                  src={telaLinks?.telaLinks[0].linkImagem ?? ''}
-                  alt={telaLinks?.telaLinks[0].nome ?? ''}
-                />
-                <AvatarFallback>
-                  {telaLinks?.telaLinks[0].nome[0]}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </div>
-          <div>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              console.log('Botao trocar imagem')
+            }}
+            className="relative h-14 w-14 rounded-full"
+          >
+            <Avatar className="h-14 w-14">
+              <AvatarImage
+                src={telaLinks?.telaLinks[0].linkImagem ?? ''}
+                alt={telaLinks?.telaLinks[0].nome ?? ''}
+              />
+              <AvatarFallback>{telaLinks?.telaLinks[0].nome[0]}</AvatarFallback>
+            </Avatar>
+          </Button>
+
+          <div className="w-full px-4">
             <div>{telaLinks?.telaLinks[0].nome}</div>
             <div>{telaLinks?.telaLinks[0].bio}</div>
             <div>sociais</div>
@@ -116,6 +113,7 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
           <Button
             className=" h-8 w-8 rounded-full flex items-center justify-center"
             onClick={() => setExibeModal(true)}
+            variant="secondary"
           >
             <p>
               <Ellipsis className="h-4 w-4" />

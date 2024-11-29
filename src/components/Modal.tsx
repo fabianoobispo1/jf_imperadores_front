@@ -1,7 +1,6 @@
 'use client'
 
 import { ReactNode } from 'react'
-import clsx from 'clsx' // Biblioteca opcional para manipular classes dinamicamente
 
 import { cn } from '@/lib/utils'
 
