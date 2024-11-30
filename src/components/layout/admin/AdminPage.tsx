@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useQuery } from 'convex/react'
 import { Ellipsis } from 'lucide-react'
+import Image from 'next/image'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -113,7 +114,15 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
                 src={telaLinks?.telaLinks[0].linkImagem ?? ''}
                 alt={telaLinks?.telaLinks[0].nome ?? ''}
               />
-              <AvatarFallback>{telaLinks?.telaLinks[0].nome[0]}</AvatarFallback>
+              <AvatarFallback>
+                {' '}
+                <Image
+                  src="/carousel-1.svg" // Substitua pelo caminho real do avatar
+                  alt="Profile"
+                  width={96}
+                  height={96}
+                />
+              </AvatarFallback>
             </Avatar>
           </Button>
 

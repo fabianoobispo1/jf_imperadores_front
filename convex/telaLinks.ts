@@ -25,3 +25,18 @@ export const getTelaLinksByUser = query({
     return { telaLinks }
   },
 })
+
+// this query will get the podcast by the authorId.
+export const getTelaLinksByName = query({
+  args: {
+    nome: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const telaLinks = await ctx.db
+      .query('telaLinks')
+      .filter((q) => q.eq(q.field('nome'), args.nome))
+      .collect()
+
+    return { telaLinks }
+  },
+})

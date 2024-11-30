@@ -67,14 +67,14 @@ export function Modal({
         <div>{children}</div>
 
         {/* Rodapé */}
-        <div className="mt-4 flex justify-end">
+        {/*   <div className="mt-4 flex justify-end">
           <button
             onClick={onClose}
             className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
           >
             Fechar
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   )
