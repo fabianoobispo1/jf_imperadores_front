@@ -40,3 +40,22 @@ export const getTelaLinksByName = query({
     return { telaLinks }
   },
 })
+
+export const updateTelaLinks = mutation({
+  args: {
+    id: v.id('telaLinks'), // ID do registro a ser atualizado
+    nome: v.string(), // Novo valor para o campo `nome`
+    bio: v.string(), // Novo valor para o campo `bio`
+  },
+  handler: async ({ db }, { id, nome, bio }) => {
+    // Atualiza o documento pelo ID
+    await db.patch(id, {
+      nome,
+      bio,
+      updated_at: Date.now(), // Atualiza o timestamp para o momento atual
+    })
+
+    // Retorna uma mensagem de sucesso ou o documento atualizado, se necessário
+    return { success: true }
+  },
+})

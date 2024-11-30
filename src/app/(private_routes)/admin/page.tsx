@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import MenuLateral from '@/components/layout/MenuLateral'
 import AdminPage from '@/components/layout/admin/AdminPage'
 import { Spinner } from '@/components/ui/spinner'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function Admin() {
   const [isMobile, setIsMobile] = useState(false)
@@ -48,9 +49,9 @@ export default function Admin() {
     )
   } else {
     return (
-      <div className="flex items-center justify-center">
+      <ScrollArea className="h-screen bg-gray-100 flex flex-col items-start justify-center p-12">
         <Spinner />
-      </div>
+      </ScrollArea>
     )
   }
 }

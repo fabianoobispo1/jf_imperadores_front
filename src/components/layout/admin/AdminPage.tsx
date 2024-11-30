@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Modal } from '@/components/Modal'
+import NomeBioForm from '@/components/forms/nome-bio-form'
 
 import { api } from '../../../../convex/_generated/api'
 
@@ -24,6 +25,7 @@ interface AdminPageProps {
 }
 
 const AdminPage = ({ isMobile, user }: AdminPageProps) => {
+  const [button, setButton] = useState('aaa')
   const [buttonText, setButtonText] = useState('copie sua URL')
   const [exibeModal, setExibeModal] = useState(false)
 
@@ -148,7 +150,6 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
             isMobile={isMobile}
           >
             <div className="flex flex-col gap-4">
-              {' '}
               <Button
                 className="w-full"
                 onClick={handleOpenModalImagem}
@@ -183,9 +184,16 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
           <Modal
             exibeModal={exibeModalNomeBio}
             onClose={() => setExibeModalNomeBio(false)}
-            title="Modal Nome Bio"
+            title="Nome Tela e Bio"
           >
-            <p>Modal NomeBio</p>
+            {telaLinks?.telaLinks?.[0] && (
+              <NomeBioForm
+                setButton={setButton}
+                idTela={telaLinks.telaLinks[0]._id}
+                nome={telaLinks.telaLinks[0].nome}
+                bio={telaLinks.telaLinks[0].bio}
+              />
+            )}
           </Modal>
           <Modal
             exibeModal={exibeModalIconeSocial}

@@ -25,9 +25,9 @@ export default function LinkTree({ nomeTela }: Props) {
   })
   if (telaLinks1 === undefined) {
     return (
-      <div className="flex items-center justify-center">
+      <ScrollArea className="h-screen bg-gray-100 flex flex-col items-start justify-center p-12">
         <Spinner />
-      </div>
+      </ScrollArea>
     )
   }
   if (telaLinks1.telaLinks.length === 0) {
