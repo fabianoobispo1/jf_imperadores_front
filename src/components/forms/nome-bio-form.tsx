@@ -30,11 +30,11 @@ interface NomeeBioFormProps {
   nome: string
   bio: string
   idTela: string
-  setButton: (value: string) => void
+  closeModal: (value: boolean) => void
 }
 
 export default function NomeBioForm({
-  setButton,
+  closeModal,
   nome,
   bio,
   idTela,
@@ -59,13 +59,18 @@ export default function NomeBioForm({
 
     try {
       const id: Id<'telaLinks'> = idTela as Id<'telaLinks'>
-      const teste = await updateTelaLinks({ id, nome, bio })
+      const teste = await updateTelaLinks({
+        id,
+        nome: data.nome,
+        bio: data.bio,
+      })
       console.log(teste)
       console.log('Atualização bem-sucedida!')
+      closeModal(false)
     } catch (error) {
       console.error('Erro ao atualizar telaLinks:', error)
     }
-    setButton('Cadastrar')
+
     setLoading(false)
   }
 

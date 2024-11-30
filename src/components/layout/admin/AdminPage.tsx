@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useQuery } from 'convex/react'
 import { Ellipsis } from 'lucide-react'
 import Image from 'next/image'
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Modal } from '@/components/Modal'
 import NomeBioForm from '@/components/forms/nome-bio-form'
+import { Input } from '@/components/ui/input'
 
 import { api } from '../../../../convex/_generated/api'
 
@@ -25,7 +26,8 @@ interface AdminPageProps {
 }
 
 const AdminPage = ({ isMobile, user }: AdminPageProps) => {
-  const [button, setButton] = useState('aaa')
+  const imageRef = useRef<HTMLInputElement>(null)
+
   const [buttonText, setButtonText] = useState('copie sua URL')
   const [exibeModal, setExibeModal] = useState(false)
 
@@ -33,9 +35,22 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
   const [exibeModalNomeBio, setExibeModalNomeBio] = useState(false)
   const [exibeModalIconeSocial, setExibeModalIconeSocial] = useState(false)
 
+  const [exibeModalAddImagem, setExibeModalAddImagem] = useState(false)
+  const [exibeModalRemoveImagem, setExibeModalRemoveImagem] = useState(false)
+
   const handleOpenModalImagem = () => {
     setExibeModal(false) // Fecha o modal principal
     setExibeModalImagem(true) // Abre o modal de imagem
+  }
+
+  const handleOpenModalAddImagem = () => {
+    setExibeModalImagem(false) // Fecha o modal principal
+    setExibeModalAddImagem(true) // Abre o modal de imagem
+  }
+
+  const handleOpenModalRemoveImagem = () => {
+    setExibeModalImagem(false) // Fecha o modal principal
+    setExibeModalRemoveImagem(true) // Abre o modal de imagem
   }
 
   const handleOpenModalNomeBio = () => {
@@ -63,13 +78,52 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
   const telaLinks = useQuery(api.telaLinks.getTelaLinksByUser, {
     userId: user.id,
   })
-  console.log(button)
   /*  async function GetTelaLink(userId: string) {
     const test = useQuery(api.telaLinks.getTelaLinksByUser1, {
       userId,
     })
     console.log(test)
   } */
+
+  /* const handleImage = async (blob: Blob, fileName: string) => {
+    setIsImageLoading(true)
+    setImage('')
+
+    try {
+      const file = new File([blob], fileName, { type: 'image/png' })
+
+      const uploaded = await startUpload([file])
+      const storageId = (uploaded[0].response as any).storageId
+
+      setImageStorageId(storageId)
+
+      const imageUrl = await getImageUrl({ storageId })
+      setImage(imageUrl!)
+      setIsImageLoading(false)
+      toast({
+        title: 'Thumbnail generated successfully',
+      })
+    } catch (error) {
+      console.log(error)
+      toast({ title: 'Error generating thumbnail', variant: 'destructive' })
+    }
+  } */
+
+  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+
+    try {
+      const files = e.target.files
+      if (!files) return
+      const file = files[0]
+      const blob = await file.arrayBuffer().then((ab) => new Blob([ab]))
+
+      // handleImage(blob, file.name)
+      console.log(blob, file.name)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className={cn(isMobile ? 'flex flex-col gap-4' : 'p-2 px-4 ')}>
@@ -106,9 +160,7 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
         >
           <Button
             variant="ghost"
-            onClick={() => {
-              console.log('Botao trocar imagem')
-            }}
+            onClick={handleOpenModalAddImagem}
             className="relative h-14 w-14 rounded-full"
           >
             <Avatar className="h-14 w-14">
@@ -117,7 +169,6 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
                 alt={telaLinks?.telaLinks[0].nome ?? ''}
               />
               <AvatarFallback>
-                {' '}
                 <Image
                   src="/carousel-1.svg" // Substitua pelo caminho real do avatar
                   alt="Profile"
@@ -179,7 +230,25 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
             onClose={() => setExibeModalImagem(false)}
             title="Modal Imagem"
           >
-            <p>Modal Imagem</p>
+            {' '}
+            <div className="flex flex-col gap-4">
+              <Button
+                className="w-full"
+                onClick={handleOpenModalAddImagem}
+                variant="secondary"
+              >
+                Escolher uma imagem
+              </Button>
+            </div>
+            <div className="flex flex-col gap-4">
+              <Button
+                className="w-full"
+                onClick={handleOpenModalRemoveImagem}
+                variant="secondary"
+              >
+                Rmover Imagem
+              </Button>
+            </div>
           </Modal>
           <Modal
             exibeModal={exibeModalNomeBio}
@@ -188,13 +257,58 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
           >
             {telaLinks?.telaLinks?.[0] && (
               <NomeBioForm
-                setButton={setButton}
+                closeModal={setExibeModalNomeBio}
                 idTela={telaLinks.telaLinks[0]._id}
                 nome={telaLinks.telaLinks[0].nome}
                 bio={telaLinks.telaLinks[0].bio}
               />
             )}
           </Modal>
+
+          <Modal
+            exibeModal={exibeModalAddImagem}
+            onClose={() => setExibeModalAddImagem(false)}
+            title="Adicionar imagem"
+          >
+            <div className="" onClick={() => imageRef?.current?.click()}>
+              <Input
+                type="file"
+                className=""
+                ref={imageRef}
+                onChange={(e) => uploadImage(e)}
+              />
+              {/*  {!isImageLoading ? (
+                <Image
+                  src="/icons/upload-image.svg"
+                  width={40}
+                  height={40}
+                  alt="upload"
+                />
+              ) : (
+                <div className="text-16 flex-center font-medium text-white-1">
+                  Uploading
+                  <Loader size={20} className="animate-spin ml-2" />
+                </div>
+              )}
+              <div className="flex flex-col items-center gap-1">
+                <h2 className="text-12 font-bold text-orange-1">
+                  Click to upload
+                </h2>
+                <p className="text-12 font-normal text-gray-1">
+                  SVG, PNG, JPG, or GIF (max. 1080x1080px)
+                </p>
+              </div> */}
+            </div>
+          </Modal>
+
+          <Modal
+            exibeModal={exibeModalRemoveImagem}
+            onClose={() => setExibeModalRemoveImagem(false)}
+            title="Rmover imagem"
+          >
+            <p>Remover imagem</p>
+          </Modal>
+
           <Modal
             exibeModal={exibeModalIconeSocial}
             onClose={() => setExibeModalIconeSocial(false)}
