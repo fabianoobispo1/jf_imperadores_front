@@ -63,7 +63,7 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
   const telaLinks = useQuery(api.telaLinks.getTelaLinksByUser, {
     userId: user.id,
   })
-
+  console.log(button)
   /*  async function GetTelaLink(userId: string) {
     const test = useQuery(api.telaLinks.getTelaLinksByUser1, {
       userId,
