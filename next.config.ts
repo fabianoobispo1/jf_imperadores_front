@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -17,9 +18,12 @@ const nextConfig = {
         hostname: 'lh3.googleusercontent.com',
         pathname: '/**', // Permite qualquer caminho
       },
-     
+      {
+        protocol: 'https',
+        hostname: 'limitless-bullfrog-897.convex.cloud',
+        pathname: '/**', // Permite qualquer caminho
+      },
     ],
-  }
-};
-
-module.exports = nextConfig;
+  },
+}
+export default nextConfig

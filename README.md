@@ -8,7 +8,6 @@ Este é um modelo inicial usando as seguintes ferramentas:
 - Auth - [next-auth](https://next-auth.js.org/)
 - Components - [Shadcn-ui](https://ui.shadcn.com)
 - Schema Validations - [Zod](https://zod.dev)
-- Email service - [mailersend](https://app.mailersend.com/dashboard)
 <!--- State Management - [Zustand](https://zustand-demo.pmnd.rs)
 - File Uploading - [Uploadthing](https://uploadthing.com)
 - Tables - [Tanstack Tables](https://ui.shadcn.com/docs/components/data-table)
@@ -17,17 +16,13 @@ Este é um modelo inicial usando as seguintes ferramentas:
 - Formatting - [Prettier](https://prettier.io)
   -->
 
-
-- Linktree - 
-Ao utilizar o https://linktr.ee/
-apos fazer o cadastro, pede um username
-para ficar  https://linktr.ee/fabianoobispo
-e depois escolhe o tema, basicamente ordenado em linhas, foto, nome, descricao, grupo de links de outras redes com icones, uns tem um item de About(sobre), e os links, que pode ou nao tem icones ou ate imagens
-
-
 ## Contato
 
 <div> 
   <a href="https://instagram.com/fabianoobispo" target="_blank"><img src="https://img.shields.io/badge/-Instagram-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white" target="_blank"></a>
   <a href="https://www.linkedin.com/in/fabiano-bispo-canedo-422738109/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a> 
 </div>
+
+<!--
+usando como base https://github.com/xipanca/nextjs-ts-nextauth-convex/blob/main/src/components/ui/input.tsx mas agarrei na parte de fazer login
+para regsitrar esta funcionando usnado o convex -->
