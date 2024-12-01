@@ -59,3 +59,29 @@ export const updateTelaLinks = mutation({
     return { success: true }
   },
 })
+
+export const getUrl = mutation({
+  args: {
+    storageId: v.id('_storage'),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.storage.getUrl(args.storageId)
+  },
+})
+
+export const updateIMGTelaLinks = mutation({
+  args: {
+    id: v.id('telaLinks'), // ID do registro a ser atualizado
+    linkImagem: v.string(),
+  },
+  handler: async ({ db }, { id, linkImagem }) => {
+    // Atualiza o documento pelo ID
+    await db.patch(id, {
+      linkImagem,
+      updated_at: Date.now(), // Atualiza o timestamp para o momento atual
+    })
+
+    // Retorna uma mensagem de sucesso ou o documento atualizado, se necessário
+    return { success: true }
+  },
+})

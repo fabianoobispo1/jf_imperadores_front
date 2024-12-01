@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         hostname: 'lh3.googleusercontent.com',
         pathname: '/**', // Permite qualquer caminho
       },
+      {
+        protocol: 'https',
+        hostname: 'limitless-bullfrog-897.convex.cloud',
+        pathname: '/**', // Permite qualquer caminho
+      },
     ],
   },
 }

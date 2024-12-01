@@ -1,9 +1,10 @@
 'use client'
 import Link from 'next/link'
 import { useRef, useState } from 'react'
-import { useQuery } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
 import { Ellipsis } from 'lucide-react'
 import Image from 'next/image'
+import { useUploadFiles } from '@xixixao/uploadstuff/react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -11,8 +12,10 @@ import { cn } from '@/lib/utils'
 import { Modal } from '@/components/Modal'
 import NomeBioForm from '@/components/forms/nome-bio-form'
 import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
 
 import { api } from '../../../../convex/_generated/api'
+import type { Id } from '../../../../convex/_generated/dataModel'
 
 interface UserProps {
   id: string
@@ -27,7 +30,15 @@ interface AdminPageProps {
 
 const AdminPage = ({ isMobile, user }: AdminPageProps) => {
   const imageRef = useRef<HTMLInputElement>(null)
+  const [isImageLoading, setIsImageLoading] = useState(false)
+  const [image, setImage] = useState('')
+  const [imageStorageId, setImageStorageId] = useState<Id<'_storage'> | null>(
+    null,
+  )
+  const getImageUrl = useMutation(api.telaLinks.getUrl)
 
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl)
+  const { startUpload } = useUploadFiles(generateUploadUrl)
   const [buttonText, setButtonText] = useState('copie sua URL')
   const [exibeModal, setExibeModal] = useState(false)
 
@@ -85,29 +96,30 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
     console.log(test)
   } */
 
-  /* const handleImage = async (blob: Blob, fileName: string) => {
+  const handleImage = async (blob: Blob, fileName: string) => {
     setIsImageLoading(true)
     setImage('')
 
     try {
       const file = new File([blob], fileName, { type: 'image/png' })
-
       const uploaded = await startUpload([file])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const storageId = (uploaded[0].response as any).storageId
 
       setImageStorageId(storageId)
-
+      console.log(imageStorageId)
       const imageUrl = await getImageUrl({ storageId })
+
+      console.log(imageUrl)
       setImage(imageUrl!)
       setIsImageLoading(false)
-      toast({
+      /* toast({
         title: 'Thumbnail generated successfully',
-      })
+      }) */
     } catch (error) {
       console.log(error)
-      toast({ title: 'Error generating thumbnail', variant: 'destructive' })
     }
-  } */
+  }
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -118,8 +130,7 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
       const file = files[0]
       const blob = await file.arrayBuffer().then((ab) => new Blob([ab]))
 
-      // handleImage(blob, file.name)
-      console.log(blob, file.name)
+      handleImage(blob, file.name)
     } catch (error) {
       console.log(error)
     }
@@ -270,14 +281,17 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
             onClose={() => setExibeModalAddImagem(false)}
             title="Adicionar imagem"
           >
-            <div className="" onClick={() => imageRef?.current?.click()}>
+            <div
+              className="flex-center mt-5 h-[142px] w-full cursor-pointer flex-col gap-3 rounded-xl border-[3.2px] border-dashed border-black-6 bg-black-1"
+              onClick={() => imageRef?.current?.click()}
+            >
               <Input
                 type="file"
-                className=""
+                className="hidden"
                 ref={imageRef}
                 onChange={(e) => uploadImage(e)}
               />
-              {/*  {!isImageLoading ? (
+              {!isImageLoading ? (
                 <Image
                   src="/icons/upload-image.svg"
                   width={40}
@@ -287,7 +301,7 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
               ) : (
                 <div className="text-16 flex-center font-medium text-white-1">
                   Uploading
-                  <Loader size={20} className="animate-spin ml-2" />
+                  <Spinner />
                 </div>
               )}
               <div className="flex flex-col items-center gap-1">
@@ -297,8 +311,20 @@ const AdminPage = ({ isMobile, user }: AdminPageProps) => {
                 <p className="text-12 font-normal text-gray-1">
                   SVG, PNG, JPG, or GIF (max. 1080x1080px)
                 </p>
-              </div> */}
+              </div>
             </div>
+
+            {image && (
+              <div className="flex-center w-full">
+                <Image
+                  src={image}
+                  width={200}
+                  height={200}
+                  className="mt-5"
+                  alt="thumbnail"
+                />
+              </div>
+            )}
           </Modal>
 
           <Modal
