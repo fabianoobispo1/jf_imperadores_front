@@ -43,7 +43,7 @@ const items = [
   },
   {
     title: 'Seletiva',
-    url: '/seletiva',
+    url: '/dashboard/seletiva',
     icon: Calendar,
   },
   {
