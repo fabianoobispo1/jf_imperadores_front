@@ -1,4 +1,4 @@
-/* import { TodoList } from '@/components/TodoList' */
+import { TodoList } from '@/components/TodoList'
 import {
   Card,
   CardContent,
@@ -147,7 +147,9 @@ export default function page() {
                     Essa lista sera visivel para todos os usuários.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>{/*           <TodoList /> */}</CardContent>
+                <CardContent>
+                  <TodoList />
+                </CardContent>
               </Card>
             </div>
           </TabsContent>

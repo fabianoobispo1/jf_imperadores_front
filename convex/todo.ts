@@ -44,3 +44,21 @@ export const toggleTodoCompletion = mutation({
     return updatedTodo // Retorna o todo atualizado
   },
 })
+
+export const remove = mutation({
+  args: {
+    todoId: v.id('todo'), // ID do todo a ser removido
+  },
+  handler: async ({ db }, { todoId }) => {
+    // Buscar o todo para garantir que ele existe antes de remover
+    const todo = await db.get(todoId)
+    if (!todo) {
+      throw new Error('Todo não encontrado')
+    }
+
+    // Remover o todo do banco de dados
+    await db.delete(todoId)
+
+    return { success: true, message: 'Todo removido com sucesso' } // Resposta de confirmação
+  },
+})

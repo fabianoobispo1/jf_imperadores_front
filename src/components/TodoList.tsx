@@ -2,7 +2,9 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { Trash } from 'lucide-react'
-import axios from 'axios'
+import { fetchMutation, fetchQuery } from 'convex/nextjs'
+import { useSession } from 'next-auth/react'
+import { useMutation } from 'convex/react'
 
 import { Input } from '@/components/ui/input'
 import {
@@ -18,32 +20,45 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { LoadingButton } from './ui/loading-button'
 import { ScrollArea, ScrollBar } from './ui/scroll-area'
 import { Spinner } from './ui/spinner'
+import { api } from '../../convex/_generated/api'
+import type { Id } from '../../convex/_generated/dataModel'
 
 interface Todo {
-  id: string
+  _id: Id<'todo'>
+  _creationTime: number
   text: string
   isCompleted: boolean
-  created_at: string
-  updated_at: string
-  sfaUser_id: string
-  sfaUser?: {
-    nome: string
-  }
+  created_at: number
+  updated_at: number
+  userId: Id<'user'>
 }
-
 export function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([])
+
   const [newTodo, setNewTodo] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [loadingInicial, setLoadingInicial] = useState<boolean>(true)
+
   const [loadingTodo, setLoadingTodo] = useState<boolean>(false)
 
+  const registerTodo = useMutation(api.todo.create)
+
+  const { data: session } = useSession()
+
   useEffect(() => {
+    console.log('usseEfect')
+    console.log(todos)
     loadTodos()
-  }, [])
+  }, [session])
 
   const loadTodos = async () => {
-    setLoadingInicial(false)
+    if (session) {
+      fetchQuery(api.todo.getTodoByUser, {
+        userId: session.user.id as Id<'user'>,
+      }).then((result) => {
+        setTodos(result)
+      })
+    }
   }
 
   const addTodo = async () => {
@@ -53,27 +68,25 @@ export function TodoList() {
       return
     }
 
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/registrartodosusuario`,
-      {
+    if (session) {
+      await registerTodo({
+        userId: session.user.id as Id<'user'>,
         text: newTodo,
-      },
-      {
-        headers: {
-          Authorization: `Bearer xxx`,
-        },
-      },
-    )
+        isCompleted: false,
+        created_at: new Date().getTime(),
+        updated_at: new Date().getTime(),
+      })
 
-    const todo = response.data.sfaTodo
-    setTodos([...todos, todo])
-    setNewTodo('')
-    setLoading(false)
+      setNewTodo('')
+      setLoading(false)
+      loadTodos()
+    }
   }
 
-  const toggleTodo = async (id: string) => {
+  const toggleTodo = async (id: Id<'todo'>) => {
     setLoadingTodo(true)
-    const todo = todos.find((todo) => todo.id === id)
+    console.log(id)
+    /*    const todo = todos.find((todo) => todo.id === id)
     if (!todo) {
       setLoadingTodo(false)
       return
@@ -94,27 +107,15 @@ export function TodoList() {
       },
     )
 
-    setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo)))
+    setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo))) */
     setLoadingTodo(false)
   }
 
-  const removeTodo = async (id: string) => {
+  const removeTodo = async (id: Id<'todo'>) => {
     setLoadingTodo(true)
-    const todo = todos.find((todo) => todo.id === id)
-    if (!todo) {
-      setLoadingTodo(false)
-      return
-    }
 
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/deletetodosusuario/${id}`,
-
-      {
-        headers: {
-          Authorization: `Bearer xxx`,
-        },
-      },
-    )
+    const response = await fetchMutation(api.todo.remove, { todoId: id })
+    console.log(response.message) // "Todo removido com sucesso"
 
     loadTodos()
     setLoadingTodo(false)
@@ -134,30 +135,26 @@ export function TodoList() {
       </div>
 
       <ScrollArea className="h-[calc(80vh-220px)] w-full overflow-x-auto rounded-md border">
-        {loadingInicial ? (
-          <div className="flex h-[calc(80vh-220px)] items-center justify-center ">
-            <Spinner />
-          </div>
-        ) : (
-          <Table className="relative">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="text-center">Sugestão</TableHead>
-                <TableHead className="text-center">Completou</TableHead>
-                <TableHead className="text-center">Criado em</TableHead>
-                {/* <TableHead className="text-center">Criado por</TableHead> */}
-                <TableHead className="text-center">Opções</TableHead>
-              </TableRow>
-            </TableHeader>
+        <Table className="relative">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-center">Sugestão</TableHead>
+              <TableHead className="text-center">Completou</TableHead>
+              <TableHead className="text-center">Criado em</TableHead>
+              {/* <TableHead className="text-center">Criado por</TableHead> */}
+              <TableHead className="text-center">Opções</TableHead>
+            </TableRow>
+          </TableHeader>
 
-            <TableBody>
-              {todos.map((todo) => (
-                <TableRow key={todo.id}>
+          <TableBody>
+            {todos ? (
+              todos.map((todo) => (
+                <TableRow key={todo._id}>
                   <TableCell>{todo.text}</TableCell>
                   <TableCell className="text-center">
                     <Checkbox
                       checked={todo.isCompleted}
-                      onCheckedChange={() => toggleTodo(todo.id)}
+                      onCheckedChange={() => toggleTodo(todo._id)}
                     />
                   </TableCell>
                   <TableCell className="text-center">
@@ -170,23 +167,25 @@ export function TodoList() {
                     <LoadingButton
                       className="w-32"
                       loading={loadingTodo}
-                      onClick={() => toggleTodo(todo.id)}
+                      onClick={() => toggleTodo(todo._id)}
                     >
                       {todo.isCompleted ? 'Desfazer' : 'Completo'}
                     </LoadingButton>
                     <LoadingButton
                       loading={loadingTodo}
                       variant={'destructive'}
-                      onClick={() => removeTodo(todo.id)}
+                      onClick={() => removeTodo(todo._id)}
                     >
                       <Trash className="h-4 w-4" />
                     </LoadingButton>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
+              ))
+            ) : (
+              <Spinner />
+            )}
+          </TableBody>
+        </Table>
 
         <ScrollBar orientation="horizontal" />
       </ScrollArea>

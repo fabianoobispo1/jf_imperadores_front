@@ -12,13 +12,13 @@ import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
-} from 'convex/server'
-import type * as files from '../files.js'
-import type * as links from '../links.js'
-import type * as socialIcons from '../socialIcons.js'
-import type * as telaLinks from '../telaLinks.js'
-import type * as todo from '../todo.js'
-import type * as user from '../user.js'
+} from "convex/server";
+import type * as files from "../files.js";
+import type * as links from "../links.js";
+import type * as socialIcons from "../socialIcons.js";
+import type * as telaLinks from "../telaLinks.js";
+import type * as todo from "../todo.js";
+import type * as user from "../user.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -29,18 +29,18 @@ import type * as user from '../user.js'
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  files: typeof files
-  links: typeof links
-  socialIcons: typeof socialIcons
-  telaLinks: typeof telaLinks
-  todo: typeof todo
-  user: typeof user
-}>
+  files: typeof files;
+  links: typeof links;
+  socialIcons: typeof socialIcons;
+  telaLinks: typeof telaLinks;
+  todo: typeof todo;
+  user: typeof user;
+}>;
 export declare const api: FilterApi<
   typeof fullApi,
-  FunctionReference<any, 'public'>
->
+  FunctionReference<any, "public">
+>;
 export declare const internal: FilterApi<
   typeof fullApi,
-  FunctionReference<any, 'internal'>
->
+  FunctionReference<any, "internal">
+>;
