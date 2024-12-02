@@ -1,6 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Trash } from 'lucide-react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import { useSession } from 'next-auth/react'
@@ -37,7 +36,6 @@ export function TodoList() {
 
   const [newTodo, setNewTodo] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
-  const [loadingInicial, setLoadingInicial] = useState<boolean>(true)
 
   const [loadingTodo, setLoadingTodo] = useState<boolean>(false)
 
@@ -45,13 +43,7 @@ export function TodoList() {
 
   const { data: session } = useSession()
 
-  useEffect(() => {
-    console.log('usseEfect')
-    console.log(todos)
-    loadTodos()
-  }, [session])
-
-  const loadTodos = async () => {
+  const loadTodos = useCallback(async () => {
     if (session) {
       fetchQuery(api.todo.getTodoByUser, {
         userId: session.user.id as Id<'user'>,
@@ -59,7 +51,13 @@ export function TodoList() {
         setTodos(result)
       })
     }
-  }
+  }, [session])
+
+  useEffect(() => {
+    if (session) {
+      loadTodos()
+    }
+  }, [loadTodos, session])
 
   const addTodo = async () => {
     setLoading(true)
@@ -86,36 +84,19 @@ export function TodoList() {
   const toggleTodo = async (id: Id<'todo'>) => {
     setLoadingTodo(true)
     console.log(id)
-    /*    const todo = todos.find((todo) => todo.id === id)
-    if (!todo) {
-      setLoadingTodo(false)
-      return
-    }
 
-    const updatedTodo = { ...todo, isCompleted: !todo.isCompleted }
+    await fetchMutation(api.todo.toggleTodoCompletion, {
+      todoId: id,
+    })
 
-    await axios.put(
-      `${process.env.NEXT_PUBLIC_API_MINHA_BASE}/sfa/todo/editartodosusuario/${id}`,
-      {
-        text: todo.text,
-        isCompleted: !todo.isCompleted,
-      },
-      {
-        headers: {
-          Authorization: `Bearer xxx`,
-        },
-      },
-    )
-
-    setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo))) */
+    loadTodos()
     setLoadingTodo(false)
   }
 
   const removeTodo = async (id: Id<'todo'>) => {
     setLoadingTodo(true)
 
-    const response = await fetchMutation(api.todo.remove, { todoId: id })
-    console.log(response.message) // "Todo removido com sucesso"
+    await fetchMutation(api.todo.remove, { todoId: id })
 
     loadTodos()
     setLoadingTodo(false)
@@ -141,7 +122,6 @@ export function TodoList() {
               <TableHead className="text-center">Sugestão</TableHead>
               <TableHead className="text-center">Completou</TableHead>
               <TableHead className="text-center">Criado em</TableHead>
-              {/* <TableHead className="text-center">Criado por</TableHead> */}
               <TableHead className="text-center">Opções</TableHead>
             </TableRow>
           </TableHeader>
@@ -160,9 +140,6 @@ export function TodoList() {
                   <TableCell className="text-center">
                     {new Date(todo.created_at).toLocaleDateString()}
                   </TableCell>
-                  {/*  <TableCell className="text-center">
-                    {todo.sfaUser?.nome || 'Desconhecido'}
-                  </TableCell> */}
                   <TableCell className="flex items-center justify-center gap-2">
                     <LoadingButton
                       className="w-32"
