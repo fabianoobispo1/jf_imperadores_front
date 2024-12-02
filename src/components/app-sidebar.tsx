@@ -1,6 +1,7 @@
 'use client'
 import {
   Calendar,
+  ChevronDown,
   ChevronUp,
   Home,
   Search,
@@ -27,6 +28,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from './ui/collapsible'
 
 // Menu items.
 const items = [
@@ -45,9 +51,11 @@ const items = [
     url: '#',
     icon: Search,
   },
+]
+const itemsAdm = [
   {
-    title: 'Settings',
-    url: '#',
+    title: 'Tela Teste',
+    url: '/telateste',
     icon: Settings,
   },
 ]
@@ -72,6 +80,33 @@ export function AppSidebar() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
+
+                <Collapsible className="group/collapsible">
+                  <SidebarGroup>
+                    <SidebarGroupLabel asChild>
+                      <CollapsibleTrigger>
+                        Administração
+                        <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                      </CollapsibleTrigger>
+                    </SidebarGroupLabel>
+                    <CollapsibleContent>
+                      <SidebarGroupContent>
+                        <SidebarMenu>
+                          {itemsAdm.map((item) => (
+                            <SidebarMenuItem key={item.title}>
+                              <SidebarMenuButton asChild>
+                                <a href={item.url}>
+                                  <item.icon />
+                                  <span>{item.title}</span>
+                                </a>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          ))}
+                        </SidebarMenu>
+                      </SidebarGroupContent>
+                    </CollapsibleContent>
+                  </SidebarGroup>
+                </Collapsible>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -91,9 +126,11 @@ export function AppSidebar() {
                   side="top"
                   className="w-[--radix-popper-anchor-width]"
                 >
-                  <DropdownMenuItem>
-                    <span>Conta</span>
-                  </DropdownMenuItem>
+                  <a href={'/dashboard/perfil'}>
+                    <DropdownMenuItem>
+                      <span>Perfil</span>
+                    </DropdownMenuItem>{' '}
+                  </a>
                   {/* <DropdownMenuItem>
                     <span>Billing</span>
                   </DropdownMenuItem> */}
