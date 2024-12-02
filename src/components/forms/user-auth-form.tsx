@@ -44,10 +44,11 @@ export default function UserAuthForm() {
     setLoading(true)
 
     try {
-      await signIn('credentials', {
+      const teste = await signIn('credentials', {
         identifier: data.email,
         password: data.password,
       })
+      console.log(teste)
     } catch (error) {
       console.log(error)
       if (error instanceof AuthError) {

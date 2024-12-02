@@ -3,7 +3,6 @@ import {
   Calendar,
   ChevronUp,
   Home,
-  Inbox,
   Search,
   Settings,
   User2,
@@ -37,13 +36,8 @@ const items = [
     icon: Home,
   },
   {
-    title: 'Inbox',
-    url: '#',
-    icon: Inbox,
-  },
-  {
-    title: 'Calendar',
-    url: '#',
+    title: 'Seletiva',
+    url: '/seletiva',
     icon: Calendar,
   },
   {
