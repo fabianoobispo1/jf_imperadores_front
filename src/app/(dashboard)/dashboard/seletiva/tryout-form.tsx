@@ -4,6 +4,8 @@ import { useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import Image from 'next/image'
+import { useUploadFiles } from '@xixixao/uploadstuff/react'
+import { useMutation } from 'convex/react'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -16,6 +18,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
+import { api } from '../../../../../convex/_generated/api'
+import type { Id } from '../../../../../convex/_generated/dataModel'
+
 const formSchema = z.object({
   name: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
   imgUrl: z.string().optional(),
@@ -25,10 +30,16 @@ type ProductFormValues = z.infer<typeof formSchema>
 
 export const TryoutForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
-  const [image, setImage] = useState<string | null>(null) // Estado para a imagem carregada
-  const [isImageLoading, setIsImageLoading] = useState(false) // Para indicar o carregamento da imagem
-  const imageRef = useRef<HTMLInputElement | null>(null) //
+  const [image, setImage] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [isImageLoading, setIsImageLoading] = useState(false)
+  const imageRef = useRef<HTMLInputElement | null>(null)
+  const [storageId, setStorageId] = useState('')
 
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl)
+  const { startUpload } = useUploadFiles(generateUploadUrl)
+  const getImageUrl = useMutation(api.files.getUrl)
+  const removeImageFIle = useMutation(api.files.removeFile)
   const defaultValues = {
     name: '',
     imgUrl: '',
@@ -41,7 +52,7 @@ export const TryoutForm: React.FC = () => {
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
-    console.log({ ...data, imgUrl: image }) // Inclui a URL da imagem no envio
+    console.log({ ...data, imgUrl: imageUrl }) // Inclui a URL da imagem no envio
     setLoading(false)
   }
 
@@ -50,7 +61,18 @@ export const TryoutForm: React.FC = () => {
       setIsImageLoading(true)
       const file = e.target.files[0]
 
-      // Simula o upload da imagem (substitua com sua lógica de upload)
+      const blob = await file.arrayBuffer().then((ab) => new Blob([ab]))
+
+      // handleImage(blob, file.name)
+      const file1 = new File([blob], file.name, { type: 'image/png' })
+      const uploaded = await startUpload([file1])
+      setStorageId('')
+      //      const storageId = { storageId: uploaded[0].response as Id<'_storage'> }.storageId
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const storageId = (uploaded[0].response as any).storageId
+      setStorageId(storageId)
+
+      setImageUrl(await getImageUrl({ storageId }))
       const reader = new FileReader()
       reader.onloadend = () => {
         setImage(reader.result as string)
@@ -60,7 +82,12 @@ export const TryoutForm: React.FC = () => {
     }
   }
 
-  const removeImage = () => setImage(null) // Remove a imagem carregada
+  const removeImage = () => {
+    removeImageFIle({ storageId: storageId as Id<'_storage'> })
+    setImageUrl('')
+    //  removeImageFIle(storageId as Id<'_storage'>)
+    setImage(null)
+  } // Remove a imagem carregada
 
   return (
     <>
@@ -88,7 +115,7 @@ export const TryoutForm: React.FC = () => {
           <div className="mt-5 w-full">
             {!image ? (
               <div
-                className="flex-center h-[142px] w-full cursor-pointer flex-col gap-3 rounded-xl border-[3.2px] border-dashed border-black-6 bg-black-1"
+                className=" h-[142px] w-full cursor-pointer flex  justify-center items-center flex-col gap-3 rounded-xl border-[3.2px] border-dashed border-black-6 "
                 onClick={() => imageRef?.current?.click()}
               >
                 <Input
@@ -104,7 +131,7 @@ export const TryoutForm: React.FC = () => {
                     Carregando...
                   </div>
                 )}
-                <div className="flex flex-col items-center gap-1">
+                <div className="w-full flex flex-col justify-center items-center gap-1">
                   <h2 className="text-12 font-bold text-orange-1">
                     Clique para enviar
                   </h2>

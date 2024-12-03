@@ -58,7 +58,7 @@ export const Tryout: React.FC = () => {
 
       {exibeAdicionar ? (
         <>
-          <div className="flexrow flex bg-black items-start justify-between gap-4">
+          <div className="flexrow flex items-start justify-between gap-4">
             <Heading title="Adicionar" description="...." />
             <Button
               onClick={() => {
