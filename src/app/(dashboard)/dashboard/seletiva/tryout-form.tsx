@@ -1,11 +1,8 @@
 'use client'
 import * as z from 'zod'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import Image from 'next/image'
-import { useUploadFiles } from '@xixixao/uploadstuff/react'
-import { useMutation } from 'convex/react'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -18,30 +15,37 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-import { api } from '../../../../../convex/_generated/api'
-import type { Id } from '../../../../../convex/_generated/dataModel'
+import FileUpload from './file-upload'
+
+const ImgSchema = z.object({
+  fileName: z.string(),
+  name: z.string(),
+  fileSize: z.number(),
+  size: z.number(),
+  fileKey: z.string(),
+  key: z.string(),
+  fileUrl: z.string(),
+  url: z.string(),
+})
+export const IMG_MAX_LIMIT = 3
 
 const formSchema = z.object({
   name: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
-  imgUrl: z.string().optional(),
+
+  imgUrl: z
+    .array(ImgSchema)
+    .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
+    .min(1, { message: 'At least one image must be added.' }),
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
 
 export const TryoutForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
-  const [image, setImage] = useState<string | null>(null)
-  const [isImageLoading, setIsImageLoading] = useState(false)
-  const imageRef = useRef<HTMLInputElement | null>(null)
-  const [storageId, setStorageId] = useState('')
 
-  const generateUploadUrl = useMutation(api.files.generateUploadUrl)
-  const { startUpload } = useUploadFiles(generateUploadUrl)
-  const getImageUrl = useMutation(api.files.getUrl)
-  const removeImageFIle = useMutation(api.files.removeFile)
   const defaultValues = {
     name: '',
-    imgUrl: '',
+    imgUrl: [],
   }
 
   const form = useForm<ProductFormValues>({
@@ -51,36 +55,13 @@ export const TryoutForm: React.FC = () => {
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
-    console.log({ ...data, imgUrl: image }) // Inclui a URL da imagem no envio
+    console.log({ ...data, imgUrl: 'string do link' }) // Inclui a URL da imagem no envio
+
+    console.log(data.imgUrl[0].key)
+    console.log(data.imgUrl[0].fileKey)
+
     setLoading(false)
   }
-
-  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setIsImageLoading(true)
-
-      // handleImage(blob, file.name)
-      const file = new File(
-        [await e.target.files[0].arrayBuffer().then((ab) => new Blob([ab]))],
-        e.target.files[0].name,
-        { type: 'image/png' },
-      )
-      const uploaded = await startUpload([file])
-      setStorageId('')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const storageId = (uploaded[0].response as any).storageId
-      setStorageId(storageId)
-      const urlImage = await getImageUrl({ storageId })
-      setImage(urlImage)
-      setIsImageLoading(false)
-    }
-  }
-
-  const removeImage = () => {
-    removeImageFIle({ storageId: storageId as Id<'_storage'> })
-    //  removeImageFIle(storageId as Id<'_storage'>)
-    setImage(null)
-  } // Remove a imagem carregada
 
   return (
     <>
@@ -104,47 +85,25 @@ export const TryoutForm: React.FC = () => {
               )}
             />
           </div>
-          {/* Upload de Imagem */}
-          <div className="mt-5 w-full">
-            {!image ? (
-              <div
-                className=" h-[142px] w-full cursor-pointer flex  justify-center items-center flex-col gap-3 rounded-xl border-[3.2px] border-dashed border-black-6 "
-                onClick={() => imageRef?.current?.click()}
-              >
-                <Input
-                  type="file"
-                  className="hidden"
-                  ref={imageRef}
-                  onChange={uploadImage}
-                />
-                {!isImageLoading ? (
-                  <div className="w-full flex flex-col justify-center items-center gap-1">
-                    <h2 className="text-12 font-bold ">Clique para enviar</h2>
-                  </div>
-                ) : (
-                  <div className="text-16 flex-center font-medium text-white-1">
-                    Carregando...
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="relative w-full flex-center">
-                <Image
-                  src={image}
-                  width={200}
-                  height={200}
-                  className="rounded-xl"
-                  alt="thumbnail"
-                />
-                <button
-                  className="absolute top-2 right-2 flex items-center justify-center w-8 h-8 bg-red-500 hover:bg-red-600 text-white text-sm font-bold rounded-full shadow-lg"
-                  onClick={removeImage}
-                >
-                  ✕
-                </button>
-              </div>
+          <FormField
+            control={form.control}
+            name="imgUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Imagem</FormLabel>
+                <FormControl>
+                  <FileUpload
+                    onChange={field.onChange}
+                    value={field.value}
+                    onRemove={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
+          />
+          {/* Upload de Imagem */}
+
           <Button disabled={loading} className="ml-auto" type="submit">
             Salvar
           </Button>
