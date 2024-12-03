@@ -10,6 +10,7 @@ export const Tryout: React.FC = () => {
   const [exibeBotoes, setExibeBotoes] = useState(true)
   const [exibeListar, setExibeListar] = useState(false)
   const [exibeAdicionar, setExibeAdicionar] = useState(false)
+
   return (
     <>
       {exibeBotoes ? (
@@ -48,6 +49,7 @@ export const Tryout: React.FC = () => {
               Voltar
             </Button>
           </div>
+
           {/* <TryoutForm /> */}
         </>
       ) : (
@@ -56,7 +58,7 @@ export const Tryout: React.FC = () => {
 
       {exibeAdicionar ? (
         <>
-          <div className="flexrow flex items-start justify-between gap-4">
+          <div className="flexrow flex bg-black items-start justify-between gap-4">
             <Heading title="Adicionar" description="...." />
             <Button
               onClick={() => {

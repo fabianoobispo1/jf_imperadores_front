@@ -36,46 +36,45 @@ const authConfig = {
     }),
     CredentialProvider({
       credentials: {
-        email: {
-          type: 'email',
-        },
-        password: {
-          type: 'password',
-        },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
 
       async authorize(credentials) {
         const parsedCredentials = z
-          .object({ identifier: z.string(), password: z.string().min(6) })
+          .object({ email: z.string(), password: z.string().min(6) })
           .safeParse(credentials)
 
-        if (parsedCredentials.success) {
-          const { identifier, password } = parsedCredentials.data
-          const isEmail = identifier.includes('@')
-          const user = await getUser({
-            key: isEmail ? 'email' : 'username',
-            value: identifier,
-          })
-          if (!user) return null
-
-          const isMatch = await compare(password, user.password)
-          if (!isMatch) return null
-
-          return {
-            id: user._id.toString(),
-            image: user.image || '',
-            email: user.email,
-            role: user.role,
-            nome: user.nome,
-          }
+        if (!parsedCredentials.success) {
+          throw new Error('Credenciais inválidas')
         }
 
-        return null
+        const { email, password } = parsedCredentials.data
+
+        const user = await getUser({
+          key: email ? 'email' : 'username',
+          value: email,
+        })
+        if (!user) {
+          throw new Error('Usuário não encontrado')
+        }
+
+        const isMatch = await compare(password, user.password)
+        if (!isMatch) {
+          throw new Error('Senha incorreta')
+        }
+        return {
+          id: user._id.toString(),
+          image: user.image || '',
+          email: user.email,
+          role: user.role,
+          nome: user.nome,
+        }
       },
     }),
   ],
   pages: {
-    signIn: '/auth/signin',
+    signIn: '/entrar',
   },
   callbacks: {
     async signIn({ account, profile }) {

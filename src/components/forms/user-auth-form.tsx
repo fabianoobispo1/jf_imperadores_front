@@ -4,7 +4,7 @@ import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { AuthError } from 'next-auth'
+import { redirect } from 'next/navigation'
 
 import {
   Form,
@@ -15,8 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-
-/* import GitHubSignInButton from '../github-auth-button' */
+import { useToast } from '@/hooks/use-toast'
 
 import { LoadingButton } from '../../components/ui/loading-button'
 import GoogleSignInButton from '../google-auth-button'
@@ -30,7 +29,7 @@ type UserFormValue = z.infer<typeof formSchema>
 
 export default function UserAuthForm() {
   const [loading, setLoading] = useState(false)
-
+  const { toast } = useToast()
   const defaultValues = {
     email: '',
     password: '',
@@ -43,23 +42,29 @@ export default function UserAuthForm() {
   const onSubmit = async (data: UserFormValue) => {
     setLoading(true)
 
-    try {
-      const teste = await signIn('credentials', {
-        identifier: data.email,
-        password: data.password,
+    const result = await signIn('credentials', {
+      redirect: false, // Evita o redirecionamento
+      email: data.email,
+      password: data.password,
+    })
+
+    console.log(result)
+    setLoading(false)
+
+    if (result?.error) {
+      // Exibe o toast com a mensagem de erro
+      toast({
+        title: 'Erro',
+        variant: 'destructive',
+        description: 'Credenciais inválidas. Verifique seu email e senha.',
       })
-      console.log(teste)
-    } catch (error) {
-      console.log(error)
-      if (error instanceof AuthError) {
-        console.log(error)
-        switch (error.type) {
-          case 'CredentialsSignin':
-            return 'Invalid credentials.'
-          default:
-            return 'Something went wrong.'
-        }
-      }
+    } else {
+      // Exibe um toast de sucesso ou redireciona para uma página
+      toast({
+        title: 'Ok',
+        description: 'Login bem-sucedido!',
+      })
+      redirect('/dashboard')
     }
 
     setLoading(false)

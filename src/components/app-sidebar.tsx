@@ -64,7 +64,7 @@ export function AppSidebar() {
   const { data: session } = useSession()
   if (session) {
     return (
-      <Sidebar>
+      <Sidebar variant="floating" collapsible="icon">
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Jf Imperadores</SidebarGroupLabel>
