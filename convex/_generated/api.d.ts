@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as files from "../files.js";
 import type * as links from "../links.js";
+import type * as seletiva from "../seletiva.js";
 import type * as socialIcons from "../socialIcons.js";
 import type * as telaLinks from "../telaLinks.js";
 import type * as todo from "../todo.js";
@@ -31,6 +32,7 @@ import type * as user from "../user.js";
 declare const fullApi: ApiFromModules<{
   files: typeof files;
   links: typeof links;
+  seletiva: typeof seletiva;
   socialIcons: typeof socialIcons;
   telaLinks: typeof telaLinks;
   todo: typeof todo;

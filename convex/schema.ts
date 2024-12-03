@@ -49,6 +49,14 @@ export const linksSchema = {
   telaLinksId: v.id('telaLinks'), // Referência à tabela 'telaLinks'
 }
 
+export const seletivaSchema = {
+  nome: v.string(),
+  cpf: v.string(),
+  data_nascimento: v.optional(v.number()),
+  email: v.string(),
+  img_link: v.string(),
+}
+
 // Definição do Schema completo
 export default defineSchema({
   user: defineTable(userSchema)
@@ -63,4 +71,5 @@ export default defineSchema({
     'telaLinksId',
   ]),
   links: defineTable(linksSchema).index('by_telaLinks', ['telaLinksId']),
+  seletiva: defineTable(seletivaSchema).index('by_nome', ['nome']),
 })

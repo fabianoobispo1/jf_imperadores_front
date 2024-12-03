@@ -31,7 +31,6 @@ type ProductFormValues = z.infer<typeof formSchema>
 export const TryoutForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [image, setImage] = useState<string | null>(null)
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [isImageLoading, setIsImageLoading] = useState(false)
   const imageRef = useRef<HTMLInputElement | null>(null)
   const [storageId, setStorageId] = useState('')
@@ -52,39 +51,33 @@ export const TryoutForm: React.FC = () => {
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
-    console.log({ ...data, imgUrl: imageUrl }) // Inclui a URL da imagem no envio
+    console.log({ ...data, imgUrl: image }) // Inclui a URL da imagem no envio
     setLoading(false)
   }
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setIsImageLoading(true)
-      const file = e.target.files[0]
-
-      const blob = await file.arrayBuffer().then((ab) => new Blob([ab]))
 
       // handleImage(blob, file.name)
-      const file1 = new File([blob], file.name, { type: 'image/png' })
-      const uploaded = await startUpload([file1])
+      const file = new File(
+        [await e.target.files[0].arrayBuffer().then((ab) => new Blob([ab]))],
+        e.target.files[0].name,
+        { type: 'image/png' },
+      )
+      const uploaded = await startUpload([file])
       setStorageId('')
-      //      const storageId = { storageId: uploaded[0].response as Id<'_storage'> }.storageId
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const storageId = (uploaded[0].response as any).storageId
       setStorageId(storageId)
-
-      setImageUrl(await getImageUrl({ storageId }))
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImage(reader.result as string)
-        setIsImageLoading(false)
-      }
-      reader.readAsDataURL(file)
+      const urlImage = await getImageUrl({ storageId })
+      setImage(urlImage)
+      setIsImageLoading(false)
     }
   }
 
   const removeImage = () => {
     removeImageFIle({ storageId: storageId as Id<'_storage'> })
-    setImageUrl('')
     //  removeImageFIle(storageId as Id<'_storage'>)
     setImage(null)
   } // Remove a imagem carregada
@@ -125,17 +118,14 @@ export const TryoutForm: React.FC = () => {
                   onChange={uploadImage}
                 />
                 {!isImageLoading ? (
-                  <></>
+                  <div className="w-full flex flex-col justify-center items-center gap-1">
+                    <h2 className="text-12 font-bold ">Clique para enviar</h2>
+                  </div>
                 ) : (
                   <div className="text-16 flex-center font-medium text-white-1">
                     Carregando...
                   </div>
                 )}
-                <div className="w-full flex flex-col justify-center items-center gap-1">
-                  <h2 className="text-12 font-bold text-orange-1">
-                    Clique para enviar
-                  </h2>
-                </div>
               </div>
             ) : (
               <div className="relative w-full flex-center">
