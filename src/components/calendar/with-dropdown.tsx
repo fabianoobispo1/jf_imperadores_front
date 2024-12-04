@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 
 import { Calendar } from './calendar'
 import MonthAndYearDropdown from './month-year-dropdown'
-import { FormItem } from '../ui/form'
+import { FormItem, FormMessage } from '../ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 import { Label } from '../ui/label'
@@ -31,7 +31,7 @@ export function DatePickerWithDropdown({
           <Button
             variant="outline"
             className={cn(
-              'w-[280px] justify-start text-left font-normal',
+              'w-full md:w-[280px] justify-start text-left font-normal',
               !date && 'text-muted-foreground',
             )}
             aria-labelledby="datepicker-month-year-dropdown-v9"
@@ -46,6 +46,9 @@ export function DatePickerWithDropdown({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
+            disabled={(date) =>
+              date > new Date() || date < new Date('1900-01-01')
+            }
             locale={ptBR}
             mode="single"
             captionLayout="dropdown"
@@ -65,6 +68,7 @@ export function DatePickerWithDropdown({
           />
         </PopoverContent>
       </Popover>
+      <FormMessage />
     </FormItem>
   )
 }

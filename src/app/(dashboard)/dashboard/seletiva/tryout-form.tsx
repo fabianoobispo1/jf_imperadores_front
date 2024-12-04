@@ -20,10 +20,12 @@ import { UploadedFilesCard1 } from '@/components/uploaded-files-card1'
 import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
 
 const formSchema = z.object({
-  name: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
-  dob: z.date({
-    required_error: 'A date of birth is required.',
+  nome: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
+  data_nascimento: z.date({
+    required_error: 'A data de nascimento precisa ser preenchida.',
   }),
+  email: z.string().email({ message: 'Digite um email valido.' }),
+  cpf: z.string().min(3, { message: 'CPF precisa ser preenchido.' }),
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
@@ -37,7 +39,10 @@ export const TryoutForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
 
   const defaultValues = {
-    name: '',
+    nome: '',
+    data_nascimento: new Date(),
+    email: '',
+    cpf: '',
   }
 
   const form = useForm<ProductFormValues>({
@@ -54,9 +59,9 @@ export const TryoutForm: React.FC = () => {
     }
     console.log({ ...data, imgUrl })
 
-    console.log(new Date(data.dob))
+    console.log(new Date(data.data_nascimento))
 
-    const date = new Date(data.dob)
+    const date = new Date(data.data_nascimento)
     const timestamp = date.getTime()
     console.log(timestamp)
 
@@ -70,34 +75,7 @@ export const TryoutForm: React.FC = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          <div className="gap-8 md:grid md:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input disabled={loading} placeholder="Nome" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dob"
-              render={({ field }) => (
-                <DatePickerWithDropdown
-                  label="Data Nascimento"
-                  date={field.value}
-                  setDate={field.onChange}
-                />
-              )}
-            />
-          </div>
-
+          {/* Upload de Imagem */}
           {uploadedFiles.length > 0 ? (
             <UploadedFilesCard1
               uploadedFiles={uploadedFiles}
@@ -112,6 +90,60 @@ export const TryoutForm: React.FC = () => {
               disabled={isUploading}
             />
           )}
+
+          <div className="gap-8 md:grid md:grid-cols-3">
+            <FormField
+              control={form.control}
+              name="nome"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Nome" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="cpf"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Cpf</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Cpf" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="data_nascimento"
+              render={({ field }) => (
+                <DatePickerWithDropdown
+                  label="Data Nascimento"
+                  date={field.value}
+                  setDate={field.onChange}
+                />
+              )}
+            />
+          </div>
 
           <Button disabled={loading} className="ml-auto" type="submit">
             Salvar
