@@ -17,9 +17,13 @@ import {
 import { useUploadFile } from '@/hooks/use-upload-file'
 import { FileUploader1 } from '@/components/file-uploader1'
 import { UploadedFilesCard1 } from '@/components/uploaded-files-card1'
+import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
 
 const formSchema = z.object({
   name: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
+  dob: z.date({
+    required_error: 'A date of birth is required.',
+  }),
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
@@ -43,8 +47,19 @@ export const TryoutForm: React.FC = () => {
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
-    console.log({ ...data, imgUrl: uploadedFiles[0].url }) // Inclui a URL da imagem no envio
-    console.log(uploadedFiles)
+    let imgUrl = ''
+
+    if (uploadedFiles[0].url) {
+      imgUrl = uploadedFiles[0].url
+    }
+    console.log({ ...data, imgUrl })
+
+    console.log(new Date(data.dob))
+
+    const date = new Date(data.dob)
+    const timestamp = date.getTime()
+    console.log(timestamp)
+
     setLoading(false)
   }
 
@@ -69,9 +84,20 @@ export const TryoutForm: React.FC = () => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="dob"
+              render={({ field }) => (
+                <DatePickerWithDropdown
+                  label="Data Nascimento"
+                  date={field.value}
+                  setDate={field.onChange}
+                />
+              )}
+            />
           </div>
 
-          {/* Upload de Imagem */}
           {uploadedFiles.length > 0 ? (
             <UploadedFilesCard1
               uploadedFiles={uploadedFiles}
