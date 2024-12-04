@@ -2,7 +2,7 @@ import { type ClientUploadedFileData } from 'uploadthing/types'
 
 import { Icons } from '@/components/icons'
 
-export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
+export type UploadedFile<T = unknown> = ClientUploadedFileData<T>
 
 export interface NavItem {
   title: string

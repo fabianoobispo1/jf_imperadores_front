@@ -36,7 +36,6 @@
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
     "@uploadthing/react": "^7.1.2",
-    "@upstash/ratelimit": "^2.0.4",
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
     "@xixixao/uploadstuff": "^0.0.5",

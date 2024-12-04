@@ -4,12 +4,16 @@ import { useUploadFile } from '@/hooks/use-upload-file'
 import BreadCrumb from '@/components/breadcrumb'
 import { FileUploader } from '@/components/file-uploader'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { UploadedFilesCard } from '@/components/uploaded-files-card'
 
 const breadcrumbItems = [{ title: 'Pefil', link: '/dashboard/perfil' }]
-export default function page() {
-  const { onUpload, progresses, isUploading } = useUploadFile('imageUploader', {
-    defaultUploadedFiles: [],
-  })
+export default function Page() {
+  const { onUpload, progresses, uploadedFiles, isUploading } = useUploadFile(
+    'imageUploader',
+    {
+      defaultUploadedFiles: [],
+    },
+  )
 
   return (
     <>
@@ -25,6 +29,7 @@ export default function page() {
             disabled={isUploading}
           />
         </div>
+        <UploadedFilesCard uploadedFiles={uploadedFiles} />
       </ScrollArea>
     </>
   )

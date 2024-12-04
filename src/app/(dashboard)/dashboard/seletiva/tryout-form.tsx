@@ -15,27 +15,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-import FileUpload from './file-upload'
-
-const ImgSchema = z.object({
-  fileName: z.string(),
-  name: z.string(),
-  fileSize: z.number(),
-  size: z.number(),
-  fileKey: z.string(),
-  key: z.string(),
-  fileUrl: z.string(),
-  url: z.string(),
-})
-export const IMG_MAX_LIMIT = 3
-
 const formSchema = z.object({
   name: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
-
-  imgUrl: z
-    .array(ImgSchema)
-    .max(IMG_MAX_LIMIT, { message: 'You can only add up to 3 images' })
-    .min(1, { message: 'At least one image must be added.' }),
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
@@ -45,7 +26,6 @@ export const TryoutForm: React.FC = () => {
 
   const defaultValues = {
     name: '',
-    imgUrl: [],
   }
 
   const form = useForm<ProductFormValues>({
@@ -56,9 +36,6 @@ export const TryoutForm: React.FC = () => {
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
     console.log({ ...data, imgUrl: 'string do link' }) // Inclui a URL da imagem no envio
-
-    console.log(data.imgUrl[0].key)
-    console.log(data.imgUrl[0].fileKey)
 
     setLoading(false)
   }
@@ -85,23 +62,7 @@ export const TryoutForm: React.FC = () => {
               )}
             />
           </div>
-          <FormField
-            control={form.control}
-            name="imgUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Imagem</FormLabel>
-                <FormControl>
-                  <FileUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                    onRemove={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           {/* Upload de Imagem */}
 
           <Button disabled={loading} className="ml-auto" type="submit">
