@@ -59,7 +59,7 @@ export const Tryout: React.FC = () => {
 
       {exibeAdicionar ? (
         <ScrollArea className="h-[80vh] w-full px-4">
-          <div className="flexrow flex items-start justify-between gap-4">
+          <div className="flexrow flex items-start justify-between ">
             <Heading title="Adicionar" description="...." />
             <Button
               onClick={() => {

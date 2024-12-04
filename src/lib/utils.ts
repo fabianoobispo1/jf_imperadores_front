@@ -37,6 +37,16 @@ export function hasDraggableData<T extends Active | Over>(
 }
  */
 
+// Função para formatar o CPF
+export function formatCPF(value: string) {
+  return value
+    .replace(/\D/g, '') // Remove todos os caracteres não numéricos
+    .replace(/(\d{3})(\d)/, '$1.$2') // Adiciona o primeiro ponto
+    .replace(/(\d{3})(\d)/, '$1.$2') // Adiciona o segundo ponto
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2') // Adiciona o hífen
+    .slice(0, 14) // Limita o tamanho do CPF
+}
+
 export function formatBytes(
   bytes: number,
   opts: {

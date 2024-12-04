@@ -187,10 +187,10 @@ export function FileUploader1(props: FileUploaderProps) {
   const isDisabled = disabled || (files?.length ?? 0) >= maxFileCount
 
   return (
-    <div className="relative flex flex-col gap-6 overflow-hidden">
+    <div className="relative flex flex-col gap-6 overflow-hidden  w-full">
       {files?.length ? (
-        <ScrollArea className="h-fit w-full px-3">
-          <div className="flex max-h-48 flex-col gap-4">
+        <ScrollArea className="h-fit w-full px-3 ">
+          <div className="flex  flex-col gap-4 w-full">
             {files?.map((file, index) => (
               <FileCard
                 key={index}
@@ -253,8 +253,8 @@ interface FileCardProps {
 
 function FileCard({ file, progress, onRemove }: FileCardProps) {
   return (
-    <div className="relative flex items-center gap-2.5">
-      <div className="flex flex-1 gap-2.5">
+    <div className="relative flex items-center gap-2.5 w-full">
+      <div className="flex flex-1 gap-2.5 w-full">
         {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
         <div className="flex w-full flex-col gap-2">
           <div className="flex flex-col gap-px">

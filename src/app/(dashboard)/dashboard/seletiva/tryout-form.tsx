@@ -18,14 +18,20 @@ import { useUploadFile } from '@/hooks/use-upload-file'
 import { FileUploader1 } from '@/components/file-uploader1'
 import { UploadedFilesCard1 } from '@/components/uploaded-files-card1'
 import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
+import { formatCPF } from '@/lib/utils'
 
 const formSchema = z.object({
   nome: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
-  data_nascimento: z.date({
-    required_error: 'A data de nascimento precisa ser preenchida.',
-  }),
+  data_nascimento: z.preprocess(
+    (val) => (val === null ? undefined : val), // Transforma null em undefined
+    z.date({
+      required_error: 'A data de nascimento precisa ser preenchida.',
+    }),
+  ),
   email: z.string().email({ message: 'Digite um email valido.' }),
-  cpf: z.string().min(3, { message: 'CPF precisa ser preenchido.' }),
+  cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, {
+    message: 'CPF inválido.',
+  }),
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
@@ -40,7 +46,7 @@ export const TryoutForm: React.FC = () => {
 
   const defaultValues = {
     nome: '',
-    data_nascimento: new Date(),
+    data_nascimento: undefined,
     email: '',
     cpf: '',
   }
@@ -52,18 +58,20 @@ export const TryoutForm: React.FC = () => {
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
-    let imgUrl = ''
+    const cpfSemMascara = data.cpf.replace(/\D/g, '')
 
-    if (uploadedFiles[0].url) {
+    let imgUrl = ''
+    if (uploadedFiles[0]?.url) {
       imgUrl = uploadedFiles[0].url
     }
-    console.log({ ...data, imgUrl })
-
-    console.log(new Date(data.data_nascimento))
-
-    const date = new Date(data.data_nascimento)
-    const timestamp = date.getTime()
-    console.log(timestamp)
+    console.log({
+      ...data,
+      imgUrl,
+      cpfSemMascara,
+      timestamp: data.data_nascimento
+        ? new Date(data.data_nascimento).getTime()
+        : null,
+    })
 
     setLoading(false)
   }
@@ -75,23 +83,24 @@ export const TryoutForm: React.FC = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          {/* Upload de Imagem */}
-          {uploadedFiles.length > 0 ? (
-            <UploadedFilesCard1
-              uploadedFiles={uploadedFiles}
-              setUploadedFiles={setUploadedFiles}
-            />
-          ) : (
-            <FileUploader1
-              maxFileCount={1}
-              maxSize={4 * 1024 * 1024}
-              progresses={progresses}
-              onUpload={onUpload}
-              disabled={isUploading}
-            />
-          )}
-
-          <div className="gap-8 md:grid md:grid-cols-3">
+          <div className="w-full md:w-[280px]">
+            {/* Upload de Imagem */}
+            {uploadedFiles.length > 0 ? (
+              <UploadedFilesCard1
+                uploadedFiles={uploadedFiles}
+                setUploadedFiles={setUploadedFiles}
+              />
+            ) : (
+              <FileUploader1
+                maxFileCount={1}
+                maxSize={4 * 1024 * 1024}
+                progresses={progresses}
+                onUpload={onUpload}
+                disabled={isUploading}
+              />
+            )}
+          </div>
+          <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
             <FormField
               control={form.control}
               name="nome"
@@ -123,9 +132,16 @@ export const TryoutForm: React.FC = () => {
               name="cpf"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Cpf</FormLabel>
+                  <FormLabel>CPF</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} placeholder="Cpf" {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="000.000.000-00"
+                      value={field.value}
+                      onChange={(e) =>
+                        field.onChange(formatCPF(e.target.value))
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -138,8 +154,8 @@ export const TryoutForm: React.FC = () => {
               render={({ field }) => (
                 <DatePickerWithDropdown
                   label="Data Nascimento"
-                  date={field.value}
-                  setDate={field.onChange}
+                  date={field.value || undefined} // Passa undefined se for null
+                  setDate={(date) => field.onChange(date || null)} // Define null ao limpar
                 />
               )}
             />
