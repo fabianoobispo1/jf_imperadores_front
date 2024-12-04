@@ -57,5 +57,6 @@ export function useUploadFile(
     uploadedFiles,
     progresses,
     isUploading,
+    setUploadedFiles,
   }
 }

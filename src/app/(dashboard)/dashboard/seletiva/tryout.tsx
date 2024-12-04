@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { TryoutForm } from './tryout-form'
 
@@ -57,7 +58,7 @@ export const Tryout: React.FC = () => {
       )}
 
       {exibeAdicionar ? (
-        <>
+        <ScrollArea className="h-[80vh] w-full px-4">
           <div className="flexrow flex items-start justify-between gap-4">
             <Heading title="Adicionar" description="...." />
             <Button
@@ -70,7 +71,7 @@ export const Tryout: React.FC = () => {
             </Button>
           </div>
           <TryoutForm />
-        </>
+        </ScrollArea>
       ) : (
         <></>
       )}

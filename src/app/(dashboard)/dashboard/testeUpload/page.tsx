@@ -22,7 +22,7 @@ export default function Page() {
           <BreadCrumb items={breadcrumbItems} />
           {/*       <PerfilUser /> */}
           <FileUploader
-            maxFileCount={4}
+            maxFileCount={1}
             maxSize={4 * 1024 * 1024}
             progresses={progresses}
             onUpload={onUpload}
