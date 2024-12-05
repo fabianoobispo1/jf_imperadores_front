@@ -105,6 +105,11 @@ export const TryoutForm: React.FC = () => {
       return
     }
 
+    toast({
+      title: 'ok',
+      description: 'Canditado cadastrado.',
+    })
+
     /*  console.log({
       ...data,
       imgUrl,
@@ -119,28 +124,28 @@ export const TryoutForm: React.FC = () => {
 
   return (
     <>
+      <div className="w-full md:w-[280px] py-4">
+        {/* Upload de Imagem */}
+        {uploadedFiles.length > 0 ? (
+          <UploadedFilesCard1
+            uploadedFiles={uploadedFiles}
+            setUploadedFiles={setUploadedFiles}
+          />
+        ) : (
+          <FileUploader1
+            maxFileCount={1}
+            maxSize={4 * 1024 * 1024}
+            progresses={progresses}
+            onUpload={onUpload}
+            disabled={isUploading}
+          />
+        )}
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
-          <div className="w-full md:w-[280px]">
-            {/* Upload de Imagem */}
-            {uploadedFiles.length > 0 ? (
-              <UploadedFilesCard1
-                uploadedFiles={uploadedFiles}
-                setUploadedFiles={setUploadedFiles}
-              />
-            ) : (
-              <FileUploader1
-                maxFileCount={1}
-                maxSize={4 * 1024 * 1024}
-                progresses={progresses}
-                onUpload={onUpload}
-                disabled={isUploading}
-              />
-            )}
-          </div>
           <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
             <FormField
               control={form.control}

@@ -6,6 +6,7 @@ import { Heading } from '@/components/ui/heading'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { TryoutForm } from './tryout-form'
+import { TryoutList } from './tryout-list'
 
 export const Tryout: React.FC = () => {
   const [exibeBotoes, setExibeBotoes] = useState(true)
@@ -51,7 +52,7 @@ export const Tryout: React.FC = () => {
             </Button>
           </div>
 
-          {/* <TryoutForm /> */}
+          <TryoutList />
         </>
       ) : (
         <></>
