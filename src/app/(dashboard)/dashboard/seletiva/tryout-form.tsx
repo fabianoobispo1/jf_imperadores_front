@@ -3,6 +3,7 @@ import * as z from 'zod'
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { fetchMutation, fetchQuery } from 'convex/nextjs'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -19,6 +20,9 @@ import { FileUploader1 } from '@/components/file-uploader1'
 import { UploadedFilesCard1 } from '@/components/uploaded-files-card1'
 import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
 import { formatCPF } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
+
+import { api } from '../../../../../convex/_generated/api'
 
 const formSchema = z.object({
   nome: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
@@ -41,6 +45,7 @@ export const TryoutForm: React.FC = () => {
     useUploadFile('imageUploader', {
       defaultUploadedFiles: [],
     })
+  const { toast } = useToast()
 
   const [loading, setLoading] = useState(false)
 
@@ -58,20 +63,56 @@ export const TryoutForm: React.FC = () => {
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
+    // vrfica e ja exsite registro
+    const existCandidatoByemail = await fetchQuery(api.seletiva.getByEmail, {
+      email: data.email,
+    })
+    if (existCandidatoByemail) {
+      toast({
+        title: 'Erro',
+        variant: 'destructive',
+        description: 'Email já cadastrado.',
+      })
+      setLoading(false)
+      return
+    }
+
     const cpfSemMascara = data.cpf.replace(/\D/g, '')
 
     let imgUrl = ''
     if (uploadedFiles[0]?.url) {
       imgUrl = uploadedFiles[0].url
     }
-    console.log({
+    const timestamp = data.data_nascimento
+      ? new Date(data.data_nascimento).getTime()
+      : 0
+
+    const candidato = await fetchMutation(api.seletiva.create, {
+      nome: data.nome,
+      cpf: cpfSemMascara,
+      email: data.email,
+      data_nascimento: timestamp,
+      img_link: imgUrl,
+    })
+
+    if (!candidato) {
+      toast({
+        title: 'Erro',
+        variant: 'destructive',
+        description: 'Canditado não cadastrado.',
+      })
+      setLoading(false)
+      return
+    }
+
+    /*  console.log({
       ...data,
       imgUrl,
       cpfSemMascara,
       timestamp: data.data_nascimento
         ? new Date(data.data_nascimento).getTime()
         : null,
-    })
+    }) */
 
     setLoading(false)
   }

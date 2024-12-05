@@ -30,3 +30,16 @@ export const getByNome = query({
     return seletiva
   },
 })
+
+export const getByEmail = query({
+  args: {
+    email: v.string(),
+  },
+  handler: async ({ db }, { email }) => {
+    const user = await db
+      .query('seletiva')
+      .withIndex('by_email', (q) => q.eq('email', email))
+      .unique()
+    return user
+  },
+})

@@ -71,5 +71,7 @@ export default defineSchema({
     'telaLinksId',
   ]),
   links: defineTable(linksSchema).index('by_telaLinks', ['telaLinksId']),
-  seletiva: defineTable(seletivaSchema).index('by_nome', ['nome']),
+  seletiva: defineTable(seletivaSchema)
+    .index('by_nome', ['nome'])
+    .index('by_email', ['email']),
 })
