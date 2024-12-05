@@ -22,7 +22,7 @@ export default async function DashboardLayout({
     <SidebarProvider>
       <AppSidebar />
       <main className="w-full">
-        <SidebarTrigger />
+        <SidebarTrigger title="Menu" />
         {children}
       </main>
     </SidebarProvider>
