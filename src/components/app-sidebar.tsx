@@ -6,7 +6,6 @@ import {
   Home,
   Search,
   Settings,
-  User2,
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 
@@ -33,6 +32,9 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from './ui/collapsible'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+/* import type { Id } from '../../convex/_generated/dataModel' */
+import { Skeleton } from './ui/skeleton'
 
 // Menu items.
 const items = [
@@ -60,89 +62,150 @@ const itemsAdm = [
   },
 ]
 
+/* interface Usuario {
+  _id: Id<'user'>
+  _creationTime: number
+  image?: string | undefined
+  data_nascimento?: number | undefined
+  role: 'user' | 'admin'
+  nome: string
+  email: string
+  provider: string
+  password: string
+} */
+
 export function AppSidebar() {
   const { data: session } = useSession()
-  if (session) {
-    return (
-      <Sidebar variant="floating" collapsible="icon">
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Jf Imperadores</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+  /*   const [loadingData, setLoadingData] = useState(true)
+  const [usuario, setUsuario] = useState<Usuario>() */
+  /* 
+  const loadUser = useCallback(async () => {
+    setLoadingData(true)
 
-                <Collapsible className="group/collapsible">
-                  <SidebarGroup>
-                    <SidebarGroupLabel asChild>
-                      <CollapsibleTrigger>
-                        Administração
-                        <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                      </CollapsibleTrigger>
-                    </SidebarGroupLabel>
-                    <CollapsibleContent>
-                      <SidebarGroupContent>
-                        <SidebarMenu>
-                          {itemsAdm.map((item) => (
-                            <SidebarMenuItem key={item.title}>
-                              <SidebarMenuButton asChild>
-                                <a href={item.url}>
-                                  <item.icon />
-                                  <span>{item.title}</span>
-                                </a>
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
-                          ))}
-                        </SidebarMenu>
-                      </SidebarGroupContent>
-                    </CollapsibleContent>
-                  </SidebarGroup>
-                </Collapsible>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
+    if (session) {
+      try {
+        const response = await fetchQuery(api.user.getById, {
+          userId: session?.user.id as Id<'user'>,
+        })
 
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    <User2 /> {session.user?.nome ?? ''}
-                    <ChevronUp className="ml-auto" />
+        if (!response) {
+          console.error('Erro ao buscar os dados do usuário:')
+          return
+        }
+
+        setUsuario(response)
+      } catch (error) {
+        console.error('Erro ao buscar os dados do usuário:', error)
+      } finally {
+        setLoadingData(false) // Define o carregamento como concluído
+      }
+    }
+  }, [session])
+
+  useEffect(() => {
+    if (session) {
+      loadUser()
+    }
+  }, [loadUser, session]) */
+
+  return (
+    <Sidebar variant="floating" collapsible="icon">
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Jf Imperadores</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </a>
                   </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <a href={'/dashboard/perfil'}>
-                    <DropdownMenuItem>
-                      <span>Perfil</span>
-                    </DropdownMenuItem>{' '}
-                  </a>
-                  {/* <DropdownMenuItem>
+                </SidebarMenuItem>
+              ))}
+
+              <Collapsible className="group/collapsible">
+                <SidebarGroup>
+                  <SidebarGroupLabel asChild>
+                    <CollapsibleTrigger>
+                      Administração
+                      <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                    </CollapsibleTrigger>
+                  </SidebarGroupLabel>
+                  <CollapsibleContent>
+                    <SidebarGroupContent>
+                      <SidebarMenu>
+                        {itemsAdm.map((item) => (
+                          <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton asChild>
+                              <a href={item.url}>
+                                <item.icon />
+                                <span>{item.title}</span>
+                              </a>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </SidebarGroupContent>
+                  </CollapsibleContent>
+                </SidebarGroup>
+              </Collapsible>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  {/* */}
+                  {!session ? (
+                    <>
+                      <Skeleton className="h-8 w-8 rounded-full" />
+                      <Skeleton className="h-4 w-[100px]" />
+                    </>
+                  ) : (
+                    <>
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage
+                          src={'img_url'}
+                          alt={session.user?.nome ?? ''}
+                        />
+                        <AvatarFallback>{session.user?.nome[0]}</AvatarFallback>
+                      </Avatar>
+                      {session.user?.nome ?? ''}
+                    </>
+                  )}
+
+                  {/*  {usuario?.nome ?? ''} */}
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <a href={'/dashboard/perfil'}>
+                  <DropdownMenuItem>
+                    <span>Perfil</span>
+                  </DropdownMenuItem>
+                </a>
+                {/* <DropdownMenuItem>
                     <span>Billing</span>
                   </DropdownMenuItem> */}
-                  <DropdownMenuItem onClick={() => signOut()}>
-                    <span>Sair</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      </Sidebar>
-    )
-  }
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <span>Sair</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  )
 }

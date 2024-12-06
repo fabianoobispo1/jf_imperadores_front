@@ -99,7 +99,7 @@ export const TryoutForm: React.FC = () => {
       toast({
         title: 'Erro',
         variant: 'destructive',
-        description: 'Canditado não cadastrado.',
+        description: 'Candidato não cadastrado.',
       })
       setLoading(false)
       return
@@ -107,7 +107,7 @@ export const TryoutForm: React.FC = () => {
 
     toast({
       title: 'ok',
-      description: 'Canditado cadastrado.',
+      description: 'Candidato cadastrado.',
     })
 
     /*  console.log({
