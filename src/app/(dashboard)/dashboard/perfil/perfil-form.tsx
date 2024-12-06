@@ -19,6 +19,7 @@ import {
 import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
 import { useToast } from '@/hooks/use-toast'
 import { Spinner } from '@/components/ui/spinner'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { api } from '../../../../../convex/_generated/api'
 import type { Id } from '../../../../../convex/_generated/dataModel'
@@ -42,7 +43,7 @@ export const PerfilForm: React.FC = () => {
   const [loadingData, setLoadingData] = useState(true)
   const [bloqueioProvider, setBloqueioProvider] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  const [carregaDados, setCarregaDados] = useState(true)
   const { toast } = useToast()
 
   const defaultValues = {
@@ -59,7 +60,7 @@ export const PerfilForm: React.FC = () => {
   const loadUser = useCallback(async () => {
     setLoadingData(true)
 
-    if (session) {
+    if (session && carregaDados) {
       try {
         const response = await fetchQuery(api.user.getById, {
           userId: session?.user.id as Id<'user'>,
@@ -75,6 +76,7 @@ export const PerfilForm: React.FC = () => {
           setBloqueioProvider(true)
         }
         // Atualiza os valores do formulário com os dados da API
+
         form.reset({
           id: response._id,
           nome: response.nome,
@@ -83,13 +85,14 @@ export const PerfilForm: React.FC = () => {
             ? new Date(response.data_nascimento)
             : undefined,
         })
+        setCarregaDados(false)
       } catch (error) {
         console.error('Erro ao buscar os dados do usuário:', error)
       } finally {
         setLoadingData(false) // Define o carregamento como concluído
       }
     }
-  }, [session, form])
+  }, [session, form, carregaDados])
 
   useEffect(() => {
     if (session) {
@@ -112,7 +115,7 @@ export const PerfilForm: React.FC = () => {
     return <Spinner />
   }
   return (
-    <>
+    <ScrollArea className="h-full">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -181,6 +184,6 @@ export const PerfilForm: React.FC = () => {
           </Button>
         </form>
       </Form>
-    </>
+    </ScrollArea>
   )
 }

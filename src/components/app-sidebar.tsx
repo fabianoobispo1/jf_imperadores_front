@@ -171,7 +171,7 @@ export function AppSidebar() {
                     </>
                   ) : (
                     <>
-                      <Avatar className="h-8 w-8">
+                      <Avatar className=" h-8 w-8">
                         <AvatarImage
                           src={'img_url'}
                           alt={session.user?.nome ?? ''}
