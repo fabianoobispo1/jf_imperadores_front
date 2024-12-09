@@ -21,6 +21,8 @@ import { useToast } from '@/hooks/use-toast'
 import { Spinner } from '@/components/ui/spinner'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useUploadFile } from '@/hooks/use-upload-file'
+import { FileUploader1 } from '@/components/file-uploader1'
 
 import { api } from '../../../../../convex/_generated/api'
 import type { Id } from '../../../../../convex/_generated/dataModel'
@@ -44,6 +46,13 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>
 
 export const PerfilForm: React.FC = () => {
+  const { onUpload, progresses, isUploading, uploadedFiles } = useUploadFile(
+    'imageUploader',
+    {
+      defaultUploadedFiles: [],
+    },
+  )
+
   const { data: session } = useSession()
   const [loadingData, setLoadingData] = useState(true)
   const [bloqueioProvider, setBloqueioProvider] = useState(false)
@@ -91,7 +100,7 @@ export const PerfilForm: React.FC = () => {
           data_nascimento: response.data_nascimento
             ? new Date(response.data_nascimento)
             : undefined,
-          image: response.image || '',
+          image: 'aaaaaa',
         })
       } catch (error) {
         console.error('Erro ao buscar os dados do usuário:', error)
@@ -102,13 +111,24 @@ export const PerfilForm: React.FC = () => {
   }, [sessionId, form])
 
   useEffect(() => {
-    console.log('entrou no useeEfect')
-    console.log(sessionId)
     if (session) {
       setSessionId(session.user.id)
       loadUser()
     }
   }, [setSessionId, session, loadUser, sessionId])
+
+  const teste = async () => {
+    console.log('Botão clicado!')
+    form.setValue(
+      'image',
+      'https://avatars.githubusercontent.com/u/95259654?v=4',
+    )
+    console.log(form.getValues('image'))
+  }
+
+  const tessst = useCallback(async () => {
+    console.log(uploadedFiles)
+  }, [uploadedFiles])
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
@@ -148,6 +168,14 @@ export const PerfilForm: React.FC = () => {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+
+            <FileUploader1
+              maxFileCount={1}
+              maxSize={4 * 1024 * 1024}
+              progresses={progresses}
+              onUpload={onUpload}
+              disabled={isUploading}
             />
             <Avatar className="h-8 w-8">
               <AvatarImage src={form.getValues('image') || ''} alt="Avatar" />
