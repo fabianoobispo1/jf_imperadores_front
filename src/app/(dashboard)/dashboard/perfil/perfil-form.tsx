@@ -20,6 +20,7 @@ import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
 import { useToast } from '@/hooks/use-toast'
 import { Spinner } from '@/components/ui/spinner'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 import { api } from '../../../../../convex/_generated/api'
 import type { Id } from '../../../../../convex/_generated/dataModel'
@@ -34,6 +35,10 @@ const formSchema = z.object({
     }),
   ),
   email: z.string().email({ message: 'Digite um email valido.' }),
+  image: z
+    .string()
+    .url({ message: 'Insira uma URL válida para a imagem.' })
+    .optional(),
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
@@ -43,7 +48,8 @@ export const PerfilForm: React.FC = () => {
   const [loadingData, setLoadingData] = useState(true)
   const [bloqueioProvider, setBloqueioProvider] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [carregaDados, setCarregaDados] = useState(true)
+  const [sessionId, setSessionId] = useState('')
+
   const { toast } = useToast()
 
   const defaultValues = {
@@ -51,6 +57,7 @@ export const PerfilForm: React.FC = () => {
     nome: '',
     data_nascimento: undefined,
     email: '',
+    imagee: '',
   }
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -60,10 +67,10 @@ export const PerfilForm: React.FC = () => {
   const loadUser = useCallback(async () => {
     setLoadingData(true)
 
-    if (session && carregaDados) {
+    if (sessionId) {
       try {
         const response = await fetchQuery(api.user.getById, {
-          userId: session?.user.id as Id<'user'>,
+          userId: sessionId as Id<'user'>,
         })
 
         if (!response) {
@@ -84,21 +91,24 @@ export const PerfilForm: React.FC = () => {
           data_nascimento: response.data_nascimento
             ? new Date(response.data_nascimento)
             : undefined,
+          image: response.image || '',
         })
-        setCarregaDados(false)
       } catch (error) {
         console.error('Erro ao buscar os dados do usuário:', error)
       } finally {
         setLoadingData(false) // Define o carregamento como concluído
       }
     }
-  }, [session, form, carregaDados])
+  }, [sessionId, form])
 
   useEffect(() => {
+    console.log('entrou no useeEfect')
+    console.log(sessionId)
     if (session) {
+      setSessionId(session.user.id)
       loadUser()
     }
-  }, [loadUser, session])
+  }, [setSessionId, session, loadUser, sessionId])
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
@@ -122,6 +132,29 @@ export const PerfilForm: React.FC = () => {
           className="w-full space-y-8"
         >
           <div className="flex flex-col gap-4 md:grid md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Imagem</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="URL da imagem"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={form.getValues('image') || ''} alt="Avatar" />
+              <AvatarFallback>
+                {form.getValues('nome')?.[0] || '?'}
+              </AvatarFallback>
+            </Avatar>
             <FormField
               control={form.control}
               name="id"
