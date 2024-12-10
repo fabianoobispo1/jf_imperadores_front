@@ -3,7 +3,7 @@ import * as z from 'zod'
 import { useCallback, useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { fetchQuery } from 'convex/nextjs'
+import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import { useSession } from 'next-auth/react'
 
 import { Input } from '@/components/ui/input'
@@ -22,7 +22,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useUploadFile } from '@/hooks/use-upload-file'
-import { FileUploader1 } from '@/components/file-uploader1'
+import { FileUploaderButton } from '@/components/file-uploader-button'
 
 import { api } from '../../../../../convex/_generated/api'
 import type { Id } from '../../../../../convex/_generated/dataModel'
@@ -58,7 +58,7 @@ export const PerfilForm: React.FC = () => {
   const [bloqueioProvider, setBloqueioProvider] = useState(false)
   const [loading, setLoading] = useState(false)
   const [sessionId, setSessionId] = useState('')
-
+  const [img, setImg] = useState('')
   const { toast } = useToast()
 
   const defaultValues = {
@@ -87,12 +87,11 @@ export const PerfilForm: React.FC = () => {
           return
         }
 
-        console.log(response)
         if (response.provider !== 'credentials') {
           setBloqueioProvider(true)
         }
         // Atualiza os valores do formulário com os dados da API
-
+        setImg(response.image ?? '')
         form.reset({
           id: response._id,
           nome: response.nome,
@@ -100,7 +99,7 @@ export const PerfilForm: React.FC = () => {
           data_nascimento: response.data_nascimento
             ? new Date(response.data_nascimento)
             : undefined,
-          image: 'aaaaaa',
+          image: response.image ?? '',
         })
       } catch (error) {
         console.error('Erro ao buscar os dados do usuário:', error)
@@ -117,33 +116,49 @@ export const PerfilForm: React.FC = () => {
     }
   }, [setSessionId, session, loadUser, sessionId])
 
-  const teste = async () => {
-    console.log('Botão clicado!')
-    form.setValue(
-      'image',
-      'https://avatars.githubusercontent.com/u/95259654?v=4',
-    )
-    console.log(form.getValues('image'))
-  }
-
-  const tessst = useCallback(async () => {
-    console.log(uploadedFiles)
-  }, [uploadedFiles])
+  useEffect(() => {
+    if (uploadedFiles.length > 0) {
+      console.log('Arquivos enviados:', uploadedFiles)
+      // Chame aqui a função que você deseja executar
+      setImg(uploadedFiles[0]?.url || '')
+      form.setValue('image', uploadedFiles[0]?.url || '') // Exemplo de atualização do campo de imagem
+    }
+  }, [uploadedFiles, form])
 
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
 
     console.log(data)
+    const timestamp = data.data_nascimento
+      ? new Date(data.data_nascimento).getTime()
+      : 0
 
+    const user = await fetchMutation(api.user.UpdateUser, {
+      userId: data.id as Id<'user'>,
+      email: data.email,
+      image: data.image,
+      nome: data.nome,
+      data_nascimento: timestamp,
+      provider: 'credentials',
+    })
+
+    console.log(user)
     toast({
       title: 'ok',
       description: 'Teste.',
     })
     setLoading(false)
   }
+
+  const removeImage = async () => {
+    setImg('')
+    form.setValue('image', '')
+  }
+
   if (loadingData) {
     return <Spinner />
   }
+
   return (
     <ScrollArea className="h-full">
       <Form {...form}>
@@ -151,12 +166,36 @@ export const PerfilForm: React.FC = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
         >
+          <div className="flex flex-col gap-4  md:grid md:grid-cols-2">
+            <Avatar className="h-32 w-32">
+              <AvatarImage src={img || ''} alt="Avatar" />
+              <AvatarFallback>
+                {form.getValues('nome')?.[0] || '?'}
+              </AvatarFallback>
+            </Avatar>{' '}
+            <div className="flex flex-col gap-4">
+              <FileUploaderButton
+                progresses={progresses}
+                onUpload={onUpload}
+                disabled={isUploading}
+              />
+              <Button
+                variant={'ghost'}
+                className="border-2"
+                type="button"
+                onClick={removeImage}
+              >
+                Remover Imagem
+              </Button>
+            </div>
+          </div>
+
           <div className="flex flex-col gap-4 md:grid md:grid-cols-2">
             <FormField
               control={form.control}
               name="image"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className=" flex-col hidden">
                   <FormLabel>Imagem</FormLabel>
                   <FormControl>
                     <Input
@@ -170,19 +209,6 @@ export const PerfilForm: React.FC = () => {
               )}
             />
 
-            <FileUploader1
-              maxFileCount={1}
-              maxSize={4 * 1024 * 1024}
-              progresses={progresses}
-              onUpload={onUpload}
-              disabled={isUploading}
-            />
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={form.getValues('image') || ''} alt="Avatar" />
-              <AvatarFallback>
-                {form.getValues('nome')?.[0] || '?'}
-              </AvatarFallback>
-            </Avatar>
             <FormField
               control={form.control}
               name="id"
