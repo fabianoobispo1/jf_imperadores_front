@@ -164,7 +164,7 @@ export function FileUploaderButton(props: FileUploaderProps) {
           >
             <input {...getInputProps()} />
             {/* area para carregarimagem */}
-            <Button variant={'ghost'} className="border-2 w-full">
+            <Button type="button" variant={'ghost'} className="border-2 w-full">
               Adicionar Imagem
             </Button>
           </div>
