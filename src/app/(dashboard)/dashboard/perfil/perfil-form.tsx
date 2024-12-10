@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import { useSession } from 'next-auth/react'
+import { compare, hash } from 'bcryptjs'
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -39,14 +40,35 @@ const formSchema = z
     ),
     email: z.string().email({ message: 'Digite um email valido.' }),
     image: z.string().optional(),
-
-    password: z.string().min(8, { message: 'Senha obrigatoria, min 8' }),
-    confirmPassword: z.string().min(8, { message: 'Senha obrigatoria, min 8' }),
+    oldPassword: z
+      .string()
+      .min(8, { message: 'Senha obrigatória, min 8' })
+      .optional(),
+    password: z
+      .string()
+      .min(8, { message: 'Senha obrigatória, min 8' })
+      .optional(),
+    confirmPassword: z.string().optional(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'As senhas não coecindem',
-    path: ['confirmPassword'],
+  .refine((data) => !data.oldPassword || (data.oldPassword && data.password), {
+    message: 'Informe a nova senha.',
+    path: ['password'], // Aponta para o campo `password`
   })
+  .refine((data) => !data.password || (data.password && data.confirmPassword), {
+    message:
+      'O campo de confirmação de senha é obrigatório quando a senha é preenchida.',
+    path: ['confirmPassword'], // Aponta para o campo `confirmPassword`
+  })
+  .refine(
+    (data) =>
+      !data.password ||
+      !data.confirmPassword ||
+      data.password === data.confirmPassword,
+    {
+      message: 'As senhas não coincidem.',
+      path: ['confirmPassword'], // Aponta para o campo `confirmPassword`
+    },
+  )
 
 type ProductFormValues = z.infer<typeof formSchema>
 
@@ -65,6 +87,7 @@ export const PerfilForm: React.FC = () => {
   const [sessionId, setSessionId] = useState('')
   const [img, setImg] = useState('')
   const [imgKey, setImgKey] = useState('')
+  const [passwordHash, setPasswordHash] = useState('1')
   const { toast } = useToast()
 
   const defaultValues = {
@@ -73,6 +96,9 @@ export const PerfilForm: React.FC = () => {
     data_nascimento: undefined,
     email: '',
     imagee: '',
+    oldPassword: '',
+    password: '',
+    confirmPassword: '',
   }
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -99,6 +125,7 @@ export const PerfilForm: React.FC = () => {
         // Atualiza os valores do formulário com os dados da API
         setImg(response.image ?? '')
         setImgKey(response.image_key ?? '')
+        setPasswordHash(response.password)
         form.reset({
           id: response._id,
           nome: response.nome,
@@ -107,6 +134,9 @@ export const PerfilForm: React.FC = () => {
             ? new Date(response.data_nascimento)
             : undefined,
           image: response.image ?? '',
+          oldPassword: '',
+          password: '',
+          confirmPassword: '',
         })
       } catch (error) {
         console.error('Erro ao buscar os dados do usuário:', error)
@@ -125,8 +155,6 @@ export const PerfilForm: React.FC = () => {
 
   useEffect(() => {
     if (uploadedFiles.length > 0) {
-      console.log('Arquivos enviados:', uploadedFiles)
-      // Chame aqui a função que você deseja executar
       setImg(uploadedFiles[0]?.url || '')
       setImgKey(uploadedFiles[0]?.key || '')
       form.setValue('image', uploadedFiles[0]?.url || '') // Exemplo de atualização do campo de imagem
@@ -136,12 +164,32 @@ export const PerfilForm: React.FC = () => {
   const onSubmit = async (data: ProductFormValues) => {
     setLoading(true)
 
+    let password = ''
+    if (data.oldPassword) {
+      console.log('confere password')
+
+      const isMatch = await compare(data.oldPassword, passwordHash)
+
+      if (!isMatch) {
+        toast({
+          title: 'Erro',
+          variant: 'destructive',
+          description: 'Senha antiga incorreta.',
+        })
+        setLoading(false)
+        return
+      }
+      const newPassword = data.password
+      if (newPassword) {
+        password = await hash(newPassword, 6)
+      }
+    }
     console.log(data)
     const timestamp = data.data_nascimento
       ? new Date(data.data_nascimento).getTime()
       : 0
 
-    const user = await fetchMutation(api.user.UpdateUser, {
+    await fetchMutation(api.user.UpdateUser, {
       userId: data.id as Id<'user'>,
       email: data.email,
       image: data.image,
@@ -149,12 +197,18 @@ export const PerfilForm: React.FC = () => {
       data_nascimento: timestamp,
       provider: 'credentials',
       image_key: imgKey,
+      password,
     })
 
-    console.log(user)
     toast({
       title: 'ok',
       description: 'Cadastro alterado.',
+    })
+
+    form.reset({
+      oldPassword: '',
+      password: '',
+      confirmPassword: '',
     })
     setLoading(false)
   }
@@ -204,11 +258,12 @@ export const PerfilForm: React.FC = () => {
   }
 
   return (
-    <ScrollArea className="h-[80vh] w-full px-4">
+    <ScrollArea className="h-[70vh] w-full px-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-8"
+          autoComplete="off"
         >
           <div className="flex flex-col gap-4  md:grid md:grid-cols-2">
             <Avatar className="h-32 w-32">
@@ -316,12 +371,33 @@ export const PerfilForm: React.FC = () => {
 
             <FormField
               control={form.control}
+              name="oldPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha antiga</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="off"
+                      type="password"
+                      placeholder=""
+                      disabled={loading}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Senha</FormLabel>
+                  <FormLabel>Nova senha</FormLabel>
                   <FormControl>
                     <Input
+                      autoComplete="off"
                       type="password"
                       placeholder=""
                       disabled={loading}
@@ -337,9 +413,10 @@ export const PerfilForm: React.FC = () => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Comfirmar senha</FormLabel>
+                  <FormLabel>Comfirmar nova senha</FormLabel>
                   <FormControl>
                     <Input
+                      autoComplete="off"
                       type="password"
                       placeholder=""
                       disabled={loading}

@@ -46,10 +46,20 @@ export const UpdateUser = mutation({
     image: v.optional(v.string()),
     image_key: v.optional(v.string()),
     data_nascimento: v.optional(v.number()),
+    password: v.optional(v.string()),
   },
   handler: async (
     { db },
-    { userId, nome, email, provider, image, data_nascimento, image_key },
+    {
+      userId,
+      nome,
+      email,
+      provider,
+      image,
+      data_nascimento,
+      image_key,
+      password,
+    },
   ) => {
     // Buscar o usuario atual
     const usuario = await db.get(userId)
@@ -65,6 +75,7 @@ export const UpdateUser = mutation({
       image,
       data_nascimento,
       image_key,
+      password,
     })
 
     return updateUser
