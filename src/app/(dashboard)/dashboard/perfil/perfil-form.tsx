@@ -23,6 +23,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useUploadFile } from '@/hooks/use-upload-file'
 import { FileUploaderButton } from '@/components/file-uploader-button'
+import { LoadingButton } from '@/components/ui/loading-button'
 
 import { api } from '../../../../../convex/_generated/api'
 import type { Id } from '../../../../../convex/_generated/dataModel'
@@ -172,13 +173,18 @@ export const PerfilForm: React.FC = () => {
               <AvatarFallback>
                 {form.getValues('nome')?.[0] || '?'}
               </AvatarFallback>
-            </Avatar>{' '}
+            </Avatar>
             <div className="flex flex-col gap-4">
-              <FileUploaderButton
-                progresses={progresses}
-                onUpload={onUpload}
-                disabled={isUploading}
-              />
+              {isUploading ? (
+                <LoadingButton>Carregando</LoadingButton>
+              ) : (
+                <FileUploaderButton
+                  progresses={progresses}
+                  onUpload={onUpload}
+                  disabled={isUploading}
+                />
+              )}
+
               <Button
                 variant={'ghost'}
                 className="border-2"
