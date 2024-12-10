@@ -144,7 +144,7 @@ export default function page() {
                 <CardHeader>
                   <CardTitle>Lista de sugestões</CardTitle>
                   <CardDescription>
-                    Essa lista sera visivel para todos os usuários.
+                    Essa e sua lista de tarefas.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

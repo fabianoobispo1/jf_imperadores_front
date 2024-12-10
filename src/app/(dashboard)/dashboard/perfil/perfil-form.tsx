@@ -23,26 +23,30 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useUploadFile } from '@/hooks/use-upload-file'
 import { FileUploaderButton } from '@/components/file-uploader-button'
-import { LoadingButton } from '@/components/ui/loading-button'
 
 import { api } from '../../../../../convex/_generated/api'
 import type { Id } from '../../../../../convex/_generated/dataModel'
 
-const formSchema = z.object({
-  id: z.string(),
-  nome: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
-  data_nascimento: z.preprocess(
-    (val) => (val === null ? undefined : val), // Transforma null em undefined
-    z.date({
-      required_error: 'A data de nascimento precisa ser preenchida.',
-    }),
-  ),
-  email: z.string().email({ message: 'Digite um email valido.' }),
-  image: z
-    .string()
-    .url({ message: 'Insira uma URL válida para a imagem.' })
-    .optional(),
-})
+const formSchema = z
+  .object({
+    id: z.string(),
+    nome: z.string().min(3, { message: 'Nome precisa ser preenchido.' }),
+    data_nascimento: z.preprocess(
+      (val) => (val === null ? undefined : val), // Transforma null em undefined
+      z.date({
+        required_error: 'A data de nascimento precisa ser preenchida.',
+      }),
+    ),
+    email: z.string().email({ message: 'Digite um email valido.' }),
+    image: z.string().optional(),
+
+    password: z.string().min(8, { message: 'Senha obrigatoria, min 8' }),
+    confirmPassword: z.string().min(8, { message: 'Senha obrigatoria, min 8' }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'As senhas não coecindem',
+    path: ['confirmPassword'],
+  })
 
 type ProductFormValues = z.infer<typeof formSchema>
 
@@ -60,6 +64,7 @@ export const PerfilForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [sessionId, setSessionId] = useState('')
   const [img, setImg] = useState('')
+  const [imgKey, setImgKey] = useState('')
   const { toast } = useToast()
 
   const defaultValues = {
@@ -93,6 +98,7 @@ export const PerfilForm: React.FC = () => {
         }
         // Atualiza os valores do formulário com os dados da API
         setImg(response.image ?? '')
+        setImgKey(response.image_key ?? '')
         form.reset({
           id: response._id,
           nome: response.nome,
@@ -122,6 +128,7 @@ export const PerfilForm: React.FC = () => {
       console.log('Arquivos enviados:', uploadedFiles)
       // Chame aqui a função que você deseja executar
       setImg(uploadedFiles[0]?.url || '')
+      setImgKey(uploadedFiles[0]?.key || '')
       form.setValue('image', uploadedFiles[0]?.url || '') // Exemplo de atualização do campo de imagem
     }
   }, [uploadedFiles, form])
@@ -141,19 +148,55 @@ export const PerfilForm: React.FC = () => {
       nome: data.nome,
       data_nascimento: timestamp,
       provider: 'credentials',
+      image_key: imgKey,
     })
 
     console.log(user)
     toast({
       title: 'ok',
-      description: 'Teste.',
+      description: 'Cadastro alterado.',
     })
     setLoading(false)
   }
 
   const removeImage = async () => {
+    removeFileFromUploadthing(imgKey)
     setImg('')
+    setImgKey('')
     form.setValue('image', '')
+  }
+
+  async function removeFileFromUploadthing(fileKey: string) {
+    const imageKey = fileKey.substring(fileKey.lastIndexOf('/') + 1)
+
+    fetch('/api/uploadthing/remove', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ imageKey }),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          toast({
+            variant: 'default',
+            description: 'Imagem removida.',
+          })
+        } else {
+          const errorData = await res.json()
+          toast({
+            variant: 'destructive',
+            description: errorData.message || 'Something went wrong',
+          })
+        }
+      })
+      .catch(() => {
+        toast({
+          variant: 'destructive',
+          description: 'Something went wrong',
+        })
+      })
+      .finally(() => {})
   }
 
   if (loadingData) {
@@ -161,7 +204,7 @@ export const PerfilForm: React.FC = () => {
   }
 
   return (
-    <ScrollArea className="h-full">
+    <ScrollArea className="h-[80vh] w-full px-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -176,7 +219,7 @@ export const PerfilForm: React.FC = () => {
             </Avatar>
             <div className="flex flex-col gap-4">
               {isUploading ? (
-                <LoadingButton>Carregando</LoadingButton>
+                <Spinner />
               ) : (
                 <FileUploaderButton
                   progresses={progresses}
@@ -268,6 +311,43 @@ export const PerfilForm: React.FC = () => {
                   date={field.value || undefined} // Passa undefined se for null
                   setDate={(date) => field.onChange(date || null)} // Define null ao limpar
                 />
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder=""
+                      disabled={loading}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Comfirmar senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder=""
+                      disabled={loading}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
           </div>

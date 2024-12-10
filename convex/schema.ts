@@ -8,6 +8,7 @@ export const userSchema = {
   provider: v.string(),
   role: v.union(v.literal('admin'), v.literal('user')),
   image: v.optional(v.string()),
+  image_key: v.optional(v.string()),
   password: v.string(),
   data_nascimento: v.optional(v.number()), // Timestamp
 }

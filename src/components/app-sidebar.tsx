@@ -19,7 +19,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
 
 import {
   DropdownMenu,
@@ -76,6 +78,8 @@ const itemsAdm = [
 
 export function AppSidebar() {
   const { data: session } = useSession()
+  const { open } = useSidebar()
+
   /*   const [loadingData, setLoadingData] = useState(true)
   const [usuario, setUsuario] = useState<Usuario>() */
   /* 
@@ -171,9 +175,9 @@ export function AppSidebar() {
                     </>
                   ) : (
                     <>
-                      <Avatar className=" h-8 w-8">
+                      <Avatar className={cn(open ? ' h-8 w-8 ' : ' h-6 w-6 ')}>
                         <AvatarImage
-                          src={'img_url'}
+                          src={session.user?.image}
                           alt={session.user?.nome ?? ''}
                         />
                         <AvatarFallback>{session.user?.nome[0]}</AvatarFallback>
