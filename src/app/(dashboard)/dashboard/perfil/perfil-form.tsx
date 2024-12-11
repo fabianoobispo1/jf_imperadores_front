@@ -40,6 +40,7 @@ const formSchema = z
     ),
     email: z.string().email({ message: 'Digite um email valido.' }),
     image: z.string().optional(),
+    provider: z.string().optional(),
     oldPassword: z
       .string()
       .min(8, { message: 'Senha obrigatória, min 8' })
@@ -88,6 +89,8 @@ export const PerfilForm: React.FC = () => {
   const [img, setImg] = useState('')
   const [imgKey, setImgKey] = useState('')
   const [passwordHash, setPasswordHash] = useState('1')
+  const [emailAtual, setEmailAtual] = useState('')
+  const [carregou, setiscarregou] = useState(false)
   const { toast } = useToast()
 
   const defaultValues = {
@@ -99,6 +102,7 @@ export const PerfilForm: React.FC = () => {
     oldPassword: '',
     password: '',
     confirmPassword: '',
+    provider: '',
   }
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
@@ -107,13 +111,15 @@ export const PerfilForm: React.FC = () => {
 
   const loadUser = useCallback(async () => {
     setLoadingData(true)
-
-    if (sessionId) {
+    console.log('entrou no loadUser')
+    console.log(sessionId)
+    if (session) {
+      console.log(session.user.id)
       try {
         const response = await fetchQuery(api.user.getById, {
-          userId: sessionId as Id<'user'>,
+          userId: session.user.id as Id<'user'>,
         })
-
+        console.log(response)
         if (!response) {
           console.error('Erro ao buscar os dados do usuário:')
           return
@@ -126,6 +132,7 @@ export const PerfilForm: React.FC = () => {
         setImg(response.image ?? '')
         setImgKey(response.image_key ?? '')
         setPasswordHash(response.password)
+        setEmailAtual(response.email)
         form.reset({
           id: response._id,
           nome: response.nome,
@@ -137,6 +144,7 @@ export const PerfilForm: React.FC = () => {
           oldPassword: '',
           password: '',
           confirmPassword: '',
+          provider: response.provider,
         })
       } catch (error) {
         console.error('Erro ao buscar os dados do usuário:', error)
@@ -144,14 +152,17 @@ export const PerfilForm: React.FC = () => {
         setLoadingData(false) // Define o carregamento como concluído
       }
     }
-  }, [sessionId, form])
+  }, [sessionId, session, form])
 
   useEffect(() => {
     if (session) {
-      setSessionId(session.user.id)
-      loadUser()
+      if (!carregou) {
+        setSessionId(session.user.id)
+        loadUser()
+        setiscarregou(true)
+      }
     }
-  }, [setSessionId, session, loadUser, sessionId])
+  }, [setSessionId, session, setiscarregou, carregou, loadUser])
 
   useEffect(() => {
     if (uploadedFiles.length > 0) {
@@ -166,8 +177,6 @@ export const PerfilForm: React.FC = () => {
 
     let password = ''
     if (data.oldPassword) {
-      console.log('confere password')
-
       const isMatch = await compare(data.oldPassword, passwordHash)
 
       if (!isMatch) {
@@ -184,7 +193,24 @@ export const PerfilForm: React.FC = () => {
         password = await hash(newPassword, 6)
       }
     }
-    console.log(data)
+    // verifica email
+    if (emailAtual !== data.email) {
+      // se for alterado, precisa verificar se ja exsite o cadastro
+      const emailExists = await fetchQuery(api.user.getByEmail, {
+        email: data.email,
+      })
+
+      if (emailExists) {
+        toast({
+          title: 'Erro',
+          variant: 'destructive',
+          description: 'Email já cadastrado.',
+        })
+        setLoading(false)
+        return
+      }
+    }
+
     const timestamp = data.data_nascimento
       ? new Date(data.data_nascimento).getTime()
       : 0
@@ -195,7 +221,7 @@ export const PerfilForm: React.FC = () => {
       image: data.image,
       nome: data.nome,
       data_nascimento: timestamp,
-      provider: 'credentials',
+      provider: data.provider,
       image_key: imgKey,
       password,
     })

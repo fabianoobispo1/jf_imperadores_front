@@ -83,7 +83,7 @@ export function AppSidebar() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [carregou, setiscarregou] = useState(false)
   if (session) {
-    console.log(session)
+    /*     console.log(session) */
     if (!carregou) {
       if (session.user.role === 'admin') {
         setIsAdmin(true)
