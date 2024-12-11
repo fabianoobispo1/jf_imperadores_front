@@ -79,7 +79,7 @@ const itemsAdm = [
 export function AppSidebar() {
   const { data: session } = useSession()
   const { open } = useSidebar()
-
+  console.log(session)
   /*   const [loadingData, setLoadingData] = useState(true)
   const [usuario, setUsuario] = useState<Usuario>() */
   /* 
@@ -180,9 +180,9 @@ export function AppSidebar() {
                           src={session.user?.image}
                           alt={session.user?.nome ?? ''}
                         />
-                        <AvatarFallback>{session.user?.nome[0]}</AvatarFallback>
+                        <AvatarFallback>{'-'}</AvatarFallback>
                       </Avatar>
-                      {session.user?.nome ?? ''}
+                      {session.user?.name ?? ''}
                     </>
                   )}
 

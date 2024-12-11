@@ -28,7 +28,6 @@ export default function GoogleSignInButton() {
   }
   return (
     <LoadingButton
-      disabled
       className="w-full"
       variant="outline"
       type="button"

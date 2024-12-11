@@ -5,9 +5,9 @@ import GithubProvider from 'next-auth/providers/github'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import { z } from 'zod'
 import { compare } from 'bcryptjs'
-import { v4 as uuidv4 } from 'uuid'
 
 import { api } from '../../convex/_generated/api'
+import type { Id } from '../../convex/_generated/dataModel'
 
 async function getUser(identifier: { key: string; value: string }) {
   let user
@@ -58,6 +58,9 @@ const authConfig = {
         if (!user) {
           throw new Error('Usuário não encontrado')
         }
+        if (user.password === '') {
+          throw new Error('ntrar com provider')
+        }
 
         const isMatch = await compare(password, user.password)
         if (!isMatch) {
@@ -77,24 +80,50 @@ const authConfig = {
     signIn: '/entrar',
   },
   callbacks: {
-    async signIn({ account, profile }) {
+    async signIn({ account, profile, user }) {
       if (account?.provider === 'github' || account?.provider === 'google') {
+        console.log('account ✔')
+        console.log(account)
+        console.log('profile ✔')
+        console.log(profile)
         const provider = account?.provider
         const email = profile?.email
+
+        let image = ''
+        if (provider === 'google') {
+          image = profile?.picture
+        }
+
         if (email) {
           const usuario = await getUser({ key: 'email', value: email })
+
           if (!usuario) {
-            await fetchMutation(api.user.create, {
-              password: uuidv4(),
+            const createUser = await fetchMutation(api.user.create, {
+              password: '',
               provider,
               email,
               role: 'user',
-              image: String(profile.avatar_url),
-              nome: String(profile.nome),
+              image,
+              nome: String(profile.name),
             })
+
+            user.nome = String(profile?.name)
+            user.id = String(createUser)
+            user.role = 'user'
+          } else {
+            const updateeUser = await fetchMutation(api.user.UpdateUserLogin, {
+              userId: usuario._id as Id<'user'>,
+              image,
+              provider,
+              password: '',
+            })
+            user.nome = String(updateeUser?.nome)
+            user.id = String(updateeUser?._id)
+            user.role = String(updateeUser?.role)
           }
         }
       }
+
       return true
     },
     async jwt({ token, user }) {
