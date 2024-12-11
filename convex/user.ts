@@ -105,3 +105,28 @@ export const UpdateUserLogin = mutation({
     return usuario
   },
 })
+
+export const getAllUserRole = query({
+  handler: async ({ db }) => {
+    const user = await db.query('user').collect()
+
+    return user
+  },
+})
+export const toggleUserRole = mutation({
+  args: {
+    userId: v.id('user'),
+  },
+  handler: async ({ db }, { userId }) => {
+    const user = await db.get(userId)
+    if (!user) {
+      throw new Error('user não encontrado')
+    }
+
+    const updateUser = await db.patch(userId, {
+      role: user.role === 'admin' ? 'user' : 'admin', // Inverte o valor de isCompleted
+    })
+
+    return updateUser // Retorna o todo atualizado
+  },
+})

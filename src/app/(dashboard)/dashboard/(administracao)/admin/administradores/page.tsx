@@ -1,8 +1,12 @@
 import BreadCrumb from '@/components/breadcrumb'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Heading } from '@/components/ui/heading'
+import { UsuariosAdministradores } from '@/components/UsuariosAdministradores'
 
-const breadcrumbItems = [{ title: 'Pefil', link: '/dashboard/admin' }]
+const breadcrumbItems = [
+  { title: 'Administração', link: '/dashboard/admin' },
+  { title: 'Administradores', link: '/dashboard/admin/administradores' },
+]
 export default function page() {
   return (
     <ScrollArea className="h-full w-full">
@@ -10,10 +14,11 @@ export default function page() {
         <BreadCrumb items={breadcrumbItems} />
         <div className=" flex items-start justify-between gap-4">
           <Heading
-            title={'Administração'}
-            description={'Informações administrativas'}
+            title={'Administradores'}
+            description={'Alterar usuario para adminsitrador'}
           />
         </div>
+        <UsuariosAdministradores />
       </div>
     </ScrollArea>
   )
