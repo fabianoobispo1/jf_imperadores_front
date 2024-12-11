@@ -4,10 +4,11 @@ import {
   ChevronDown,
   ChevronUp,
   Home,
-  Search,
   Settings,
+  UserPen,
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
+import { useState } from 'react'
 
 import {
   Sidebar,
@@ -51,15 +52,15 @@ const items = [
     icon: Calendar,
   },
   {
-    title: 'Search',
-    url: '#',
-    icon: Search,
+    title: 'Perfil',
+    url: '/dashboard/perfil',
+    icon: UserPen,
   },
 ]
 const itemsAdm = [
   {
-    title: 'Tela Teste',
-    url: '/telateste',
+    title: 'Administração',
+    url: '/dashboard/admin',
     icon: Settings,
   },
 ]
@@ -79,7 +80,18 @@ const itemsAdm = [
 export function AppSidebar() {
   const { data: session } = useSession()
   const { open } = useSidebar()
-  console.log(session)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [carregou, setiscarregou] = useState(false)
+  if (session) {
+    console.log(session)
+    if (!carregou) {
+      if (session.user.role === 'admin') {
+        setIsAdmin(true)
+      }
+      setiscarregou(true)
+    }
+  }
+
   /*   const [loadingData, setLoadingData] = useState(true)
   const [usuario, setUsuario] = useState<Usuario>() */
   /* 
@@ -133,7 +145,7 @@ export function AppSidebar() {
               <Collapsible className="group/collapsible">
                 <SidebarGroup>
                   <SidebarGroupLabel asChild>
-                    <CollapsibleTrigger>
+                    <CollapsibleTrigger disabled={!isAdmin}>
                       Administração
                       <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                     </CollapsibleTrigger>
@@ -180,9 +192,9 @@ export function AppSidebar() {
                           src={session.user?.image}
                           alt={session.user?.nome ?? ''}
                         />
-                        <AvatarFallback>{'-'}</AvatarFallback>
+                        <AvatarFallback>{session.user?.nome[0]}</AvatarFallback>
                       </Avatar>
-                      {session.user?.name ?? ''}
+                      {session.user?.nome ?? ''}
                     </>
                   )}
 

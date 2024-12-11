@@ -24,14 +24,14 @@ export function DatePickerWithDropdown({
   setDate,
 }: DatePickerWithDropdownProps) {
   return (
-    <FormItem className="flex flex-col">
+    <FormItem className="flex flex-col gap-2">
       <Label id="datepicker-month-year-dropdown-v9">{label}</Label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              'w-full md:w-[280px] justify-start text-left font-normal',
+              'w-full  justify-start text-left font-normal',
               !date && 'text-muted-foreground',
             )}
             aria-labelledby="datepicker-month-year-dropdown-v9"
