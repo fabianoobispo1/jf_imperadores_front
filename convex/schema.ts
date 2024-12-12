@@ -13,6 +13,12 @@ export const userSchema = {
   data_nascimento: v.optional(v.number()), // Timestamp
 }
 
+export const recuperaSenhaSchema = {
+  email: v.string(),
+  created_at: v.number(),
+  valid_at: v.number(),
+}
+
 // Schema para todos
 export const todoSchema = {
   text: v.string(),
@@ -63,6 +69,8 @@ export default defineSchema({
   user: defineTable(userSchema)
     .index('by_email', ['email'])
     .index('by_username', ['nome']),
+  recuperaSenha: defineTable(recuperaSenhaSchema).index('by_email', ['email']),
+
   todo: defineTable(todoSchema).index('by_user', ['userId']), // Índice para buscar todos de um usuário
   telaLinks: defineTable(telaLinksSchema)
     .index('by_nome', ['nome'])

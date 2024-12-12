@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { fetchQuery } from 'convex/nextjs'
+import { fetchMutation, fetchQuery } from 'convex/nextjs'
 
 import UserAuthForm from '@/components/forms/user-auth-form'
 import UserRegisterForm from '@/components/forms/user-register-form'
@@ -44,14 +44,26 @@ export default function AuthenticationModal() {
     })
 
     if (emailExists) {
-      console.log(data.email)
+      const timestampAtual = new Date().getTime()
+      const trintaMinutosEmMilissegundos = 30 * 60 * 1000 // 30 minutos em milissegundos
+      const timestampMais30Min = timestampAtual + trintaMinutosEmMilissegundos
+
+      const recuperaSenha = await fetchMutation(api.recuperaSenha.create, {
+        email: data.email,
+        created_at: timestampAtual,
+        valid_at: timestampMais30Min,
+      })
 
       fetch('/api/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: data.email }),
+        body: JSON.stringify({
+          email: data.email,
+          idRecuperaSenha: recuperaSenha,
+          tipoMensagem: 'redefinirSenha',
+        }),
       })
         .then(async (res) => {
           console.log(res)
@@ -59,7 +71,6 @@ export default function AuthenticationModal() {
         .catch(() => {})
         .finally(() => {})
     }
-
     setOpen(false)
   }
   return (
