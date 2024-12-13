@@ -36,3 +36,14 @@ export const getById = query({
     return recuperaSenha
   },
 })
+
+export const invalidaRecuperarSenha = mutation({
+  args: {
+    _id: v.id('recuperaSenha'),
+  },
+  handler: async ({ db }, { _id }) => {
+    await db.patch(_id, {
+      valid_at: Date.now(),
+    })
+  },
+})

@@ -9,6 +9,7 @@ import UserAuthForm from '@/components/forms/user-auth-form'
 import UserRegisterForm from '@/components/forms/user-register-form'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
 
 import {
   Dialog,
@@ -27,6 +28,7 @@ const formSchema = z.object({
 })
 
 export default function AuthenticationModal() {
+  const { toast } = useToast()
   const [button, setButton] = useState('Cadastrar')
   const [open, setOpen] = useState(false)
 
@@ -44,6 +46,16 @@ export default function AuthenticationModal() {
     })
 
     if (emailExists) {
+      // verifica se logou com algum provider
+      if (emailExists.provider !== 'credentials') {
+        toast({
+          title: 'Erro',
+          variant: 'destructive',
+          description: 'Sem senha para resetar',
+        })
+        setOpen(false)
+        return
+      }
       const timestampAtual = new Date().getTime()
       const trintaMinutosEmMilissegundos = 30 * 60 * 1000 // 30 minutos em milissegundos
       const timestampMais30Min = timestampAtual + trintaMinutosEmMilissegundos

@@ -9,7 +9,7 @@ export default async function Page({
 
   return (
     <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <ResetPasswordForm resetSenha={resetSenha} />
+      <ResetPasswordForm idResetSenha={resetSenha} />
     </div>
   )
 }
