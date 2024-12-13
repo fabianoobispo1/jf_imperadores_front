@@ -1,170 +1,152 @@
+import {
+  Body,
+  Container,
+  Column,
+  Head,
+  Html,
+  Link,
+  Preview,
+  Row,
+  Section,
+  Text,
+} from '@react-email/components'
 import * as React from 'react'
 
-interface EmailTemplateProps {
-  firstName: string
-}
-
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
-  firstName,
-}) => (
-  <html>
-    <body>
-      <div>
-        <h1>Welcome, {firstName}!</h1>
-      </div>
-    </body>
-  </html>
-)
-/* 
-
-interface TwitchResetPasswordEmailProps {
-  username?: string;
-  updatedDate?: Date;
+interface ResetPasswordEmailProps {
+  nome?: string
+  idReset?: string
 }
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "";
+  : ''
 
-export const TwitchResetPasswordEmail = ({
-  username,
-  updat'dDate,'
-}: TwitchResetPasswordE'ailPr's) => {
-  const formattedDate = new Intl.DateTimeFormat("en", {
-    dateStyle: "medium",
-    timeStyle: "medum",
-  }).format(updatedDte);
-
+export const ResetPasswordEmail = ({
+  nome,
+  idReset,
+}: ResetPasswordEmailProps) => {
+  const linkReset = baseUrl + '/reset/' + idReset
   return (
     <Html>
       <Head />
-    ''Preview>You updated the password for your Twitch account</Preview>
+      <Preview>You updated the password for your Twitch account</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={logo}>
-            <Img width={114} src={`${baseUrl}/static/twitch-logo.png`} />
+            {/*     <Img width={114} src={`${baseUrl}/static/twitch-logo.png`} /> */}
           </Section>
-          <Section style={sectionsBorders}>''
-            <Ro'>'
-              <'olumn 'tyle={sectionBorder} />
-              <Column stle={sectionCenter} />
+          <Section style={sectionsBorders}>
+            <Row>
+              <Column style={sectionBorder} />
+              <Column style={sectionCenter} />
               <Column style={sectionBorder} />
             </Row>
           </Section>
           <Section style={content}>
-            <Text style={paragraph}>Hi {username},</Text>
+            <Text style={paragraph}>Oi {nome},</Text>
             <Text style={paragraph}>
-              You updated the password for your Twitch account on{" "}
-              {formattedDate}. If this was you, then no further action is
-              required.
+              Recentemente houve uma solicitação para alterar a senha da sua
+              conta.
             </Text>
             <Text style={paragraph}>
-              However if you did NOT perform this password change, please{" "}
-              <Link href="#" style={link}>
-                reset your account password
-              </Link>{" "}
-              immediately.
-            </Text>
-            <Text style={paragraph}>
-              Remember to use a password that is both strong and unique to your
-              Twitch account. To learn more about how to create a strong and
-              unique password,{" "}''
-              <Link href="#" style={link}>
-                click here.
-              </Link>
-            </Text>
-            <Text style={paragraph}>''
-              Still have questions? Please contact{" "}
-              <Link href="#" style={link}>
-                Twitch'S'pport
+              Clique abaixo para confirmar esta alteração:
+              <Link href={linkReset} style={link}>
+                nova senha
               </Link>
             </Text>
             <Text style={paragraph}>
-              Thanks,
+              Se você não pediu a redefinição de sua senha, é provável que outro
+              usuário tenha digitado seu nome de usuário ou endereço de e-mail
+              por engano ao tentar redefinir a própria senha. Se esse for o
+              caso, você não precisa tomar nenhuma medida adicional e pode
+              ignorar este e-mail com segurança.
+            </Text>
+
+            <Text style={paragraph}>
+              Obrigado,
               <br />
-              Twitch Support Te'm'
+              Jf Imperadores
             </Text>
           </Section>
         </Container>
 
         <Section style={footer}>
-          <Row>''
-            <Column align="right" style={{ width: "50%", paddingRight: "8px" }}>
+          {/* <Row>
+            <Column align="right" style={{ width: '50%', paddingRight: '8px' }}>
               <Img src={`${baseUrl}/static/twitch-icon-twitter.png`} />
             </Column>
-            <Column align="left" style={{ width: "50%", paddingLeft: "8px" }}>
+            <Column align="left" style={{ width: '50%', paddingLeft: '8px' }}>
               <Img src={`${baseUrl}/static/twitch-icon-facebook.png`} />
             </Column>
-          </Row>
+          </Row> */}
           <Row>
-            <Text style={{ textAlign: "center", color: "#706a7b" }}>
-              © 2022 Twitch, All Rights Reserved <br />
-              350 Bush Street, 2nd Floor, San Francisco, CA, 94104 - USA
+            <Text style={{ textAlign: 'center', color: '#706a7b' }}>
+              © 2024 Bispo, Todos os direitos reservados.
+              <br />
             </Text>
           </Row>
         </Section>
-      </Body>''''
+      </Body>
     </Html>
-  );
-};''''
+  )
+}
 
-TwitchResetPasswordEmail.PreviewProps = {
-  username: "alanturing",
-  updatedDate: new Date("June 23, 2022 4:06:00 pm UTC"),
-} as TwitchResetPasswordEmailProps;''''
+ResetPasswordEmail.PreviewProps = {
+  nome: 'alanturing',
+  idReset: '12345',
+} as ResetPasswordEmailProps
 
-export default TwitchResetPasswordEmail;
+export default ResetPasswordEmail
 
-const fontFamily = "HelveticaNeue,Helvetica,Arial,sans-serif";
+const fontFamily = 'HelveticaNeue,Helvetica,Arial,sans-serif'
 
 const main = {
-  backgroundColor: "#efeef1",
-  fntFamily,
+  backgroundColor: '#efeef1',
+  fontFamily,
 }
 
 const paragraph = {
-  lineHeight' 1.5,'
-  fontSize: 14,''
-};
+  lineHeight: 1.5,
+  fontSize: 14,
+}
 
 const container = {
-  maxWidth: "580px",
-  margin: "30px aut'",'
-  backgroundColor: "#ffffff",
-};
-''
+  maxWidth: '580px',
+  margin: '30px auto',
+  backgroundColor: '#ffffff',
+}
+
 const footer = {
- maxWidth: "580px",
-  margin: "0 auto",
-};
+  maxWidth: '580px',
+  margin: '0 auto',
+}
 
 const content = {
- padding: "5px 20px 10px 20px",
-};
-
-const logo ='{'
-  display:'"flex",'
-  justifyContent: "'enter",'
- alingItems: "center",
-  padding: 30,
-};
-''
-const sect'onsBor'ers = {
- width: "100%",
-  display: "flex",
-};
-''
-cnst sectionBorder = {
-  borderBottom: "1px solid rgb(238,238,238)",
-  width: "249px",
-};''
-''
-const sectionC'nter ='{
-  borderBottom: "1px solid rgb(145,71,255)",
- width: "102px",
-};
-
-const lin' = {'
-  textDecor'tion' "underline",
+  padding: '5px 20px 10px 20px',
 }
-'''''''''' */
+
+const logo = {
+  display: 'flex',
+  justifyContent: 'center',
+  alingItems: 'center',
+  padding: 30,
+}
+
+const sectionsBorders = {
+  width: '100%',
+  display: 'flex',
+}
+
+const sectionBorder = {
+  borderBottom: '1px solid rgb(238,238,238)',
+  width: '249px',
+}
+
+const sectionCenter = {
+  borderBottom: '1px solid rgb(150, 112, 8)',
+  width: '102px',
+}
+
+const link = {
+  textDecoration: 'underline',
+}

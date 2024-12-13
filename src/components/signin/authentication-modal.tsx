@@ -61,6 +61,7 @@ export default function AuthenticationModal() {
         },
         body: JSON.stringify({
           email: data.email,
+          nome: emailExists.nome,
           idRecuperaSenha: recuperaSenha,
           tipoMensagem: 'redefinirSenha',
         }),
