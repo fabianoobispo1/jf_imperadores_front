@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   if (tipoMensagem === 'redefinirSenha') {
     try {
       const { data, error } = await resend.emails.send({
-        from: 'JF Imperadores <nao-responda@jfimperadores.com.br>',
+        from: 'JF Imperadores <nao-responda@marketing.jfimperadores.com.br>',
         to: [email],
         subject: 'Recupar senha',
         react: ResetPasswordEmail({
