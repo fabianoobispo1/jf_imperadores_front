@@ -106,6 +106,26 @@ export const UpdateUserLogin = mutation({
   },
 })
 
+export const UpdateUserLoginPassword = mutation({
+  args: {
+    userId: v.id('user'),
+    password: v.string(),
+  },
+  handler: async ({ db }, { userId, password }) => {
+    // Buscar o usuario atual
+    const verificaUsuario = await db.get(userId)
+    if (!verificaUsuario) {
+      throw new Error('Usuario não encontrado')
+    }
+    // altera os valores
+    await db.patch(userId, {
+      password,
+    })
+    const usuario = await db.get(userId)
+    return usuario
+  },
+})
+
 export const getAllUserRole = query({
   handler: async ({ db }) => {
     const user = await db.query('user').collect()

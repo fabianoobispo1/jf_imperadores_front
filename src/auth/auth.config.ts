@@ -59,7 +59,7 @@ const authConfig = {
           throw new Error('Usuário não encontrado')
         }
         if (user.password === '') {
-          throw new Error('ntrar com provider')
+          throw new Error('Entrar com provider')
         }
 
         const isMatch = await compare(password, user.password)
@@ -106,7 +106,7 @@ const authConfig = {
               image,
               nome: String(profile.name),
             })
-
+            user.image = String(profile?.image)
             user.nome = String(profile?.name)
             user.id = String(createUser)
             user.role = 'user'
@@ -117,6 +117,7 @@ const authConfig = {
               provider,
               password: '',
             })
+            user.image = String(updateeUser?.image)
             user.nome = String(updateeUser?.nome)
             user.id = String(updateeUser?._id)
             user.role = String(updateeUser?.role)

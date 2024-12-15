@@ -108,7 +108,7 @@ export function TodoList() {
         <Input
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Adicionar nova sugestão"
+          placeholder="Adicionar nova tarefa"
         />
         <LoadingButton loading={loading} onClick={addTodo} className="ml-2">
           Adicionar
@@ -119,7 +119,7 @@ export function TodoList() {
         <Table className="relative">
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Sugestão</TableHead>
+              <TableHead className="text-center">Tarefa</TableHead>
               <TableHead className="text-center">Completou</TableHead>
               <TableHead className="text-center">Criado em</TableHead>
               <TableHead className="text-center">Opções</TableHead>

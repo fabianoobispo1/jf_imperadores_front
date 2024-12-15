@@ -5,7 +5,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-/* import { hash } from 'bcryptjs' */
+import { hash } from 'bcryptjs'
+import { fetchMutation, fetchQuery } from 'convex/nextjs'
+import { useRouter } from 'next/navigation'
 
 import { useToast } from '@/hooks/use-toast'
 import { Spinner } from '@/components/ui/spinner'
@@ -26,6 +28,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+
+import { api } from '../../../../../convex/_generated/api'
+import type { Id } from '../../../../../convex/_generated/dataModel'
 
 /* import { api } from '../../../../../convex/_generated/api'
 import type { Id } from '../../../../../convex/_generated/dataModel' */
@@ -49,6 +54,7 @@ interface ResetPasswordFormProps {
 export default function ResetPasswordForm({
   idResetSenha,
 }: ResetPasswordFormProps) {
+  const router = useRouter()
   const { toast } = useToast()
   const [loadingData, setLoadingData] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -65,26 +71,13 @@ export default function ResetPasswordForm({
     setLoadingData(true)
 
     try {
-      /*       const response = await fetchQuery(api.recuperaSenha.getById, {
+      const response = await fetchQuery(api.recuperaSenha.getById, {
         _id: idResetSenha as Id<'recuperaSenha'>,
-      }) */
-
-      // simulando resultado
-      const response = {
-        _creationTime: 1734004126237.839,
-        _id: idResetSenha,
-        created_at: 1734004125931,
-        email: 'fbc623@gmail.com',
-        valid_at: 1735005995931,
-      }
-      //
+      })
 
       if (!response) {
-        setIdInvalido(true)
-        console.error('Erro ao buscar os dados do usuário:')
         return
       }
-
       // verifica campo valid_at
       // Obter a data atual como timestamp
 
@@ -93,20 +86,11 @@ export default function ResetPasswordForm({
       }
 
       // recupera ID do usuario
-      /*    const responseUsuario = await fetchQuery(api.user.getByEmail, {
-        email: response.email
-      }) */
-
-      // simulando resultado
-      const responseUsuario = {
-        _id: '123456',
-        email: 'fbc623@gmail.com',
-        image:
-          'https://lh3.googleusercontent.com/a/ACg8ocKLw8fTiHQPTK9n6dpKxgDcO0D49CSjflVMWAt_Mr-tglFbWcBEDg=s96-c',
-        nome: 'Fabiano Bispo',
-        password: '',
-        provider: 'google',
-        role: 'admin',
+      const responseUsuario = await fetchQuery(api.user.getByEmail, {
+        email: response.email,
+      })
+      if (!responseUsuario) {
+        return
       }
 
       setNome(responseUsuario.nome)
@@ -117,7 +101,8 @@ export default function ResetPasswordForm({
         confirmPassword: '',
       })
     } catch (error) {
-      console.error('Erro ao buscar os dados do usuário:', error)
+      setIdInvalido(true)
+      console.log('Erro ao buscar os dados do usuário: ' + error)
     } finally {
       setLoadingData(false)
     }
@@ -136,33 +121,38 @@ export default function ResetPasswordForm({
     setLoading(true)
     console.log(data)
 
-    /*     let password = ''
+    let password = ''
     const newPassword = data.password
     if (newPassword) {
       password = await hash(newPassword, 6)
-    } */
-
-    /*     await fetchMutation(api.user.UpdateUser, {
+    }
+    console.log(password)
+    await fetchMutation(api.user.UpdateUserLoginPassword, {
       userId: data.id as Id<'user'>,
       password,
-    }) */
+    })
 
     // altera o campo valid_at par ao link nao ser mais valido
-    /*     await fetchMutation(api.recuperasenha.invalidaRecuperarSenha, {
-      _id: idResetSenha as Id<'user'>,
-      
-    }) */
+
+    await fetchMutation(api.recuperaSenha.invalidaRecuperarSenha, {
+      _id: idResetSenha as Id<'recuperaSenha'>,
+    })
 
     toast({
       title: 'ok',
       description: 'Cadastro alterado.',
     })
 
+    router.push('/entrar')
     setLoading(true)
   }
 
   if (loadingData) {
-    return <Spinner />
+    return (
+      <div className="flex items-center justify-center h-full w-full">
+        <Spinner />
+      </div>
+    )
   }
   if (idInvalido) {
     return (

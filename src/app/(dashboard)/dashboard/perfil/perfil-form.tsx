@@ -291,33 +291,37 @@ export const PerfilForm: React.FC = () => {
           className="w-full space-y-8"
           autoComplete="off"
         >
-          <div className="flex flex-col gap-4  md:grid md:grid-cols-2">
+          <div className="flex flex-col gap-4  md:grid md:grid-cols-2 ">
             <Avatar className="h-32 w-32">
               <AvatarImage src={img || ''} alt="Avatar" />
               <AvatarFallback>
                 {form.getValues('nome')?.[0] || '?'}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col gap-4">
-              {isUploading ? (
-                <Spinner />
-              ) : (
-                <FileUploaderButton
-                  progresses={progresses}
-                  onUpload={onUpload}
-                  disabled={isUploading}
-                />
-              )}
+            {bloqueioProvider ? (
+              <></>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {isUploading ? (
+                  <Spinner />
+                ) : (
+                  <FileUploaderButton
+                    progresses={progresses}
+                    onUpload={onUpload}
+                    disabled={isUploading}
+                  />
+                )}
 
-              <Button
-                variant={'ghost'}
-                className="border-2"
-                type="button"
-                onClick={removeImage}
-              >
-                Remover Imagem
-              </Button>
-            </div>
+                <Button
+                  variant={'ghost'}
+                  className="border-2"
+                  type="button"
+                  onClick={removeImage}
+                >
+                  Remover Imagem
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-4 md:grid md:grid-cols-2">
@@ -395,64 +399,70 @@ export const PerfilForm: React.FC = () => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="oldPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Senha antiga</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="off"
-                      type="password"
-                      placeholder=""
-                      disabled={loading || bloqueioProvider}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {bloqueioProvider ? (
+              <></>
+            ) : (
+              <>
+                <FormField
+                  control={form.control}
+                  name="oldPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Senha antiga</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="off"
+                          type="password"
+                          placeholder=""
+                          disabled={loading || bloqueioProvider}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nova senha</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="off"
-                      type="password"
-                      placeholder=""
-                      disabled={loading || bloqueioProvider}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Comfirmar nova senha</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="off"
-                      type="password"
-                      placeholder=""
-                      disabled={loading || bloqueioProvider}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nova senha</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="off"
+                          type="password"
+                          placeholder=""
+                          disabled={loading || bloqueioProvider}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Comfirmar nova senha</FormLabel>
+                      <FormControl>
+                        <Input
+                          autoComplete="off"
+                          type="password"
+                          placeholder=""
+                          disabled={loading || bloqueioProvider}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
           </div>
 
           <Button disabled={loading} className="ml-auto" type="submit">

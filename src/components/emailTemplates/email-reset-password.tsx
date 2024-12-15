@@ -9,6 +9,7 @@ import {
   Row,
   Section,
   Text,
+  Img,
 } from '@react-email/components'
 import * as React from 'react'
 
@@ -31,7 +32,7 @@ export const ResetPasswordEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Section style={logo}>
-            {/*     <Img width={114} src={`${baseUrl}/static/twitch-logo.png`} /> */}
+            <Img width={114} src={`${baseUrl}/public/logo.webp`} />
           </Section>
           <Section style={sectionsBorders}>
             <Row>

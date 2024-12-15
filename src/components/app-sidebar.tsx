@@ -84,6 +84,7 @@ export function AppSidebar() {
   const [carregou, setiscarregou] = useState(false)
   if (session) {
     /*     console.log(session) */
+
     if (!carregou) {
       if (session.user.role === 'admin') {
         setIsAdmin(true)
@@ -179,7 +180,6 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  {/* */}
                   {!session ? (
                     <>
                       <Skeleton className="h-8 w-8 rounded-full" />
@@ -189,16 +189,15 @@ export function AppSidebar() {
                     <>
                       <Avatar className={cn(open ? ' h-8 w-8 ' : ' h-6 w-6 ')}>
                         <AvatarImage
-                          src={session.user?.image}
-                          alt={session.user?.nome ?? ''}
+                          src={session.user.image}
+                          alt={session.user.nome}
                         />
-                        <AvatarFallback>{session.user?.nome[0]}</AvatarFallback>
+                        <AvatarFallback>{session.user.nome[0]}</AvatarFallback>
                       </Avatar>
-                      {session.user?.nome ?? ''}
+                      {session.user.nome}
                     </>
                   )}
 
-                  {/*  {usuario?.nome ?? ''} */}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

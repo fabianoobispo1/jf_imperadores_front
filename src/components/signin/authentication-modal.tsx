@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
+import Image from 'next/image'
 
 import UserAuthForm from '@/components/forms/user-auth-form'
 import UserRegisterForm from '@/components/forms/user-register-form'
@@ -102,10 +103,11 @@ export default function AuthenticationModal() {
 
       <div className="flex h-full items-center p-4 lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          <div className="flex flex-col space-y-2 text-center">
-            {/*    <h1 className="text-3xl font-bold tracking-tight pb-8">
-            JF imperadores
+          <div className="flex flex-col justify-center items-center space-y-2 text-center">
+            {/*   <h1 className="text-3xl font-bold tracking-tight pb-8">
+              JF imperadores
             </h1> */}
+            <Image src={'/logo.png'} alt="logo" width={400} height={400} />
             <h1 className="text-2xl font-semibold tracking-tight">
               {button === 'Login' ? 'Criar uma conta' : 'Realizar login'}
             </h1>
@@ -123,8 +125,8 @@ export default function AuthenticationModal() {
           <p className="px-8 text-center text-sm text-muted-foreground">
             Esqueceu sua Senha? recupere{' '}
             <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger className=" px-8 text-center text-sm text-muted-foreground underline underline-offset-4 hover:text-primary">
-                aqui
+              <DialogTrigger className="  text-center text-sm text-muted-foreground underline underline-offset-4 hover:text-primary">
+                aqui.
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -166,7 +168,6 @@ export default function AuthenticationModal() {
                 </DialogHeader>
               </DialogContent>
             </Dialog>
-            .
           </p>
         </div>
       </div>

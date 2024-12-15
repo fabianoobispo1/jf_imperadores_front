@@ -26,6 +26,7 @@ export default function auth2() {
         </div>
       </div>
  */}
+      {/*     <ResetPasswordEmail idReset="12" nome="fabiano" /> */}
       <AuthenticationModal />
     </div>
   )
