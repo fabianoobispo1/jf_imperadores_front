@@ -32,7 +32,7 @@ export const ResetPasswordEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Section style={logo}>
-            <Img width={114} src={`${baseUrl}/public/logo.webp`} />
+            <Img width={114} src={`/logo.png`} />
           </Section>
           <Section style={sectionsBorders}>
             <Row>
