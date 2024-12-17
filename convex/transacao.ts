@@ -1,6 +1,6 @@
 import { v } from 'convex/values'
 
-import { mutation } from './_generated/server'
+import { mutation, query } from './_generated/server'
 import { transacaoSchema } from './schema'
 
 export const create = mutation({
@@ -27,7 +27,7 @@ export const remove = mutation({
   },
 })
 
-export const buscaPeriodo = mutation({
+export const buscaPeriodo = query({
   args: {
     dataInicial: v.number(),
     dataFinal: v.number(),
