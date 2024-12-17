@@ -61,6 +61,7 @@ export function FinancasList() {
         dataInicial: timestampStart,
         dataFinal: timestampEnd,
       })
+      console.log(transacoes)
       setTransacoes(transacoes)
     } catch (error) {
       console.error('Erro ao buscar seletivas:', error)
