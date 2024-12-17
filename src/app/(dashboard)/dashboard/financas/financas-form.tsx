@@ -68,7 +68,7 @@ export const FinancasForm: React.FC = () => {
       data: timestamp,
       descricao: data.descricao,
       tipo: data.tipo,
-      valor: data.valor,
+      valor: Number(data.valor),
     })
     console.log(transacao)
     setLoading(false)
