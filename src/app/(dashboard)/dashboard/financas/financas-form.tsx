@@ -3,6 +3,8 @@ import * as z from 'zod'
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { fetchMutation } from 'convex/nextjs'
+import { api } from '../../../../../convex/_generated/api'
 
 import {
   Select,
@@ -60,8 +62,14 @@ export const FinancasForm: React.FC = () => {
     setLoading(true)
     console.log(data)
     const timestamp = data.data ? new Date(data.data).getTime() : 0
-    console.log(timestamp)
 
+    const transacao = await fetchMutation(api.transacao.create, {
+      data: timestamp,
+      descricao: data.descricao,
+      tipo: data.tipo,
+      valor: data.valor,
+    })
+    console.log(transacao)
     setLoading(false)
   }
 
