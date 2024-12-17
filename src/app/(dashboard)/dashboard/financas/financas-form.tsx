@@ -3,7 +3,7 @@ import * as z from 'zod'
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { fetchMutation, fetchQuery } from 'convex/nextjs'
+
 import {
   Select,
   SelectContent,
@@ -21,12 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-
-import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
-import { formatCPF } from '@/lib/utils'
-import { useToast } from '@/hooks/use-toast'
-
-import { api } from '../../../../../convex/_generated/api'
+import { DatePickerWithDefaults } from '@/components/calendar/with-default'
 
 const formSchema = z.object({
   tipo: z.enum(['despesa', 'receita']).default('despesa'),
@@ -45,14 +40,14 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>
 
 export const FinancasForm: React.FC = () => {
-  const { toast } = useToast()
+  /*   const { toast } = useToast() */
 
   const [loading, setLoading] = useState(false)
 
-  const defaultValues = {
+  const defaultValues: ProductFormValues = {
     tipo: 'despesa',
     descricao: '',
-    data: undefined,
+    data: new Date(),
     valor: 0,
   }
 
@@ -65,41 +60,7 @@ export const FinancasForm: React.FC = () => {
     setLoading(true)
     console.log(data)
     const timestamp = data.data ? new Date(data.data).getTime() : 0
-
-    // vrfica e ja exsite registro
-    /*  
- 
-    const candidato = await fetchMutation(api.seletiva.create, {
-      nome: data.nome,
-      cpf: cpfSemMascara,
-      email: data.email,
-      data_nascimento: timestamp,
-      img_link: imgUrl,
-    })
-
-    if (!candidato) {
-      toast({
-        title: 'Erro',
-        variant: 'destructive',
-        description: 'Candidato não cadastrado.',
-      })
-      setLoading(false)
-      return
-    }
-
-    toast({
-      title: 'ok',
-      description: 'Candidato cadastrado.',
-    }) */
-
-    /*  console.log({
-      ...data,
-      imgUrl,
-      cpfSemMascara,
-      timestamp: data.data_nascimento
-        ? new Date(data.data_nascimento).getTime()
-        : null,
-    }) */
+    console.log(timestamp)
 
     setLoading(false)
   }
@@ -156,10 +117,10 @@ export const FinancasForm: React.FC = () => {
             control={form.control}
             name="data"
             render={({ field }) => (
-              <DatePickerWithDropdown
+              <DatePickerWithDefaults
                 label="Data pagamento/recebimento"
-                date={field.value || undefined} 
-                setDate={(date) => field.onChange(date || null)} 
+                date={field.value || undefined}
+                setDate={(date) => field.onChange(date || null)}
               />
             )}
           />

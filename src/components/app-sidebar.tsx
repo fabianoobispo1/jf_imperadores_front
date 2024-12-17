@@ -6,6 +6,7 @@ import {
   Home,
   Settings,
   UserPen,
+  CircleDollarSign,
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import { useState } from 'react'
@@ -62,6 +63,11 @@ const itemsAdm = [
     title: 'Administração',
     url: '/dashboard/admin',
     icon: Settings,
+  },
+  {
+    title: 'Finanças',
+    url: '/dashboard/financas',
+    icon: CircleDollarSign,
   },
 ]
 
