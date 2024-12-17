@@ -13,18 +13,40 @@ export const create = mutation({
 
 export const remove = mutation({
   args: {
-    transacaoId: v.id('transacao'), // ID do transacao a ser removido
+    transacaoId: v.id('transacao'),
   },
   handler: async ({ db }, { transacaoId }) => {
-    // Buscar o transacao para garantir que ele existe antes de remover
     const transacao = await db.get(transacaoId)
     if (!transacao) {
       throw new Error('Todo não encontrado')
     }
 
-    // Remover o transacao do banco de dados
     await db.delete(transacaoId)
 
-    return { success: true, message: 'Todo removido com sucesso' } // Resposta de confirmação
+    return { success: true, message: 'Todo removido com sucesso' }
+  },
+})
+
+export const buscaPeriodo = mutation({
+  args: {
+    dataInicial: v.number(),
+    dataFinal: v.number(),
+  },
+  handler: async ({ db }, { dataInicial, dataFinal }) => {
+    if (dataInicial >= dataFinal) {
+      throw new Error('A data inicial deve ser menor que a data final.')
+    }
+
+    const transacoes = await db
+      .query('transacao')
+      .filter((q) =>
+        q.and(
+          q.gte(q.field('data'), dataInicial),
+          q.lt(q.field('data'), dataFinal),
+        ),
+      )
+      .collect()
+
+    return transacoes
   },
 })
