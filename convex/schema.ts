@@ -57,10 +57,19 @@ export const linksSchema = {
 }
 
 export const seletivaSchema = {
+  numerio_seletiva: v.number(),
   nome: v.string(),
   cpf: v.string(),
   data_nascimento: v.optional(v.number()),
   email: v.string(),
+  altura: v.number(),
+  peso: v.number(),
+  celular: v.string(),
+  tem_experiencia: v.boolean(),
+  equipe_anterior: v.string(),
+  setor: v.number(),
+  posicao: v.string(),
+  equipamento: v.number(),
   img_link: v.string(),
 }
 

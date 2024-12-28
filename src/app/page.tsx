@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-// import Redirecionador from '@/components/redirecionador'
+import Redirecionador from '@/components/redirecionador'
 
 export const metadata: Metadata = {
   title: 'JF Imperadores',
@@ -12,7 +12,11 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="flex h-screen items-center justify-center ">
-      {/*   <Redirecionador link={'https://jfimperadores.lojavirtualnuvem.com.br'} /> */}
+      <Redirecionador
+        link={
+          'https://docs.google.com/forms/d/e/1FAIpQLSe84IAb6iYL1SiXOO2JTQdZ49wlFd_EDbKXuMqKWO2LqkfNAw/viewform'
+        }
+      />
     </div>
   )
 }

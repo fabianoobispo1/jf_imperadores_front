@@ -93,6 +93,15 @@ export const TryoutForm: React.FC = () => {
       email: data.email,
       data_nascimento: timestamp,
       img_link: imgUrl,
+      altura: 0,
+      celular: '',
+      equipamento: 0,
+      equipe_anterior: '',
+      numerio_seletiva: 0,
+      peso: 0,
+      posicao: '',
+      setor: 0,
+      tem_experiencia: false,
     })
 
     if (!candidato) {

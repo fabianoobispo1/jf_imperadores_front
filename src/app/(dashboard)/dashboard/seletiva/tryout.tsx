@@ -25,14 +25,14 @@ export const Tryout: React.FC = () => {
           >
             Listar
           </Button>
-          <Button
+          {/*          <Button
             onClick={() => {
               setExibeBotoes(false)
               setExibeAdicionar(true)
             }}
           >
             Adicionar
-          </Button>
+          </Button> */}
         </div>
       ) : (
         <></>

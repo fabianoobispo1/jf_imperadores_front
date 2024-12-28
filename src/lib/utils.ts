@@ -47,6 +47,64 @@ export function formatCPF(value: string) {
     .slice(0, 14) // Limita o tamanho do CPF
 }
 
+export const formatPhone = (value: string): string => {
+  // Remove all non-digits
+  const digits = value.replace(/\D/g, '')
+
+  // Limit to max 11 digits
+  const trimmed = digits.slice(0, 11)
+
+  // Apply mask based on length
+  if (trimmed.length <= 2) {
+    return `(${trimmed}`
+  }
+  if (trimmed.length <= 7) {
+    return `(${trimmed.slice(0, 2)})${trimmed.slice(2)}`
+  }
+  return `(${trimmed.slice(0, 2)})${trimmed.slice(2, 7)}-${trimmed.slice(7)}`
+}
+
+export const formatHeight = (value: string): string => {
+  // Remove non-digits and dots
+  const cleaned = value.replace(/[^\d.]/g, '')
+  // Split by dot if exists
+  const parts = cleaned.split('.')
+
+  if (parts.length > 1) {
+    // If we have a decimal point, format to x.xx
+    return `${parts[0].slice(0, 1)}.${parts[1].slice(0, 2)}`
+  }
+
+  // If no decimal point, add it after first digit
+  if (cleaned.length > 0) {
+    return `${cleaned.slice(0, 1)}.${cleaned.slice(1, 3)}`
+  }
+
+  return cleaned
+}
+
+export const formatWeight = (value: string): string => {
+  // Remove não-dígitos exceto ponto
+  const cleaned = value.replace(/[^\d.]/g, '')
+
+  // Divide nos pontos
+  const parts = cleaned.split('.')
+
+  if (parts.length > 1) {
+    // Se tem ponto decimal, mantém até 3 dígitos antes e 1 depois
+    const integerPart = parts[0].slice(0, 3)
+    const decimalPart = parts[1].slice(0, 1)
+    return `${integerPart}.${decimalPart}`
+  }
+
+  // Se não tem ponto e tem mais que 3 dígitos
+  if (cleaned.length > 3) {
+    return `${cleaned.slice(0, 3)}.${cleaned.slice(3, 4)}`
+  }
+
+  return cleaned
+}
+
 export function formatBytes(
   bytes: number,
   opts: {
