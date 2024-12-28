@@ -63,12 +63,12 @@ const itemsAdm = [
     title: 'Administração',
     url: '/dashboard/admin',
     icon: Settings,
-  },
+  } /* ,
   {
     title: 'Finanças',
     url: '/dashboard/financas',
     icon: CircleDollarSign,
-  },
+  }, */,
 ]
 
 /* interface Usuario {
