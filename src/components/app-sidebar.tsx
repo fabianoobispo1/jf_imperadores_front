@@ -6,7 +6,7 @@ import {
   Home,
   Settings,
   UserPen,
-  CircleDollarSign,
+  /*  CircleDollarSign, */
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import { useState } from 'react'
