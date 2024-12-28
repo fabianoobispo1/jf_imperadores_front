@@ -12,11 +12,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="flex h-screen items-center justify-center ">
-      <Redirecionador
-        link={
-          'https://docs.google.com/forms/d/e/1FAIpQLSe84IAb6iYL1SiXOO2JTQdZ49wlFd_EDbKXuMqKWO2LqkfNAw/viewform'
-        }
-      />
+      <Redirecionador link={'https://www.jfimperadores.com.br/seletiva'} />
     </div>
   )
 }
