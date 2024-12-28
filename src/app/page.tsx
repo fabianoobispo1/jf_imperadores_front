@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 
-import Redirecionador from '@/components/redirecionador'
+// import Redirecionador from '@/components/redirecionador'
 
 export const metadata: Metadata = {
   title: 'JF Imperadores',
