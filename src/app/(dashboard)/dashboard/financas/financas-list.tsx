@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Trash } from 'lucide-react'
-import { fetchMutation, fetchQuery } from 'convex/nextjs'
+import { fetchQuery } from 'convex/nextjs'
 
 import {
   Table,
@@ -11,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { LoadingButton } from '@/components/ui/loading-button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
