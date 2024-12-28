@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 
+import ThemeToggle from '@/components/layout/ThemeToggle/theme-toggle'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { SeletivaForm } from './seletiva-form'
@@ -13,6 +14,9 @@ export const metadata: Metadata = {
 export default function seletiva() {
   return (
     <ScrollArea className="h-screen">
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <div className="flex flex-col items-start gap-2 space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">
