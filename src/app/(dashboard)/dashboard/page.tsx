@@ -16,8 +16,8 @@ export default function page() {
         <div className="flex items-center justify-start space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">Bem Vindo 👋</h2>
           <p>
-            Site em fase de testes, todas as informações aqui são meramente para
-            simulação.
+            {/* Site em fase de testes, todas as informações aqui são meramente para
+            simulação. */}
           </p>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
