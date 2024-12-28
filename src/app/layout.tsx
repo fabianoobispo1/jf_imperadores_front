@@ -11,8 +11,10 @@ import { Toaster } from '@/components/ui/toaster'
 import ThemeProvider from '@/components/layout/ThemeToggle/theme-provider'
 
 export const metadata: Metadata = {
-  title: 'Fabiano sistema',
-  description: 'Site para testar novas tecnologias',
+  title: 'JF Imperadores',
+  description: 'Página oficial do time JF Imperadores',
+  keywords:
+    'imperadores, jf imperadores, jfimperadores, futebolamericano, futebol ameriacno, fabr, juiz de fora imperadores, time imperadores, time jfimperadores, time jf imperadores',
 }
 
 export default async function RootLayout({
