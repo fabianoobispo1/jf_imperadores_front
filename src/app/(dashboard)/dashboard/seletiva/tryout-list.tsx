@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Trash } from 'lucide-react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 
+import { useSidebar } from '@/components/ui/sidebar'
 import {
   Table,
   TableBody,
@@ -15,6 +16,7 @@ import { LoadingButton } from '@/components/ui/loading-button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 import type { Id } from '../../../../../convex/_generated/dataModel'
 import { api } from '../../../../../convex/_generated/api'
@@ -58,6 +60,7 @@ export function TryoutList() {
   const [offset, setOffset] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const limit = 10
+  const { open } = useSidebar()
 
   const fetchSeletivaPaginated = async (offset: number, limit: number) => {
     setLoading(true)
@@ -100,8 +103,15 @@ export function TryoutList() {
   }
 
   return (
-    <div className="space-y-8 w-screen md:max-w-[calc(100%-5rem)] pr-4 ">
+    <div
+      className={cn(
+        'space-y-8 w-screen pr-4 ',
+        open ? 'md:max-w-[calc(100%-16rem)] ' : 'md:max-w-[calc(100%-5rem)] ',
+      )}
+    >
       <div className="w-full overflow-auto">
+        {open ? 'Sidebar está aberta' : 'Sidebar está fechada'}
+
         <div className="w-full pr-4">
           {' '}
           {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
@@ -237,7 +247,7 @@ export function TryoutList() {
             variant="outline"
             size="sm"
             onClick={handleNext}
-            disabled={loading || seletivas.length < limit}
+            disabled={loading || seletivas.length <= limit}
           >
             Próxima
           </Button>
