@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Trash } from 'lucide-react'
+import { Trash, MailPlusIcon } from 'lucide-react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 
 import { useSidebar } from '@/components/ui/sidebar'
@@ -208,6 +208,14 @@ export function TryoutList() {
                           <div className="flex justify-center">
                             <LoadingButton
                               loading={loading}
+                              disabled
+                              onClick={() => removeCandidato(seletiva._id)}
+                            >
+                              <MailPlusIcon className="h-4 w-4" />
+                            </LoadingButton>
+                            <LoadingButton
+                              loading={loading}
+                              disabled
                               variant={'destructive'}
                               onClick={() => removeCandidato(seletiva._id)}
                             >
