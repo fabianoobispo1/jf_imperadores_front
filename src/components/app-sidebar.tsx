@@ -47,11 +47,7 @@ const items = [
     url: '/dashboard',
     icon: Home,
   },
-  {
-    title: 'Seletiva',
-    url: '/dashboard/seletiva',
-    icon: Calendar,
-  },
+
   {
     title: 'Perfil',
     url: '/dashboard/perfil',
@@ -59,6 +55,11 @@ const items = [
   },
 ]
 const itemsAdm = [
+  {
+    title: 'Seletiva',
+    url: '/dashboard/seletiva',
+    icon: Calendar,
+  },
   {
     title: 'Administração',
     url: '/dashboard/admin',
