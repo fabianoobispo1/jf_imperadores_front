@@ -100,12 +100,12 @@ export function TryoutList() {
   }
 
   return (
-    <div className="space-y-8 w-screen max-w-screen-xl pr-4">
+    <div className="space-y-8 w-screen md:max-w-[calc(100%-5rem)] pr-4 ">
       <div className="w-full overflow-auto">
         <div className="w-full pr-4">
           {' '}
           {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
-          <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border ">
+          <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border  ">
             <div className="">
               <Table>
                 <TableHeader className="sticky top-0 bg-background">
@@ -216,7 +216,7 @@ export function TryoutList() {
         </div>
       </div>
 
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-4 pr-4">
         <div className="flex-1 text-sm text-muted-foreground">
           <p>
             Página {Math.ceil(offset / limit) + 1} de{' '}
