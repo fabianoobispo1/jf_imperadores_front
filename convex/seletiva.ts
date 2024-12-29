@@ -71,3 +71,10 @@ export const remove = mutation({
     return { success: true, message: 'seletiva removido com sucesso' } // Resposta de confirmação
   },
 })
+
+export const getCount = query({
+  handler: async (ctx) => {
+    const count = await ctx.db.query('seletiva').collect()
+    return count.length
+  },
+})

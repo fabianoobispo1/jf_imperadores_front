@@ -40,7 +40,7 @@ export const Tryout: React.FC = () => {
 
       {exibeListar ? (
         <>
-          <div className="flexrow flex items-start justify-between gap-4">
+          <div className="flexrow flex items-start justify-between gap-4 ">
             <Heading
               title="Seletiva"
               description="Lista dos cadastrados na seletiva."
