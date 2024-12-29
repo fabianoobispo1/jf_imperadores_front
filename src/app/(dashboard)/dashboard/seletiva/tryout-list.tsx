@@ -247,7 +247,7 @@ export function TryoutList() {
             variant="outline"
             size="sm"
             onClick={handleNext}
-            disabled={loading || seletivas.length <= limit}
+            disabled={loading || seletivas.length < limit}
           >
             Próxima
           </Button>
