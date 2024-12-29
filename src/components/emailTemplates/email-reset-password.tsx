@@ -28,7 +28,7 @@ export const ResetPasswordEmail = ({
   return (
     <Html>
       <Head />
-      <Preview>You updated the password for your Twitch account</Preview>
+      <Preview>Você atualizou a senha da sua conta no jf imperadores.</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={logo}>

@@ -9,8 +9,8 @@ import { TryoutForm } from './tryout-form'
 import { TryoutList } from './tryout-list'
 
 export const Tryout: React.FC = () => {
-  const [exibeBotoes, setExibeBotoes] = useState(true)
-  const [exibeListar, setExibeListar] = useState(false)
+  const [exibeBotoes, setExibeBotoes] = useState(false)
+  const [exibeListar, setExibeListar] = useState(true)
   const [exibeAdicionar, setExibeAdicionar] = useState(false)
 
   return (
@@ -45,14 +45,14 @@ export const Tryout: React.FC = () => {
               title="Seletiva"
               description="Lista dos cadastrados na seletiva."
             />
-            <Button
+            {/*  <Button
               onClick={() => {
                 setExibeBotoes(true)
                 setExibeListar(false)
               }}
             >
               Voltar
-            </Button>
+            </Button> */}
           </div>
 
           <TryoutList />

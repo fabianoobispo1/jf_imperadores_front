@@ -145,7 +145,7 @@ export const SeletivaForm: React.FC = () => {
   const [loading, setLoading] = useState(false)
 
   const defaultValues = {
-    /*  nome: 'Fabiano bispo',
+    /*     nome: 'Fabiano bispo',
     data_nascimento: new Date(),
     email: 'fbc623@gmail.com',
     cpf: '094.600.666-07',
@@ -248,6 +248,24 @@ export const SeletivaForm: React.FC = () => {
       equipamento: data.equipamento,
       img_link: imgUrl,
     })
+
+    fetch('/api/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: data.email,
+        nome: data.nome,
+
+        tipoMensagem: 'confirmaSeletiva',
+      }),
+    })
+      .then(async (res) => {
+        console.log(res)
+      })
+      .catch(() => {})
+      .finally(() => {})
 
     if (!candidato) {
       toast({

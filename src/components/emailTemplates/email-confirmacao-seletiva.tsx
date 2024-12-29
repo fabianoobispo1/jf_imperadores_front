@@ -4,7 +4,6 @@ import {
   Column,
   Head,
   Html,
-  Link,
   Preview,
   Row,
   Section,
@@ -15,20 +14,13 @@ import * as React from 'react'
 
 interface ConfirmacaoSeletivaProps {
   nome?: string
-  idReset?: string
 }
 
-const baseUrl = process.env.NEXTAUTH_URL ? process.env.NEXTAUTH_URL : ''
-
-export const ConfirmacaoSeletiva = ({
-  nome,
-  idReset,
-}: ConfirmacaoSeletivaProps) => {
-  const linkReset = baseUrl + '/reset/' + idReset
+export const ConfirmacaoSeletiva = ({ nome }: ConfirmacaoSeletivaProps) => {
   return (
     <Html>
       <Head />
-      <Preview>You updated the password for your Twitch account</Preview>
+      <Preview>Email de confirmação da Seletiva.</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={logo}>
@@ -39,29 +31,20 @@ export const ConfirmacaoSeletiva = ({
           </Section>
           <Section style={sectionsBorders}>
             <Row>
-              <Column style={sectionBorder} />
+              <Column style={sectionBorderInicio} />
               <Column style={sectionCenter} />
-              <Column style={sectionBorder} />
+              <Column style={sectionBorderFim} />
             </Row>
           </Section>
           <Section style={content}>
-            <Text style={paragraph}>Oi {nome},</Text>
+            <Text style={paragraph}>Ola {nome},</Text>
             <Text style={paragraph}>
-              Recentemente houve uma solicitação para alterar a senha da sua
-              conta.
+              Seu regeitro foi feito na seletiva para o Jf imperadores.
             </Text>
+
             <Text style={paragraph}>
-              Clique no link para confirmar esta alteração:{' '}
-              <Link href={linkReset} style={link}>
-                nova senha
-              </Link>
-            </Text>
-            <Text style={paragraph}>
-              Se você não pediu a redefinição de sua senha, é provável que outro
-              usuário tenha digitado seu nome de usuário ou endereço de e-mail
-              por engano ao tentar redefinir a própria senha. Se esse for o
-              caso, você não precisa tomar nenhuma medida adicional e pode
-              ignorar este e-mail com segurança.
+              A seletiva será realizada no dia 19 de Janeiro. Horário: 9 horas
+              Local: Ginásio da Faefid-UFJF
             </Text>
 
             <Text style={paragraph}>
@@ -73,17 +56,9 @@ export const ConfirmacaoSeletiva = ({
         </Container>
 
         <Section style={footer}>
-          {/* <Row>
-            <Column align="right" style={{ width: '50%', paddingRight: '8px' }}>
-              <Img src={`${baseUrl}/static/twitch-icon-twitter.png`} />
-            </Column>
-            <Column align="left" style={{ width: '50%', paddingLeft: '8px' }}>
-              <Img src={`${baseUrl}/static/twitch-icon-facebook.png`} />
-            </Column>
-          </Row> */}
           <Row>
             <Text style={{ textAlign: 'center', color: '#706a7b' }}>
-              © 2024 Bispo, Todos os direitos reservados.
+              © Jf Imperadores, Todos os direitos reservados.
               <br />
             </Text>
           </Row>
@@ -139,16 +114,17 @@ const sectionsBorders = {
   display: 'flex',
 }
 
-const sectionBorder = {
-  borderBottom: '1px solid rgb(238,238,238)',
+const sectionBorderInicio = {
+  borderBottom: '1px solid rgb(150, 112, 8)',
   width: '249px',
 }
 
 const sectionCenter = {
-  borderBottom: '1px solid rgb(150, 112, 8)',
+  borderBottom: '1px solid rgb(238,238,238)',
   width: '102px',
 }
 
-const link = {
-  textDecoration: 'underline',
+const sectionBorderFim = {
+  borderBottom: '1px solid rgb(238,238,238)',
+  width: '249px',
 }
