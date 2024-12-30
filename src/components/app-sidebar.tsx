@@ -6,6 +6,7 @@ import {
   Home,
   Settings,
   UserPen,
+  ChevronsLeftRightEllipsisIcon,
   /*  CircleDollarSign, */
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
@@ -64,6 +65,11 @@ const itemsAdm = [
     title: 'Administração',
     url: '/dashboard/admin',
     icon: Settings,
+  },
+  {
+    title: 'Configurar WhatsApp',
+    url: '/dashboard/configwhatsapp',
+    icon: ChevronsLeftRightEllipsisIcon,
   } /* ,
   {
     title: 'Finanças',
