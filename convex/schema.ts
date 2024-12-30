@@ -73,6 +73,30 @@ export const seletivaSchema = {
   img_link: v.string(),
 }
 
+export const atletasSchema = {
+  status: v.number(),
+  nome: v.string(),
+  cpf: v.string(),
+  data_nascimento: v.optional(v.number()),
+  email: v.string(),
+  altura: v.number(),
+  peso: v.number(),
+  celular: v.string(),
+  setor: v.number(),
+  posicao: v.string(),
+  rua: v.string(),
+  bairro: v.string(),
+  cidade: v.string(),
+  cep: v.string(),
+  uf: v.string(),
+  complemento: v.string(),
+  genero: v.string(),
+  rg: v.string(),
+  emisor: v.string(),
+  uf_emisor: v.string(),
+  img_link: v.string(),
+}
+
 export const transacaoSchema = {
   tipo: v.union(v.literal('despesa'), v.literal('receita')),
   descricao: v.string(),
@@ -99,5 +123,9 @@ export default defineSchema({
   seletiva: defineTable(seletivaSchema)
     .index('by_nome', ['nome'])
     .index('by_email', ['email']),
+  atletas: defineTable(atletasSchema)
+    .index('by_nome', ['nome'])
+    .index('by_email', ['email'])
+    .index('by_cpf', ['cpf']),
   transacao: defineTable(transacaoSchema).index('by_data', ['data']),
 })

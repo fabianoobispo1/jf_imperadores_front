@@ -110,10 +110,7 @@ export function TryoutList() {
       )}
     >
       <div className="w-full overflow-auto">
-        {open ? 'Sidebar está aberta' : 'Sidebar está fechada'}
-
         <div className="w-full pr-4">
-          {' '}
           {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
           <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border  ">
             <div className="">
