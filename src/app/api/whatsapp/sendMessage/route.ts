@@ -4,12 +4,12 @@ export async function POST(request: Request) {
   const body = await request.json()
 
   const response = await fetch(
-    'https://webhook.fabianoobispo.com.br/client/sendMessage/comunidadezdg',
+    'https://apiwhatsapp.fabianoobispo.com.br/client/sendMessage/jfimperadores',
     {
       method: 'POST',
       headers: {
         accept: '*/*',
-        'x-api-key': 'comunidadezdg.com.br',
+        'x-api-key': 'fabianotoken',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),

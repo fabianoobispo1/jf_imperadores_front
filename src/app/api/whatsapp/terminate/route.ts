@@ -2,11 +2,11 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   const response = await fetch(
-    'https://webhook.fabianoobispo.com.br/session/terminateAll',
+    'https://apiwhatsapp.fabianoobispo.com.br/session/terminateAll',
     {
       headers: {
         accept: 'application/json',
-        'x-api-key': 'comunidadezdg.com.br',
+        'x-api-key': 'fabianotoken',
       },
     },
   )
