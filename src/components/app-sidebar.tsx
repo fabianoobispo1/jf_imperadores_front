@@ -7,6 +7,7 @@ import {
   Settings,
   UserPen,
   ChevronsLeftRightEllipsisIcon,
+  User,
   /*  CircleDollarSign, */
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
@@ -53,6 +54,11 @@ const items = [
     title: 'Perfil',
     url: '/dashboard/perfil',
     icon: UserPen,
+  },
+  {
+    title: 'Atletas',
+    url: '/dashboard/atletas',
+    icon: User,
   },
 ]
 const itemsAdm = [
