@@ -1,6 +1,6 @@
 'use-client'
 import { useEffect, useState } from 'react'
-import { MailPlusIcon } from 'lucide-react'
+import { PenBoxIcon } from 'lucide-react'
 import { fetchQuery } from 'convex/nextjs'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
@@ -192,7 +192,7 @@ export const AtletasList = () => {
                       <TableCell>
                         <div className="flex justify-center">
                           <LoadingButton loading={loading} disabled>
-                            <MailPlusIcon className="h-4 w-4" />
+                            <PenBoxIcon className="h-4 w-4" />
                           </LoadingButton>
                         </div>
                       </TableCell>

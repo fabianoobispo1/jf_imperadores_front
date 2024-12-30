@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -40,6 +39,7 @@ export function WhatsAppComponent() {
   const [message, setMessage] = useState('')
   const [statusMessage, setStatusMessage] = useState('')
   const [numeroConectado, setNumeroConectado] = useState('')
+  const [nomeConectado, setNomeConectado] = useState('')
   const [mesageColor, setMesageColor] = useState('')
 
   const startWhatsAppSession = async () => {
@@ -99,8 +99,13 @@ export function WhatsAppComponent() {
   const getNumber = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await axios.get('/api/whatsapp/getnumber')
-      setNumeroConectado(response.data.number)
+      const response = await axios.get('/api/whatsapp/getNumber')
+      setNomeConectado(response.data.sessionInfo.pushname)
+      setNumeroConectado(
+        response.data.sessionInfo.me.user.slice(2, 4) +
+          '9' +
+          response.data.sessionInfo.me.user.slice(4),
+      )
     } catch (error) {
       console.error('Error:', error)
     }
@@ -152,6 +157,8 @@ export function WhatsAppComponent() {
           <span>
             {''}
             {numeroConectado === '' ? '-' : formatPhone(numeroConectado)}
+            {' - '}
+            {nomeConectado === '' ? '-' : nomeConectado}
           </span>
         </p>
         <div className="flex gap-4 flex-wrap">
@@ -210,7 +217,7 @@ export function WhatsAppComponent() {
               >
                 ✕
               </Button>
-              <Image
+              <img
                 key={qrKey}
                 src="/api/whatsapp/qrcode"
                 alt="WhatsApp QR Code"

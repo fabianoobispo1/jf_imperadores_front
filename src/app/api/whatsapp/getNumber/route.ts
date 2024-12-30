@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   const response = await fetch(
-    'https://apiwhatsapp.fabianoobispo.com.br/client/getNumberId/jfimperadores',
+    'https://apiwhatsapp.fabianoobispo.com.br/client/getClassInfo/jfimperadores',
     {
       headers: {
         accept: 'application/json',
