@@ -180,7 +180,7 @@ export function WhatsAppComponent() {
           <h3 className="text-lg font-semibold">Teste enviar mensagem</h3>
           <div className="flex flex-col gap-2 max-w-md">
             <Input
-              placeholder="Nuemro telefone"
+              placeholder="Numero telefone"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
