@@ -12,7 +12,12 @@ export default function page() {
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <BreadCrumb items={breadcrumbItems} />
         <div className=" flex items-start justify-between gap-4">
-          <Heading title={'Configurar WhatsApp'} description={'......'} />
+          <Heading
+            title={'Configurar WhatsApp'}
+            description={
+              'Tela para configurar o WhatsApp para envio de mensagens'
+            }
+          />
         </div>
         <WhatsAppComponent />
       </div>
