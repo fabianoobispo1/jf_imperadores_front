@@ -190,38 +190,39 @@ export const AtletasForm: React.FC<AtletasFormProps> = ({
         })
       } else {
         console.log(`adiciona`)
+
+        await create({
+          status: parseInt(values.status),
+          nome: values.nome,
+          cpf: values.cpf,
+          email: values.email,
+          data_nascimento: new Date(values.data_nascimento).getTime(),
+          data_registro: new Date().getTime(),
+          altura: values.altura ? parseFloat(values.altura) : 0,
+          peso: values.peso ? parseFloat(values.peso) : 0,
+          celular: values.celular,
+          setor: parseInt(values.setor),
+          posicao: values.posicao,
+          rua: values.rua,
+          bairro: values.bairro,
+          cidade: values.cidade,
+          cep: values.cep,
+          uf: values.uf,
+          complemento: values.complemento,
+          genero: values.genero,
+          rg: values.rg,
+          emisor: values.emisor,
+          uf_emisor: values.uf_emisor,
+          img_link: '',
+        })
+
+        toast({
+          title: 'Atleta cadastrado com sucesso!',
+          description: 'Os dados foram salvos no sistema.',
+        })
+
+        form.reset()
       }
-      await create({
-        status: parseInt(values.status),
-        nome: values.nome,
-        cpf: values.cpf,
-        email: values.email,
-        data_nascimento: new Date(values.data_nascimento).getTime(),
-        data_registro: new Date().getTime(),
-        altura: values.altura ? parseFloat(values.altura) : 0,
-        peso: values.peso ? parseFloat(values.peso) : 0,
-        celular: values.celular,
-        setor: parseInt(values.setor),
-        posicao: values.posicao,
-        rua: values.rua,
-        bairro: values.bairro,
-        cidade: values.cidade,
-        cep: values.cep,
-        uf: values.uf,
-        complemento: values.complemento,
-        genero: values.genero,
-        rg: values.rg,
-        emisor: values.emisor,
-        uf_emisor: values.uf_emisor,
-        img_link: '',
-      })
-
-      toast({
-        title: 'Atleta cadastrado com sucesso!',
-        description: 'Os dados foram salvos no sistema.',
-      })
-
-      form.reset()
     } catch (error) {
       console.log(error)
       toast({
