@@ -166,3 +166,16 @@ export const update = mutation({
     return updateUser
   },
 })
+
+export const getCountByStatus = query({
+  args: {
+    status: v.number(),
+  },
+  handler: async (ctx, { status }) => {
+    const atletas = await ctx.db
+      .query('atletas')
+      .filter((q) => q.eq(q.field('status'), status))
+      .collect()
+    return atletas.length
+  },
+})

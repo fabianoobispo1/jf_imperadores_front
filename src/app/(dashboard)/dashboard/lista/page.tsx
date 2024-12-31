@@ -1,10 +1,11 @@
 import BreadCrumb from '@/components/breadcrumb'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Heading } from '@/components/ui/heading'
+import { TodoList } from '@/components/TodoList'
 
-import { PerfilForm } from './perfil-form'
-
-const breadcrumbItems = [{ title: 'Pefil', link: '/dashboard/perfil' }]
+const breadcrumbItems = [
+  { title: 'Lista de tarefas', link: '/dashboard/lista' },
+]
 export default function page() {
   return (
     <ScrollArea className="h-full w-full">
@@ -12,11 +13,11 @@ export default function page() {
         <BreadCrumb items={breadcrumbItems} />
         <div className=" flex items-start justify-between gap-4">
           <Heading
-            title={'Perfil'}
-            description={'Editar suas informações pessoais.'}
+            title={'Lista de tarefas'}
+            description={'Essa e sua lista de tarefas.'}
           />
         </div>
-        <PerfilForm />
+        <TodoList />
       </div>
     </ScrollArea>
   )

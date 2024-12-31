@@ -8,6 +8,7 @@ import {
   UserPen,
   ChevronsLeftRightEllipsisIcon,
   User,
+  NotebookPenIcon,
   /*  CircleDollarSign, */
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
@@ -49,7 +50,11 @@ const items = [
     url: '/dashboard',
     icon: Home,
   },
-
+  {
+    title: 'Lista de tarefas',
+    url: '/dashboard/lista',
+    icon: NotebookPenIcon,
+  },
   {
     title: 'Perfil',
     url: '/dashboard/perfil',
