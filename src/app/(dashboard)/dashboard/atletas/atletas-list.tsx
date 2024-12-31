@@ -142,7 +142,7 @@ export const AtletasList = () => {
         open ? 'md:max-w-[calc(100%-18rem)] ' : 'md:max-w-[calc(100%-7rem)] ',
       )}
     >
-      <Button disabled={isAdmin} onClick={() => setIsAddModalOpen(true)}>
+      <Button disabled={!isAdmin} onClick={() => setIsAddModalOpen(true)}>
         Adicionar Atleta
       </Button>
 
@@ -264,7 +264,7 @@ export const AtletasList = () => {
                         </LoadingButton> */}
                         <div className="flex justify-center text-center gap-1">
                           <Button
-                            disabled={isAdmin}
+                            disabled={!isAdmin}
                             onClick={() => {
                               setSelectedAtleta(atleta)
                               setIsModalOpen(true)
@@ -282,7 +282,7 @@ export const AtletasList = () => {
 
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button disabled={isAdmin} variant="destructive">
+                              <Button disabled={!isAdmin} variant="destructive">
                                 <Trash className="h-4 w-4" />
                               </Button>
                             </AlertDialogTrigger>
