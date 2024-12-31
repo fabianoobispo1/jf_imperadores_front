@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { PenBoxIcon, Trash } from 'lucide-react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
+import { useSession } from 'next-auth/react'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
@@ -89,6 +90,20 @@ export const AtletasList = () => {
   const [selectedAtleta, setSelectedAtleta] = useState<Atletas | null>(null)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
+  const { data: session } = useSession()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [carregou, setiscarregou] = useState(false)
+  if (session) {
+    /*     console.log(session) */
+
+    if (!carregou) {
+      if (session.user.role === 'admin') {
+        setIsAdmin(true)
+      }
+      setiscarregou(true)
+    }
+  }
+
   const fetchAtletasPaginated = async (offset: number, limit: number) => {
     setLoading(true)
     try {
@@ -127,7 +142,9 @@ export const AtletasList = () => {
         open ? 'md:max-w-[calc(100%-18rem)] ' : 'md:max-w-[calc(100%-7rem)] ',
       )}
     >
-      <Button onClick={() => setIsAddModalOpen(true)}>Adicionar Atleta</Button>
+      <Button disabled={isAdmin} onClick={() => setIsAddModalOpen(true)}>
+        Adicionar Atleta
+      </Button>
 
       <div className="w-full overflow-auto">
         <div className="w-full pr-4">
@@ -247,6 +264,7 @@ export const AtletasList = () => {
                         </LoadingButton> */}
                         <div className="flex justify-center text-center gap-1">
                           <Button
+                            disabled={isAdmin}
                             onClick={() => {
                               setSelectedAtleta(atleta)
                               setIsModalOpen(true)
@@ -264,7 +282,7 @@ export const AtletasList = () => {
 
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="destructive">
+                              <Button disabled={isAdmin} variant="destructive">
                                 <Trash className="h-4 w-4" />
                               </Button>
                             </AlertDialogTrigger>
