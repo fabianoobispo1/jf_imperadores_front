@@ -243,7 +243,7 @@ export const AtletasForm: React.FC<AtletasFormProps> = ({
         open ? 'md:max-w-[calc(100%-18rem)] ' : 'md:max-w-[calc(100%-7rem)] ',
       )}
     > */
-    <ScrollArea className="h-[calc(100vh-220px)]  w-full px-4">
+    <ScrollArea className="h-[calc(100vh-270px)]  w-full px-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
