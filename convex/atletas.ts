@@ -17,13 +17,12 @@ export const getAllPaginated = query({
     limit: v.number(),
   },
   handler: async ({ db }, { offset, limit }) => {
-    // Obtemos todos os documentos e os manipulamos manualmente
     const allatletass = await db
-      .query('atletas') // Consulta a tabela 'atletas'
-      .order('desc') // Ordena em ordem decrescente
-      .collect() // Retorna todos os resultados como uma lista
+      .query('atletas')
+      .withIndex('by_nome')
+      .order('asc')
+      .collect()
 
-    // Retornamos somente o intervalo desejado
     return allatletass.slice(offset, offset + limit)
   },
 })
@@ -76,5 +75,94 @@ export const getCount = query({
   handler: async (ctx) => {
     const count = await ctx.db.query('atletas').collect()
     return count.length
+  },
+})
+
+export const update = mutation({
+  args: {
+    atletaId: v.id('atletas'),
+    status: v.optional(v.number()),
+    nome: v.optional(v.string()),
+    cpf: v.optional(v.string()),
+    data_nascimento: v.optional(v.optional(v.number())),
+    data_registro: v.optional(v.optional(v.number())),
+    email: v.optional(v.string()),
+    altura: v.optional(v.optional(v.number())),
+    peso: v.optional(v.optional(v.number())),
+    celular: v.optional(v.string()),
+    setor: v.optional(v.number()),
+    posicao: v.optional(v.string()),
+    rua: v.optional(v.string()),
+    bairro: v.optional(v.string()),
+    cidade: v.optional(v.string()),
+    cep: v.optional(v.string()),
+    uf: v.optional(v.string()),
+    complemento: v.optional(v.string()),
+    genero: v.optional(v.string()),
+    rg: v.optional(v.string()),
+    emisor: v.optional(v.string()),
+    uf_emisor: v.optional(v.string()),
+    img_link: v.optional(v.string()),
+  },
+  handler: async (
+    { db },
+    {
+      atletaId,
+      status,
+      nome,
+      cpf,
+      data_nascimento,
+      data_registro,
+      email,
+      altura,
+      peso,
+      celular,
+      setor,
+      posicao,
+      rua,
+      bairro,
+      cidade,
+      cep,
+      uf,
+      complemento,
+      genero,
+      rg,
+      emisor,
+      uf_emisor,
+      img_link,
+    },
+  ) => {
+    // Buscar o atleta atual
+    const atleta = await db.get(atletaId)
+    if (!atleta) {
+      throw new Error('atleta não encontrado')
+    }
+    // altera os valores
+    const updateUser = await db.patch(atletaId, {
+      status,
+      nome,
+      cpf,
+      data_nascimento,
+      data_registro,
+      email,
+      altura,
+      peso,
+      celular,
+      setor,
+      posicao,
+      rua,
+      bairro,
+      cidade,
+      cep,
+      uf,
+      complemento,
+      genero,
+      rg,
+      emisor,
+      uf_emisor,
+      img_link,
+    })
+
+    return updateUser
   },
 })

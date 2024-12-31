@@ -7,8 +7,6 @@ import { useSidebar } from '@/components/ui/sidebar'
 /* import { ExcelReader } from '@/components/ExcelReader' */
 
 import { AtletasList } from './atletas-list'
-/* import { AtletasForm } from './atletas-form' */
-/* import { AtletasForm } from './atletas-form' */
 
 export const Atletas: React.FC = () => {
   const { open } = useSidebar()
@@ -25,7 +23,6 @@ export const Atletas: React.FC = () => {
       >
         <AtletasList />
         {/*   <ExcelReader /> */}
-        {/*  <AtletasForm /> */}
       </ScrollArea>
     </>
   )

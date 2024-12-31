@@ -1,7 +1,7 @@
 'use-client'
 import { useEffect, useState } from 'react'
-import { PenBoxIcon } from 'lucide-react'
-import { fetchQuery } from 'convex/nextjs'
+import { PenBoxIcon, Trash } from 'lucide-react'
+import { fetchMutation, fetchQuery } from 'convex/nextjs'
 
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
@@ -13,13 +13,30 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Spinner } from '@/components/ui/spinner'
-import { LoadingButton } from '@/components/ui/loading-button'
 import { Button } from '@/components/ui/button'
 import { useSidebar } from '@/components/ui/sidebar'
-import { cn } from '@/lib/utils'
+import { cn, formatPhoneNumber } from '@/lib/utils'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
 import type { Id } from '../../../../../convex/_generated/dataModel'
 import { api } from '../../../../../convex/_generated/api'
+import { AtletasForm } from './atletas-form'
 
 const SETOR_LABELS = {
   1: 'Ataque',
@@ -40,7 +57,7 @@ interface Atletas {
   status: number
   nome: string
   cpf: string
-  data_nascimento?: number
+  data_nascimento?: number | undefined
   email: string
   altura?: number // Make optional
   peso?: number // Make optional
@@ -53,6 +70,7 @@ interface Atletas {
   cep: string
   uf: string
   complemento: string
+  data_registro?: number | undefined
   genero: string
   rg: string
   emisor: string
@@ -65,8 +83,11 @@ export const AtletasList = () => {
   const [atletas, setAtletas] = useState<Atletas[]>([])
   const [offset, setOffset] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const limit = 10
+  const limit = 20
   const { open } = useSidebar()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedAtleta, setSelectedAtleta] = useState<Atletas | null>(null)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
   const fetchAtletasPaginated = async (offset: number, limit: number) => {
     setLoading(true)
@@ -76,6 +97,7 @@ export const AtletasList = () => {
         offset,
       })
       const total = await fetchQuery(api.atletas.getCount, {})
+
       setAtletas(atletas)
       setTotalCount(total)
     } catch (error) {
@@ -92,49 +114,68 @@ export const AtletasList = () => {
   const handleNext = () => setOffset((prev) => prev + limit)
   const handlePrev = () => setOffset((prev) => Math.max(prev - limit, 0))
 
-  const formatPhoneNumber = (phone: string) => {
-    const cleaned = phone.replace(/\D/g, '')
-    const match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/)
-    if (match) {
-      return `(${match[1]}) ${match[2]}-${match[3]}`
-    }
-    return phone
+  const removeAtleta = async (id: Id<'atletas'>) => {
+    setLoading(true)
+    await fetchMutation(api.atletas.remove, { atletasId: id })
+    fetchAtletasPaginated(offset, limit)
+    setLoading(false)
   }
-
   return (
     <div
       className={cn(
-        'space-y-8 w-screen pr-4 ',
+        'space-y-4 w-screen pr-4 ',
         open ? 'md:max-w-[calc(100%-18rem)] ' : 'md:max-w-[calc(100%-7rem)] ',
       )}
     >
+      <Button onClick={() => setIsAddModalOpen(true)}>Adicionar Atleta</Button>
+
       <div className="w-full overflow-auto">
         <div className="w-full pr-4">
           {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
-          <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border  ">
+          <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border pr-2">
             <Table>
-              <TableHeader className="sticky top-0 bg-background">
+              <TableHeader className="sticky top-0 bg-background ">
                 <TableRow>
-                  <TableHead className="text-center min-w-[150px]">
-                    Status
-                  </TableHead>
-                  <TableHead className="text-center min-w-[200px]">
+                  <TableHead className="text-center">Status</TableHead>
+                  <TableHead className="text-center min-w-[300px]">
                     Nome
                   </TableHead>
-                  <TableHead className="text-center min-w-[200px]">
-                    Email
-                  </TableHead>
-                  <TableHead className="text-center w-32">Celular</TableHead>
-                  <TableHead className="text-center w-28">Data Nasc.</TableHead>
-                  <TableHead className="text-center w-24">Altura</TableHead>
-                  <TableHead className="text-center w-24">Peso</TableHead>
-                  <TableHead className="text-center w-32">Setor</TableHead>
-                  <TableHead className="text-center w-28">Posição</TableHead>
+                  {/* <TableHead className="text-center">CPF</TableHead> */}
                   <TableHead className="text-center min-w-[150px]">
+                    Data Nascimento
+                  </TableHead>
+                  <TableHead className="text-center">Email</TableHead>
+                  <TableHead className="text-center min-w-[150px]">
+                    Celular
+                  </TableHead>
+                  <TableHead className="text-center">Altura</TableHead>
+                  <TableHead className="text-center">Peso</TableHead>
+
+                  <TableHead className="text-center">Setor</TableHead>
+                  <TableHead className="text-center">Posição</TableHead>
+                  <TableHead className="text-center min-w-[300px]">
+                    Rua
+                  </TableHead>
+                  <TableHead className="text-center min-w-[200px]">
+                    Bairro
+                  </TableHead>
+                  <TableHead className="text-center min-w-[200px]">
                     Cidade
                   </TableHead>
-                  <TableHead className="text-center w-20">UF</TableHead>
-                  <TableHead className="text-center w-24">Opções</TableHead>
+                  <TableHead className="text-center min-w-[100px]">
+                    CEP
+                  </TableHead>
+                  <TableHead className="text-center">UF</TableHead>
+                  <TableHead className="text-center">Complemento</TableHead>
+                  <TableHead className="text-center min-w-[150px]">
+                    Data Registro
+                  </TableHead>
+                  {/*         <TableHead className="text-center">Gênero</TableHead> */}
+                  {/*                <TableHead className="text-center">RG</TableHead>
+                  <TableHead className="text-center">Emissor</TableHead>
+                  <TableHead className="text-center">UF Emissor</TableHead> */}
+                  {/* <TableHead className="text-center">Imagem</TableHead> */}
+                  <TableHead className="text-center">Opções</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -148,52 +189,106 @@ export const AtletasList = () => {
                 ) : (
                   atletas.map((atleta) => (
                     <TableRow key={atleta._id}>
-                      <TableCell className="text-center">
+                      <TableCell>
                         {
                           STATUS_LABELS[
                             atleta.status as keyof typeof STATUS_LABELS
                           ]
                         }
                       </TableCell>
-                      <TableCell className="text-center font-medium">
-                        {atleta.nome}
-                      </TableCell>
-                      <TableCell>{atleta.email}</TableCell>
-                      <TableCell className="text-center whitespace-nowrap">
-                        {formatPhoneNumber(atleta.celular)}
-                      </TableCell>
-                      <TableCell className="text-center whitespace-nowrap">
+                      <TableCell>{atleta.nome}</TableCell>
+                      {/* <TableCell>{atleta.cpf}</TableCell> */}
+                      <TableCell className="text-center">
                         {atleta.data_nascimento
                           ? new Date(
                               atleta.data_nascimento,
                             ).toLocaleDateString()
                           : '-'}
                       </TableCell>
+                      <TableCell>{atleta.email}</TableCell>
                       <TableCell className="text-center">
-                        {atleta.altura}m
+                        {atleta.celular === ''
+                          ? '-'
+                          : formatPhoneNumber(atleta.celular)}
                       </TableCell>
-                      <TableCell className="text-center">
-                        {atleta.peso}kg
-                      </TableCell>
-                      <TableCell className="text-center whitespace-nowrap">
+                      <TableCell>{atleta.altura}m</TableCell>
+                      <TableCell>{atleta.peso}kg</TableCell>
+                      <TableCell>
                         {
                           SETOR_LABELS[
                             atleta.setor as keyof typeof SETOR_LABELS
                           ]
                         }
                       </TableCell>
+                      <TableCell>{atleta.posicao}</TableCell>
+                      <TableCell>{atleta.rua}</TableCell>
                       <TableCell className="text-center">
-                        {atleta.posicao}
+                        {atleta.bairro}
                       </TableCell>
                       <TableCell className="text-center">
                         {atleta.cidade}
                       </TableCell>
-                      <TableCell className="text-center">{atleta.uf}</TableCell>
+                      <TableCell>{atleta.cep}</TableCell>
+                      <TableCell>{atleta.uf}</TableCell>
+                      <TableCell>{atleta.complemento}</TableCell>
+                      {/*  <TableCell>{atleta.genero}</TableCell> */}
+                      {/*     <TableCell>{atleta.rg}</TableCell>
+                      <TableCell>{atleta.emisor}</TableCell>
+                      <TableCell>{atleta.uf_emisor}</TableCell> */}
+                      {/*        <TableCell>{atleta.img_link}</TableCell> */}
+                      <TableCell className="text-center">
+                        {atleta.data_registro
+                          ? new Date(atleta.data_registro).toLocaleDateString()
+                          : '-'}
+                      </TableCell>
                       <TableCell>
-                        <div className="flex justify-center">
-                          <LoadingButton loading={loading} disabled>
+                        {/*  <LoadingButton loading={loading} disabled>
+                          <PenBoxIcon className="h-4 w-4" />
+                        </LoadingButton> */}
+                        <div className="flex justify-center text-center gap-1">
+                          <Button
+                            onClick={() => {
+                              setSelectedAtleta(atleta)
+                              setIsModalOpen(true)
+                            }}
+                          >
                             <PenBoxIcon className="h-4 w-4" />
-                          </LoadingButton>
+                          </Button>
+
+                          {/*   <Button
+                            variant={'destructive'}
+                            onClick={() => removeAtleta(atleta._id)}
+                          >
+                            <Trash className="h-4 w-4" />
+                          </Button> */}
+
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="destructive">
+                                <Trash className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Você tem certeza?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Esta ação não pode ser desfeita. Isso excluirá
+                                  permanentemente o atleta.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => removeAtleta(atleta._id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                  Excluir
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -232,6 +327,35 @@ export const AtletasList = () => {
           </Button>
         </div>
       </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-[900px] h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>Editar Atleta</DialogTitle>
+          </DialogHeader>
+          <AtletasForm
+            initialData={selectedAtleta}
+            onSuccess={() => {
+              setIsModalOpen(false)
+              fetchAtletasPaginated(offset, limit)
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <DialogContent className="max-w-[900px] h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>Adicionar Novo Atleta</DialogTitle>
+          </DialogHeader>
+          <AtletasForm
+            onSuccess={() => {
+              setIsAddModalOpen(false)
+              fetchAtletasPaginated(offset, limit)
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

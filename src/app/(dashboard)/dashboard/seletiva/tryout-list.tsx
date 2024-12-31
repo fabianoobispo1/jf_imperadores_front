@@ -16,7 +16,7 @@ import { LoadingButton } from '@/components/ui/loading-button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, formatPhoneNumber } from '@/lib/utils'
 
 import type { Id } from '../../../../../convex/_generated/dataModel'
 import { api } from '../../../../../convex/_generated/api'
@@ -93,14 +93,6 @@ export function TryoutList() {
     fetchSeletivaPaginated(offset, limit)
     setLoading(false)
   }
-  const formatPhoneNumber = (phone: string) => {
-    const cleaned = phone.replace(/\D/g, '')
-    const match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/)
-    if (match) {
-      return `(${match[1]}) ${match[2]}-${match[3]}`
-    }
-    return phone
-  }
 
   return (
     <div
@@ -112,7 +104,7 @@ export function TryoutList() {
       <div className="w-full overflow-auto">
         <div className="w-full pr-4">
           {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
-          <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border  ">
+          <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border   pr-2 ">
             <div className="">
               <Table>
                 <TableHeader className="sticky top-0 bg-background">

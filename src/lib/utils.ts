@@ -1,14 +1,17 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-/* import { Active, DataRef, Over } from '@dnd-kit/core' */
 
-/* import { ColumnDragData } from '@/components/kanban/board-column'
-import { TaskDragData } from '@/components/kanban/task-card' */
-
-/* type DraggableData = ColumnDragData | TaskDragData
- */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export function formatPhoneNumber(phone: string) {
+  const cleaned = phone.replace(/\D/g, '')
+  const match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/)
+  if (match) {
+    return `(${match[1]}) ${match[2]}-${match[3]}`
+  }
+  return phone
 }
 
 export function extractYouTubeID(url: string) {
@@ -17,25 +20,6 @@ export function extractYouTubeID(url: string) {
   const match = url.match(regExp)
   return match && match[2].length === 11 ? match[2] : null
 }
-/* 
-export function hasDraggableData<T extends Active | Over>(
-  entry: T | null | undefined,
-): entry is T & {
-  data: DataRef<DraggableData>
-} {
-  if (!entry) {
-    return false
-  }
-
-  const data = entry.data.current
-
-  if (data?.type === 'Column' || data?.type === 'Task') {
-    return true
-  }
-
-  return false
-}
- */
 
 // Função para formatar o CPF
 export function formatCPF(value: string) {

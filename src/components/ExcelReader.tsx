@@ -1,8 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import * as XLSX from 'xlsx'
+/* import { fetchMutation } from 'convex/nextjs' */
 
-/* import { fetchMutation } from 'convex/nextjs'
- */
 import { Button } from '@/components/ui/button'
 
 /* import { api } from '../../convex/_generated/api' */
@@ -32,7 +31,13 @@ export const ExcelReader = () => {
       for (let i = 0; i < jsonData.length; i++) {
         const row = jsonData[i]
         console.log(`Row ${i + 1}:`, row)
-        /*    console.log('Nome Civil:', row['Nome Civil'])
+        /* console.log('Data Registro:', row['Data Registro'])
+
+        const excelDateToJSDate = (excelDate: number) => {
+          return (excelDate - 25569) * 86400 * 1000
+        }
+        const dataNascimento = excelDateToJSDate(row['Data Nascimento'])
+        const DataRegistro = excelDateToJSDate(row['Data Registro'])
 
         const cpfSemMascara = row.CPF ? row.CPF.replace(/\D/g, '') : ''
         const celularSemMascara = row.Telefone
@@ -52,8 +57,8 @@ export const ExcelReader = () => {
           rua: row.Rua ?? '',
           uf: row.UF ?? '',
           uf_emisor: row['UF Emissor'] ?? '',
-          data_nascimento: row['Data Nascimento'],
-          data_registro: row['Data Registro'],
+          data_nascimento: dataNascimento,
+          data_registro: DataRegistro,
           altura: 0,
           peso: 0,
           posicao: '',
