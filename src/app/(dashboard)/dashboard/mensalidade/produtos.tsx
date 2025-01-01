@@ -120,7 +120,7 @@ export const Produtos = () => {
   return (
     <ScrollArea
       className={cn(
-        'space-y-8 w-screen pr-4 md:pr-1  h-[calc(100vh-220px)]',
+        'space-y-8 w-screen pr-8 md:pr-1  h-[calc(100vh-220px)]',
         open ? 'md:max-w-[calc(100%-16rem)] ' : 'md:max-w-[calc(100%-5rem)] ',
       )}
     >
