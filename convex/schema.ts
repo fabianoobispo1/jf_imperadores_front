@@ -11,6 +11,7 @@ export const userSchema = {
   image_key: v.optional(v.string()),
   password: v.string(),
   data_nascimento: v.optional(v.number()),
+  cpf: v.optional(v.string()),
 }
 
 export const recuperaSenhaSchema = {

@@ -23,6 +23,11 @@ const nextConfig: NextConfig = {
         hostname: 'limitless-bullfrog-897.convex.cloud',
         pathname: '/**', // Permite qualquer caminho
       },
+      {
+        protocol: 'https',
+        hostname: 'files.stripe.com',
+        pathname: '/**', // Permite qualquer caminho
+      },
     ],
   },
 }
