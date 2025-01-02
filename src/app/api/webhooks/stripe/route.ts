@@ -19,12 +19,16 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
 
 export async function POST(req: Request) {
+  if (req.method === 'OPTIONS') {
+    return NextResponse.json({}, { status: 200 })
+  }
+
   try {
     const rawBody = await buffer(
       req.body as unknown as AsyncIterable<Uint8Array>,
     )
-
-    const signature = (await headers()).get('stripe-signature')
+    const headersList = await headers()
+    const signature = headersList.get('stripe-signature')
 
     if (!signature) {
       return NextResponse.json(
@@ -110,7 +114,6 @@ export async function POST(req: Request) {
     const errorMessage =
       error instanceof Error ? error.message : 'Unknown error'
     console.error('Webhook error:', errorMessage)
-
     return NextResponse.json(
       { message: `Webhook Error: ${errorMessage}` },
       { status: 400 },
