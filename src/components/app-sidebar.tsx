@@ -65,11 +65,11 @@ const items = [
     url: '/dashboard/atletas',
     icon: User,
   },
-  {
+  /*   {
     title: 'Mensalidade - TESTE',
     url: '/dashboard/mensalidade',
     icon: User,
-  },
+  }, */
 ]
 const itemsAdm = [
   {
