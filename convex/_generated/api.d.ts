@@ -16,6 +16,7 @@ import type {
 import type * as atletas from "../atletas.js";
 import type * as files from "../files.js";
 import type * as links from "../links.js";
+import type * as mensalidade from "../mensalidade.js";
 import type * as recuperaSenha from "../recuperaSenha.js";
 import type * as seletiva from "../seletiva.js";
 import type * as socialIcons from "../socialIcons.js";
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   atletas: typeof atletas;
   files: typeof files;
   links: typeof links;
+  mensalidade: typeof mensalidade;
   recuperaSenha: typeof recuperaSenha;
   seletiva: typeof seletiva;
   socialIcons: typeof socialIcons;

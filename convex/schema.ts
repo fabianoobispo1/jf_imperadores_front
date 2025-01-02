@@ -106,6 +106,17 @@ export const transacaoSchema = {
   data: v.number(),
 }
 
+export const mensalidadeSchema = {
+  tipo: v.union(v.literal('avulsa'), v.literal('recorrente')),
+  email: v.string(),
+  client_secret_stripe: v.string(),
+  id_payment_stripe: v.string(),
+  valor: v.number(),
+  data_pagamento: v.number(),
+  data_cancelamento: v.number(),
+  cancelado: v.boolean(),
+}
+
 // Definição do Schema completo
 export default defineSchema({
   user: defineTable(userSchema)
@@ -130,4 +141,7 @@ export default defineSchema({
     .index('by_email', ['email'])
     .index('by_cpf', ['cpf']),
   transacao: defineTable(transacaoSchema).index('by_data', ['data']),
+  mensalidade: defineTable(mensalidadeSchema)
+    .index('by_data_pagamento', ['data_pagamento'])
+    .index('by_email', ['email']),
 })
