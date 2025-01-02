@@ -23,7 +23,9 @@ export async function GET() {
   try {
     const response = await stripe.products.list({
       expand: ['data.default_price'],
+      active: true,
     })
+
     const produtos = response.data.map((produto) => {
       const price = produto.default_price as Stripe.Price
 
@@ -31,8 +33,8 @@ export async function GET() {
         id: produto.id,
         nome: produto.name,
         imageUrl: produto.images[0],
-        preco: price.unit_amount,
-        default_price: price.id,
+        preco: price?.unit_amount || 0,
+        default_price: price?.id || null,
       }
     })
 
