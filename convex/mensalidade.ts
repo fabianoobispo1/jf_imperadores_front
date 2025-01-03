@@ -61,3 +61,25 @@ export const updateCancelamento = mutation({
     return mensalidade
   },
 })
+
+export const getByEmailAndDateRange = query({
+  args: {
+    email: v.string(),
+    startDate: v.number(),
+    endDate: v.number(),
+  },
+  handler: async ({ db }, { email, startDate, endDate }) => {
+    const mensalidade = await db
+      .query('mensalidade')
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('email'), email),
+          q.gte(q.field('data_pagamento'), startDate),
+          q.lte(q.field('data_pagamento'), endDate),
+        ),
+      )
+      .first()
+
+    return mensalidade
+  },
+})

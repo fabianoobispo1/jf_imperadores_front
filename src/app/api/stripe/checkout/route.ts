@@ -34,6 +34,7 @@ export async function POST(req: Request) {
         `${process.env.NEXTAUTH_URL}/dashboard/mensalidade/success/` +
         userEmail,
       cancel_url: `${process.env.NEXTAUTH_URL}/dashboard/mensalidade/`,
+      customer_creation: 'always',
       payment_method_types: paymentMethodTypes,
       mode,
       locale: 'pt-BR',

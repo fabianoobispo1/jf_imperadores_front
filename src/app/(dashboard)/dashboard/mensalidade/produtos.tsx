@@ -31,6 +31,7 @@ export const Produtos = () => {
 
   const { toast } = useToast()
   const [isAtleta, setIsAtleta] = useState(false)
+  const [hasPaidThisMonth, setHasPaidThisMonth] = useState(false)
 
   const fetchProducts = async () => {
     try {
@@ -68,6 +69,29 @@ export const Produtos = () => {
           return
         }
 
+        // Check if user has paid this month
+        const currentDate = new Date()
+        const firstDayOfMonth = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          1,
+        )
+        const lastDayOfMonth = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          0,
+        )
+
+        const mensalidade = await fetchQuery(
+          api.mensalidade.getByEmailAndDateRange,
+          {
+            email: session.user.email,
+            startDate: firstDayOfMonth.getTime(),
+            endDate: lastDayOfMonth.getTime(),
+          },
+        )
+
+        setHasPaidThisMonth(!!mensalidade)
         setIsAtleta(true)
         fetchProducts()
         setLoading(false)
@@ -159,7 +183,10 @@ export const Produtos = () => {
                         )
                       }
                     >
-                      Selecionar
+                      {hasPaidThisMonth &&
+                      !product.nome.toLowerCase().includes('avulsa')
+                        ? 'Mensalidade já paga'
+                        : 'Selecionar'}
                     </Button>
                   </div>
                 ))}
