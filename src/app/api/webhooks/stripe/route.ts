@@ -48,10 +48,14 @@ export async function POST(req: Request) {
     if (event.type === 'payment_intent.succeeded') {
       const paymentIntent = event.data.object as Stripe.PaymentIntent
 
+      const customer = (await stripe.customers.retrieve(
+        paymentIntent.customer as string,
+      )) as Stripe.Customer
+
       await convex.mutation(api.mensalidade.create, {
         tipo: 'avulsa', // or 'recorrente' based on your payment type
-        email: paymentIntent.receipt_email || '',
-        client_secret_stripe: paymentIntent.client_secret || '',
+        email: customer.email || '',
+        client_secret_stripe: (paymentIntent.customer as string) || '',
         id_payment_stripe: paymentIntent.id,
         valor: paymentIntent.amount / 100, // Convert from cents to actual currency
         data_pagamento: Date.now(),
@@ -59,6 +63,25 @@ export async function POST(req: Request) {
         cancelado: false,
       })
 
+      return NextResponse.json({ status: 'success' }, { status: 200 })
+    }
+
+    if (event.type === 'transfer.reversed') {
+      const transfer = event.data.object as Stripe.Transfer
+
+      console.log(transfer)
+
+      /*  await convex.mutation(api.mensalidade.create, {
+        tipo: 'avulsa', // or 'recorrente' based on your payment type
+        email: customer.email || '',
+        client_secret_stripe: (paymentIntent.customer as string) || '',
+        id_payment_stripe: paymentIntent.id,
+        valor: paymentIntent.amount / 100, // Convert from cents to actual currency
+        data_pagamento: Date.now(),
+        data_cancelamento: 0,
+        cancelado: false,
+      })
+ */
       return NextResponse.json({ status: 'success' }, { status: 200 })
     }
 
