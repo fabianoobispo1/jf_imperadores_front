@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -217,7 +218,7 @@ export function WhatsAppComponent() {
               >
                 ✕
               </Button>
-              <img
+              <Image
                 key={qrKey}
                 src="/api/whatsapp/qrcode"
                 alt="WhatsApp QR Code"

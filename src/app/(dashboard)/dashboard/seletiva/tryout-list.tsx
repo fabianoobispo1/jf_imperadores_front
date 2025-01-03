@@ -1,8 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { /* Trash,  */ MailPlusIcon } from 'lucide-react'
+import { /* Trash,  */ MessageCircleMore, MailPlusIcon } from 'lucide-react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
+import axios from 'axios'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
 import { useSidebar } from '@/components/ui/sidebar'
 import {
   Table,
@@ -62,6 +71,31 @@ export function TryoutList() {
   const limit = 10
   const { open } = useSidebar()
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedCandidate, setSelectedCandidate] = useState<Seletivas | null>(
+    null,
+  )
+  const [message, setMessage] = useState('')
+  const [whatsappStatus, setWhatsappStatus] = useState('')
+
+  const checkWhatsappStatus = async () => {
+    try {
+      const response = await axios.get('/api/whatsapp/status')
+      setWhatsappStatus(response.data.message)
+      console.log(whatsappStatus)
+    } catch (error) {
+      console.error('Error checking whatsapp status:', error)
+    }
+  }
+
+  // Add useEffect to check status periodically
+  useEffect(() => {
+    const interval = setInterval(checkWhatsappStatus, 5000)
+    checkWhatsappStatus() // Initial check
+
+    return () => clearInterval(interval)
+  }, [])
+
   const fetchSeletivaPaginated = async (offset: number, limit: number) => {
     setLoading(true)
     try {
@@ -94,115 +128,145 @@ export function TryoutList() {
     setLoading(false)
   }
 
-  return (
-    <div
-      className={cn(
-        'space-y-8 w-screen pr-4 ',
-        open ? 'md:max-w-[calc(100%-16rem)] ' : 'md:max-w-[calc(100%-5rem)] ',
-      )}
-    >
-      <div className="w-full overflow-auto">
-        <div className="w-full pr-4">
-          {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
-          <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border   pr-2 ">
-            <div className="">
-              <Table>
-                <TableHeader className="sticky top-0 bg-background">
-                  <TableRow>
-                    {/* <TableHead className="text-center w-16">Nº</TableHead> */}
-                    <TableHead className="text-center min-w-[200px]">
-                      Nome
-                    </TableHead>
-                    <TableHead className="text-center min-w-[200px]">
-                      Email
-                    </TableHead>
-                    <TableHead className="text-center w-32">Celular</TableHead>
-                    <TableHead className="text-center w-28">
-                      Data Nasc.
-                    </TableHead>
-                    <TableHead className="text-center w-24">Altura</TableHead>
-                    <TableHead className="text-center w-24">Peso</TableHead>
-                    <TableHead className="text-center w-32">Setor</TableHead>
-                    <TableHead className="text-center w-28">Posição</TableHead>
-                    <TableHead className="text-center w-28">
-                      Experiência
-                    </TableHead>
-                    <TableHead className="text-center min-w-[150px]">
-                      Equipe Anterior
-                    </TableHead>
-                    <TableHead className="text-center min-w-[150px]">
-                      Equipamento
-                    </TableHead>
-                    <TableHead className="text-center w-24">Opções</TableHead>
-                  </TableRow>
-                </TableHeader>
+  const handleSendWhatsApp = () => {
+    if (!selectedCandidate) return
 
-                <TableBody>
-                  {loading ? (
+    const phoneNumber = selectedCandidate.celular.replace(/\D/g, '')
+    const encodedMessage = encodeURIComponent(message)
+    window.open(
+      `https://wa.me/55${phoneNumber}?text=${encodedMessage}`,
+      '_blank',
+    )
+
+    setIsModalOpen(false)
+    setMessage('')
+  }
+
+  return (
+    <>
+      <div
+        className={cn(
+          'space-y-8 w-screen pr-4 ',
+          open ? 'md:max-w-[calc(100%-16rem)] ' : 'md:max-w-[calc(100%-5rem)] ',
+        )}
+      >
+        <div className="w-full overflow-auto">
+          <div className="w-full pr-4">
+            {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
+            <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border   pr-2 ">
+              <div className="">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-background">
                     <TableRow>
-                      <TableCell colSpan={13} className="text-center">
-                        <Spinner />
-                      </TableCell>
+                      {/* <TableHead className="text-center w-16">Nº</TableHead> */}
+                      <TableHead className="text-center min-w-[200px]">
+                        Nome
+                      </TableHead>
+                      <TableHead className="text-center min-w-[200px]">
+                        Email
+                      </TableHead>
+                      <TableHead className="text-center w-32">
+                        Celular
+                      </TableHead>
+                      <TableHead className="text-center w-28">
+                        Data Nasc.
+                      </TableHead>
+                      <TableHead className="text-center w-24">Altura</TableHead>
+                      <TableHead className="text-center w-24">Peso</TableHead>
+                      <TableHead className="text-center w-32">Setor</TableHead>
+                      <TableHead className="text-center w-28">
+                        Posição
+                      </TableHead>
+                      <TableHead className="text-center w-28">
+                        Experiência
+                      </TableHead>
+                      <TableHead className="text-center min-w-[150px]">
+                        Equipe Anterior
+                      </TableHead>
+                      <TableHead className="text-center min-w-[150px]">
+                        Equipamento
+                      </TableHead>
+                      <TableHead className="text-center w-24">Opções</TableHead>
                     </TableRow>
-                  ) : (
-                    seletivas.map((seletiva) => (
-                      <TableRow key={seletiva._id}>
-                        {/*  <TableCell className="text-center">
+                  </TableHeader>
+
+                  <TableBody>
+                    {loading ? (
+                      <TableRow>
+                        <TableCell colSpan={13} className="text-center">
+                          <Spinner />
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      seletivas.map((seletiva) => (
+                        <TableRow key={seletiva._id}>
+                          {/*  <TableCell className="text-center">
                           {seletiva.numerio_seletiva}
                         </TableCell> */}
-                        <TableCell className="text-center  font-medium">
-                          {seletiva.nome}
-                        </TableCell>
-                        <TableCell>{seletiva.email}</TableCell>
-                        <TableCell className="text-center whitespace-nowrap">
-                          {formatPhoneNumber(seletiva.celular)}
-                        </TableCell>
-                        <TableCell className="text-center whitespace-nowrap">
-                          {seletiva.data_nascimento
-                            ? new Date(
-                                seletiva.data_nascimento,
-                              ).toLocaleDateString()
-                            : '-'}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {seletiva.altura}m
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {seletiva.peso}kg
-                        </TableCell>
-                        <TableCell className="text-center whitespace-nowrap">
-                          {
-                            SETOR_LABELS[
-                              seletiva.setor as keyof typeof SETOR_LABELS
-                            ]
-                          }
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {seletiva.posicao}
-                        </TableCell>
-                        <TableCell className="text-center whitespace-nowrap">
-                          {seletiva.tem_experiencia ? 'Sim' : 'Não'}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {seletiva.equipe_anterior || '-'}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          {
-                            EQUIPAMENTO_LABELS[
-                              seletiva.equipamento as keyof typeof EQUIPAMENTO_LABELS
-                            ]
-                          }
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex justify-center">
-                            <LoadingButton
-                              loading={loading}
-                              disabled
-                              onClick={() => removeCandidato(seletiva._id)}
-                            >
-                              <MailPlusIcon className="h-4 w-4" />
-                            </LoadingButton>
-                            {/*  <LoadingButton
+                          <TableCell className="text-center  font-medium">
+                            {seletiva.nome}
+                          </TableCell>
+                          <TableCell>{seletiva.email}</TableCell>
+                          <TableCell className="text-center whitespace-nowrap">
+                            {formatPhoneNumber(seletiva.celular)}
+                          </TableCell>
+                          <TableCell className="text-center whitespace-nowrap">
+                            {seletiva.data_nascimento
+                              ? new Date(
+                                  seletiva.data_nascimento,
+                                ).toLocaleDateString()
+                              : '-'}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {seletiva.altura}m
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {seletiva.peso}kg
+                          </TableCell>
+                          <TableCell className="text-center whitespace-nowrap">
+                            {
+                              SETOR_LABELS[
+                                seletiva.setor as keyof typeof SETOR_LABELS
+                              ]
+                            }
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {seletiva.posicao}
+                          </TableCell>
+                          <TableCell className="text-center whitespace-nowrap">
+                            {seletiva.tem_experiencia ? 'Sim' : 'Não'}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {seletiva.equipe_anterior || '-'}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {
+                              EQUIPAMENTO_LABELS[
+                                seletiva.equipamento as keyof typeof EQUIPAMENTO_LABELS
+                              ]
+                            }
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex justify-center gap-2">
+                              <LoadingButton
+                                loading={loading}
+                                disabled
+                                onClick={() => {
+                                  setSelectedCandidate(seletiva)
+                                  setIsModalOpen(true)
+                                }}
+                              >
+                                <MessageCircleMore className="h-4 w-4" />
+                              </LoadingButton>
+
+                              <LoadingButton
+                                loading={loading}
+                                disabled
+                                onClick={() => removeCandidato(seletiva._id)}
+                              >
+                                <MailPlusIcon className="h-4 w-4" />
+                              </LoadingButton>
+                              {/*  <LoadingButton
                               loading={loading}
                               disabled
                               variant={'destructive'}
@@ -210,46 +274,69 @@ export function TryoutList() {
                             >
                               <Trash className="h-4 w-4" />
                             </LoadingButton> */}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end space-x-2 py-4 pr-4">
+          <div className="flex-1 text-sm text-muted-foreground">
+            <p>
+              Página {Math.ceil(offset / limit) + 1} de{' '}
+              {Math.ceil(totalCount / limit)} | Total de registros: {totalCount}
+            </p>
+          </div>
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrev}
+              disabled={offset === 0 || loading}
+            >
+              Anterior
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNext}
+              disabled={loading || seletivas.length < limit}
+            >
+              Próxima
+            </Button>
+          </div>
         </div>
       </div>
-
-      <div className="flex items-center justify-end space-x-2 py-4 pr-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          <p>
-            Página {Math.ceil(offset / limit) + 1} de{' '}
-            {Math.ceil(totalCount / limit)} | Total de registros: {totalCount}
-          </p>
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrev}
-            disabled={offset === 0 || loading}
-          >
-            Anterior
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNext}
-            disabled={loading || seletivas.length < limit}
-          >
-            Próxima
-          </Button>
-        </div>
-      </div>
-    </div>
+      {/* Modal Mensagem whatsapp */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Enviar mensagem para {selectedCandidate?.nome}
+            </DialogTitle>
+          </DialogHeader>
+          <Textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Digite sua mensagem..."
+            className="min-h-[100px]"
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSendWhatsApp}>Enviar WhatsApp</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

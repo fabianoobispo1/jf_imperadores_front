@@ -30,9 +30,7 @@ export async function POST(req: Request) {
       mode === 'subscription' ? ['card'] : ['card', 'boleto']
 
     const sessionConfig: Stripe.Checkout.SessionCreateParams = {
-      success_url:
-        `${process.env.NEXTAUTH_URL}/dashboard/mensalidade/success/` +
-        userEmail,
+      success_url: `${process.env.NEXTAUTH_URL}/dashboard/mensalidade/`,
       cancel_url: `${process.env.NEXTAUTH_URL}/dashboard/mensalidade/`,
       payment_method_types: paymentMethodTypes,
       mode,
