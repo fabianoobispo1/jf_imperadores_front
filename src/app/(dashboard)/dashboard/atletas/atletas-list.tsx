@@ -46,11 +46,11 @@ const SETOR_LABELS = {
   4: 'Sem preferência',
 } as const
 
-const STATUS_LABELS = {
+/* const STATUS_LABELS = {
   1: 'Ativo',
   2: 'Inativo',
   3: 'Pendente',
-} as const
+} as const */
 
 interface Atletas {
   _id: Id<'atletas'>
@@ -110,8 +110,11 @@ export const AtletasList = () => {
       const atletas = await fetchQuery(api.atletas.getAllPaginated, {
         limit,
         offset,
+        status: 1,
       })
-      const total = await fetchQuery(api.atletas.getCount, {})
+      const total = await fetchQuery(api.atletas.getCountByStatus, {
+        status: 1,
+      })
 
       setAtletas(atletas)
       setTotalCount(total)
@@ -131,7 +134,10 @@ export const AtletasList = () => {
 
   const removeAtleta = async (id: Id<'atletas'>) => {
     setLoading(true)
-    await fetchMutation(api.atletas.remove, { atletasId: id })
+    await fetchMutation(api.atletas.updateStatus, {
+      atletaId: id,
+      status: 2, // Set status to inactive (2)
+    })
     fetchAtletasPaginated(offset, limit)
     setLoading(false)
   }
@@ -153,7 +159,7 @@ export const AtletasList = () => {
             <Table>
               <TableHeader className="sticky top-0 bg-background ">
                 <TableRow>
-                  <TableHead className="text-center">Status</TableHead>
+                  {/* <TableHead className="text-center">Status</TableHead> */}
                   <TableHead className="text-center min-w-[300px]">
                     Nome
                   </TableHead>
@@ -206,13 +212,13 @@ export const AtletasList = () => {
                 ) : (
                   atletas.map((atleta) => (
                     <TableRow key={atleta._id}>
-                      <TableCell>
+                      {/*  <TableCell>
                         {
                           STATUS_LABELS[
                             atleta.status as keyof typeof STATUS_LABELS
                           ]
                         }
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell>{atleta.nome}</TableCell>
                       {/* <TableCell>{atleta.cpf}</TableCell> */}
                       <TableCell className="text-center">
@@ -292,8 +298,8 @@ export const AtletasList = () => {
                                   Você tem certeza?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Esta ação não pode ser desfeita. Isso excluirá
-                                  permanentemente o atleta.
+                                  Esta ação al tará a exclusão do atleta para
+                                  inativo.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
@@ -302,7 +308,7 @@ export const AtletasList = () => {
                                   onClick={() => removeAtleta(atleta._id)}
                                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                 >
-                                  Excluir
+                                  Desativar
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>

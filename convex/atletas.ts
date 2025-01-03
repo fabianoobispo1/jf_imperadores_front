@@ -15,11 +15,13 @@ export const getAllPaginated = query({
   args: {
     offset: v.number(),
     limit: v.number(),
+    status: v.number(),
   },
-  handler: async ({ db }, { offset, limit }) => {
+  handler: async ({ db }, { offset, limit, status }) => {
     const allatletass = await db
       .query('atletas')
       .withIndex('by_nome')
+      .filter((q) => q.eq(q.field('status'), status))
       .order('asc')
       .collect()
 
@@ -177,5 +179,18 @@ export const getCountByStatus = query({
       .filter((q) => q.eq(q.field('status'), status))
       .collect()
     return atletas.length
+  },
+})
+
+export const updateStatus = mutation({
+  args: {
+    atletaId: v.id('atletas'),
+    status: v.number(),
+  },
+  handler: async (ctx, { atletaId, status }) => {
+    const atleta = await ctx.db.patch(atletaId, {
+      status,
+    })
+    return atleta
   },
 })

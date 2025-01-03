@@ -4,7 +4,6 @@ import { Heading } from '@/components/ui/heading'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { useSidebar } from '@/components/ui/sidebar'
-/* import { ExcelReader } from '@/components/ExcelReader' */
 
 import { AtletasList } from './atletas-list'
 
@@ -13,7 +12,10 @@ export const Atletas: React.FC = () => {
   return (
     <>
       <div className="flexrow flex items-start justify-between gap-4 ">
-        <Heading title="Atletas" description="Lista de atletas do time." />
+        <Heading
+          title="Atletas Ativos"
+          description="Lista de atletas ativos do time."
+        />
       </div>
       <ScrollArea
         className={cn(
@@ -22,7 +24,7 @@ export const Atletas: React.FC = () => {
         )}
       >
         <AtletasList />
-        {/*   <ExcelReader /> */}
+        {/*       <ExcelReader /> */}
       </ScrollArea>
     </>
   )

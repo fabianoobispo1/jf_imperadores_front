@@ -139,7 +139,8 @@ export default defineSchema({
   atletas: defineTable(atletasSchema)
     .index('by_nome', ['nome'])
     .index('by_email', ['email'])
-    .index('by_cpf', ['cpf']),
+    .index('by_cpf', ['cpf'])
+    .index('by_status', ['status']),
   transacao: defineTable(transacaoSchema).index('by_data', ['data']),
   mensalidade: defineTable(mensalidadeSchema)
     .index('by_data_pagamento', ['data_pagamento'])

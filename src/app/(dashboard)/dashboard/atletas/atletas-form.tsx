@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { useMutation } from 'convex/react'
+import { fetchQuery } from 'convex/nextjs'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -158,70 +159,104 @@ export const AtletasForm: React.FC<AtletasFormProps> = ({
       console.log(values)
 
       if (initialData) {
-        await update({
-          atletaId: initialData._id,
-          status: parseInt(values.status),
-          nome: values.nome,
-          cpf: values.cpf,
+        // Check if email already exists
+        const existingAtleta = await fetchQuery(api.atletas.getByEmail, {
           email: values.email,
-          data_nascimento: new Date(values.data_nascimento).getTime(),
-          data_registro: initialData.data_registro,
-          altura: parseFloat(values.altura),
-          peso: parseFloat(values.peso),
-          celular: values.celular,
-          setor: parseInt(values.setor),
-          posicao: values.posicao,
-          rua: values.rua,
-          bairro: values.bairro,
-          cidade: values.cidade,
-          cep: values.cep,
-          uf: values.uf,
-          complemento: values.complemento,
-          genero: values.genero,
-          rg: values.rg,
-          emisor: values.emisor,
-          uf_emisor: values.uf_emisor,
-          img_link: '',
         })
 
-        toast({
-          title: 'Atleta Altrerado com sucesso!',
-          description: 'Os dados foram alterados no sistema.',
-        })
+        if (existingAtleta) {
+          toast({
+            title: 'Erro',
+            variant: 'destructive',
+            description: 'Email já cadastrado no sistema.',
+          })
+        } else {
+          await update({
+            atletaId: initialData._id,
+            status: parseInt(values.status),
+            nome: values.nome,
+            cpf: values.cpf,
+            email: values.email,
+            data_nascimento: new Date(values.data_nascimento).getTime(),
+            data_registro: initialData.data_registro,
+            altura: parseFloat(values.altura),
+            peso: parseFloat(values.peso),
+            celular: values.celular,
+            setor: parseInt(values.setor),
+            posicao: values.posicao,
+            rua: values.rua,
+            bairro: values.bairro,
+            cidade: values.cidade,
+            cep: values.cep,
+            uf: values.uf,
+            complemento: values.complemento,
+            genero: values.genero,
+            rg: values.rg,
+            emisor: values.emisor,
+            uf_emisor: values.uf_emisor,
+            img_link: '',
+          })
+
+          toast({
+            title: 'Atleta Altrerado com sucesso!',
+            description: 'Os dados foram alterados no sistema.',
+          })
+
+          form.reset()
+
+          onSuccess?.()
+          setLoading(false)
+        }
       } else {
         console.log(`adiciona`)
 
-        await create({
-          status: parseInt(values.status),
-          nome: values.nome,
-          cpf: values.cpf,
+        // Check if email already exists
+        const existingAtleta = await fetchQuery(api.atletas.getByEmail, {
           email: values.email,
-          data_nascimento: new Date(values.data_nascimento).getTime(),
-          data_registro: new Date().getTime(),
-          altura: values.altura ? parseFloat(values.altura) : 0,
-          peso: values.peso ? parseFloat(values.peso) : 0,
-          celular: values.celular,
-          setor: parseInt(values.setor),
-          posicao: values.posicao,
-          rua: values.rua,
-          bairro: values.bairro,
-          cidade: values.cidade,
-          cep: values.cep,
-          uf: values.uf,
-          complemento: values.complemento,
-          genero: values.genero,
-          rg: values.rg,
-          emisor: values.emisor,
-          uf_emisor: values.uf_emisor,
-          img_link: '',
         })
 
-        toast({
-          title: 'Atleta cadastrado com sucesso!',
-          description: 'Os dados foram salvos no sistema.',
-        })
+        if (existingAtleta) {
+          toast({
+            title: 'Erro',
+            variant: 'destructive',
+            description: 'Email já cadastrado no sistema.',
+          })
+        } else {
+          await create({
+            status: parseInt(values.status),
+            nome: values.nome,
+            cpf: values.cpf,
+            email: values.email,
+            data_nascimento: new Date(values.data_nascimento).getTime(),
+            data_registro: new Date().getTime(),
+            altura: values.altura ? parseFloat(values.altura) : 0,
+            peso: values.peso ? parseFloat(values.peso) : 0,
+            celular: values.celular,
+            setor: parseInt(values.setor),
+            posicao: values.posicao,
+            rua: values.rua,
+            bairro: values.bairro,
+            cidade: values.cidade,
+            cep: values.cep,
+            uf: values.uf,
+            complemento: values.complemento,
+            genero: values.genero,
+            rg: values.rg,
+            emisor: values.emisor,
+            uf_emisor: values.uf_emisor,
+            img_link: '',
+          })
 
-        form.reset()
+          toast({
+            title: 'Atleta cadastrado com sucesso!',
+            description: 'Os dados foram salvos no sistema.',
+          })
+
+          form.reset()
+
+          onSuccess?.()
+          setLoading(false)
+        }
       }
     } catch (error) {
       console.log(error)
@@ -230,9 +265,6 @@ export const AtletasForm: React.FC<AtletasFormProps> = ({
         title: 'Erro ao cadastrar',
         description: 'Ocorreu um erro ao salvar os dados.',
       })
-    } finally {
-      onSuccess?.()
-      setLoading(false)
     }
   }
 

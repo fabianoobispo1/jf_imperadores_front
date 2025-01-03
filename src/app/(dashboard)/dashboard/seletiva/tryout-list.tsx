@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { useSidebar } from '@/components/ui/sidebar'
@@ -25,7 +26,12 @@ import { LoadingButton } from '@/components/ui/loading-button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
-import { cn, formatPhoneNumber } from '@/lib/utils'
+import {
+  cn,
+  formatPhone,
+  formatPhoneNumber,
+  formatWhatsAppNumber,
+} from '@/lib/utils'
 
 import type { Id } from '../../../../../convex/_generated/dataModel'
 import { api } from '../../../../../convex/_generated/api'
@@ -78,11 +84,23 @@ export function TryoutList() {
   const [message, setMessage] = useState('')
   const [whatsappStatus, setWhatsappStatus] = useState('')
 
+  const [numeroConectado, setNumeroConectado] = useState('')
+  const [nomeConectado, setNomeConectado] = useState('')
+
   const checkWhatsappStatus = async () => {
     try {
-      const response = await axios.get('/api/whatsapp/status')
-      setWhatsappStatus(response.data.message)
-      console.log(whatsappStatus)
+      const responseStatus = await axios.get('/api/whatsapp/status')
+      setWhatsappStatus(responseStatus.data.message)
+
+      if (responseStatus.data.message === 'session_connected') {
+        const responseNumber = await axios.get('/api/whatsapp/getNumber')
+        setNomeConectado(responseNumber.data.sessionInfo.pushname)
+        setNumeroConectado(
+          responseNumber.data.sessionInfo.me.user.slice(2, 4) +
+            '9' +
+            responseNumber.data.sessionInfo.me.user.slice(4),
+        )
+      }
     } catch (error) {
       console.error('Error checking whatsapp status:', error)
     }
@@ -128,15 +146,21 @@ export function TryoutList() {
     setLoading(false)
   }
 
-  const handleSendWhatsApp = () => {
+  const handleSendWhatsApp = async () => {
     if (!selectedCandidate) return
 
-    const phoneNumber = selectedCandidate.celular.replace(/\D/g, '')
-    const encodedMessage = encodeURIComponent(message)
-    window.open(
-      `https://wa.me/55${phoneNumber}?text=${encodedMessage}`,
-      '_blank',
-    )
+    try {
+      const response = await axios.post('/api/whatsapp/sendMessage', {
+        chatId: formatWhatsAppNumber(selectedCandidate.celular),
+        contentType: 'string',
+        content: message,
+      })
+
+      /* setSessionData(response.data) */
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error sending message:', error)
+    }
 
     setIsModalOpen(false)
     setMessage('')
@@ -250,7 +274,9 @@ export function TryoutList() {
                             <div className="flex justify-center gap-2">
                               <LoadingButton
                                 loading={loading}
-                                disabled
+                                disabled={
+                                  whatsappStatus !== 'session_connected'
+                                }
                                 onClick={() => {
                                   setSelectedCandidate(seletiva)
                                   setIsModalOpen(true)
@@ -322,6 +348,12 @@ export function TryoutList() {
             <DialogTitle>
               Enviar mensagem para {selectedCandidate?.nome}
             </DialogTitle>
+            <DialogDescription>
+              Digite a mensagem que será enviada via WhatsApp do{' '}
+              {numeroConectado === '' ? '-' : formatPhone(numeroConectado)}
+              {' - '}
+              {nomeConectado === '' ? '-' : nomeConectado}
+            </DialogDescription>
           </DialogHeader>
           <Textarea
             value={message}
@@ -333,7 +365,9 @@ export function TryoutList() {
             <Button variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSendWhatsApp}>Enviar WhatsApp</Button>
+            <Button onClick={handleSendWhatsApp} disabled={!message}>
+              Enviar WhatsApp
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

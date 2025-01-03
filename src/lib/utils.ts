@@ -5,6 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function formatWhatsAppNumber(phone: string) {
+  // Remove any non-digits
+  const cleanNumber = phone.replace(/\D/g, '')
+
+  // Add country code and WhatsApp suffix
+  return `55${cleanNumber}@c.us`
+}
+
 export function formatPhoneNumber(phone: string) {
   const cleaned = phone.replace(/\D/g, '')
   const match = cleaned.match(/^(\d{2})(\d{5})(\d{4})$/)
