@@ -32,6 +32,7 @@ export const Produtos = () => {
   const { toast } = useToast()
   const [isAtleta, setIsAtleta] = useState(false)
   const [hasPaidThisMonth, setHasPaidThisMonth] = useState(false)
+  const [tipoMensalidade, setTipoMensalidade] = useState('')
 
   const fetchProducts = async () => {
     try {
@@ -69,7 +70,6 @@ export const Produtos = () => {
           return
         }
 
-        // Check if user has paid this month
         const currentDate = new Date()
         const firstDayOfMonth = new Date(
           currentDate.getFullYear(),
@@ -92,6 +92,8 @@ export const Produtos = () => {
         )
 
         setHasPaidThisMonth(!!mensalidade)
+        setTipoMensalidade(mensalidade?.tipo || '')
+
         setIsAtleta(true)
         fetchProducts()
         setLoading(false)
@@ -154,43 +156,50 @@ export const Produtos = () => {
         ) : (
           <>
             {isAtleta ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="border rounded-lg p-4 shadow-sm"
-                  >
-                    <Image
-                      src={product.imageUrl}
-                      alt={product.nome || 'Produto'}
-                      width={400}
-                      height={192}
-                      className="w-full h-48 object-cover rounded-md"
-                    />
-                    <h3 className="text-lg font-semibold mt-2">
-                      {product.nome}
-                    </h3>
-                    <p className="text-gray-600">
-                      R$ {(product.preco / 100).toFixed(2)}
-                    </p>
-                    <Button
-                      className="w-full mt-4"
-                      onClick={() =>
-                        handleSelectProduct(
-                          product.id,
-                          product.default_price,
-                          product.nome,
-                        )
-                      }
-                    >
-                      {hasPaidThisMonth &&
-                      !product.nome.toLowerCase().includes('avulsa')
-                        ? 'Mensalidade já paga'
-                        : 'Selecionar'}
-                    </Button>
+              <>
+                {hasPaidThisMonth && (
+                  <div className="col-span-full mb-4 p-4 bg-green-100 rounded-lg text-green-800">
+                    {tipoMensalidade === 'avulsa'
+                      ? 'Sua mensalidade deste mês já está paga!'
+                      : 'Você já possui uma mensalidade recorrente ativa! Seu próximo pagamento será processado automaticamente.'}
                   </div>
-                ))}
-              </div>
+                )}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="border rounded-lg p-4 shadow-sm"
+                    >
+                      <Image
+                        src={product.imageUrl}
+                        alt={product.nome || 'Produto'}
+                        width={400}
+                        height={192}
+                        className="w-full h-48 object-cover rounded-md"
+                      />
+                      <h3 className="text-lg font-semibold mt-2">
+                        {product.nome}
+                      </h3>
+                      <p className="text-gray-600">
+                        R$ {(product.preco / 100).toFixed(2)}
+                      </p>
+                      <Button
+                        className="w-full mt-4"
+                        onClick={() =>
+                          handleSelectProduct(
+                            product.id,
+                            product.default_price,
+                            product.nome,
+                          )
+                        }
+                        disabled={hasPaidThisMonth}
+                      >
+                        Selecionar
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </>
             ) : (
               <div>
                 <p>

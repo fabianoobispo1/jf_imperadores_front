@@ -25,16 +25,15 @@ export async function POST(req: Request) {
   if (!productId || !default_price || !userEmail || !mode) {
     return new NextResponse('Missing required parameters', { status: 400 })
   }
-
   try {
     const paymentMethodTypes: Stripe.Checkout.SessionCreateParams.PaymentMethodType[] =
       mode === 'subscription' ? ['card'] : ['card', 'boleto']
-    const session = await stripe.checkout.sessions.create({
+
+    const sessionConfig: Stripe.Checkout.SessionCreateParams = {
       success_url:
         `${process.env.NEXTAUTH_URL}/dashboard/mensalidade/success/` +
         userEmail,
       cancel_url: `${process.env.NEXTAUTH_URL}/dashboard/mensalidade/`,
-      customer_creation: 'always',
       payment_method_types: paymentMethodTypes,
       mode,
       locale: 'pt-BR',
@@ -45,7 +44,13 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
-    })
+    }
+
+    if (mode !== 'subscription') {
+      sessionConfig.customer_creation = 'always'
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig)
 
     return NextResponse.json({ url: session.url })
   } catch (error) {

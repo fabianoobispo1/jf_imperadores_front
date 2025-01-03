@@ -43,21 +43,29 @@ export async function POST(req: Request) {
       endpointSecret,
     )
 
+    // tenho que ler esses dois charge.succeeded e charge.refunded
+
     // pagamento realizado com sucesso
     // stripe trigger payment_intent.succeeded
-    if (event.type === 'payment_intent.succeeded') {
-      const paymentIntent = event.data.object as Stripe.PaymentIntent
+    if (event.type === 'charge.succeeded') {
+      const charge = event.data.object as Stripe.Charge
 
-      const customer = (await stripe.customers.retrieve(
+      /* const customer = (await stripe.customers.retrieve(
         paymentIntent.customer as string,
       )) as Stripe.Customer
+*/
+      const tipo =
+        charge.description === 'Subscription creation' ||
+        charge.description === 'Subscription update'
+          ? 'recorrente'
+          : 'avulsa'
 
       await convex.mutation(api.mensalidade.create, {
-        tipo: 'avulsa', // or 'recorrente' based on your payment type
-        email: customer.email || '',
-        client_secret_stripe: (paymentIntent.customer as string) || '',
-        id_payment_stripe: paymentIntent.id,
-        valor: paymentIntent.amount / 100, // Convert from cents to actual currency
+        tipo,
+        email: charge.billing_details?.email || 'fbc623@gmail.com',
+        customer: (charge.customer as string) || '',
+        id_payment_stripe: charge.id,
+        valor: charge.amount / 100, // Convert from cents to actual currency
         data_pagamento: Date.now(),
         data_cancelamento: 0,
         cancelado: false,
@@ -66,71 +74,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ status: 'success' }, { status: 200 })
     }
 
-    if (event.type === 'transfer.reversed') {
-      const transfer = event.data.object as Stripe.Transfer
-
-      console.log(transfer)
-
-      /*  await convex.mutation(api.mensalidade.create, {
-        tipo: 'avulsa', // or 'recorrente' based on your payment type
-        email: customer.email || '',
-        client_secret_stripe: (paymentIntent.customer as string) || '',
-        id_payment_stripe: paymentIntent.id,
-        valor: paymentIntent.amount / 100, // Convert from cents to actual currency
-        data_pagamento: Date.now(),
-        data_cancelamento: 0,
-        cancelado: false,
-      })
- */
-      return NextResponse.json({ status: 'success' }, { status: 200 })
-    }
-
-    if (
-      event.type === 'customer.subscription.created' ||
-      event.type === 'invoice.paid'
-    ) {
-      const subscription = event.data.object as Stripe.Subscription
-
-      const customer = (await stripe.customers.retrieve(
-        subscription.customer as string,
-      )) as Stripe.Customer
-
-      await convex.mutation(api.mensalidade.create, {
-        tipo: 'recorrente',
-        email: customer.email || '',
-        client_secret_stripe: subscription.latest_invoice as string,
-        id_payment_stripe: subscription.id,
-        valor: subscription.items.data[0].price.unit_amount! / 100,
-        data_pagamento: Date.now(),
-        data_cancelamento: 0,
-        cancelado: false,
-      })
-      return NextResponse.json({ status: 'success' }, { status: 200 })
-    }
-
-    if (event.type === 'customer.subscription.deleted') {
-      const subscription = event.data.object as Stripe.Subscription
+    if (event.type === 'charge.refunded') {
+      const charge = event.data.object as Stripe.Charge
 
       await convex.mutation(api.mensalidade.updateCancelamento, {
-        id_payment_stripe: subscription.id,
-        cancelado: true,
+        id_payment_stripe: charge.id,
         data_cancelamento: Date.now(),
-      })
-    }
-
-    if (event.type === 'payment_intent.canceled') {
-      const paymentIntent = event.data.object as Stripe.PaymentIntent
-
-      await convex.mutation(api.mensalidade.updateCancelamento, {
-        id_payment_stripe: paymentIntent.id,
         cancelado: true,
-        data_cancelamento: Date.now(),
       })
 
       return NextResponse.json({ status: 'success' }, { status: 200 })
     }
-
-    // Handle other event types
     console.log(`Handling event type: ${event.type}`)
     return NextResponse.json({ status: 'received' }, { status: 200 })
   } catch (error) {

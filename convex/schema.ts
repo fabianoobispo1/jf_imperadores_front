@@ -109,7 +109,7 @@ export const transacaoSchema = {
 export const mensalidadeSchema = {
   tipo: v.union(v.literal('avulsa'), v.literal('recorrente')),
   email: v.string(),
-  client_secret_stripe: v.string(),
+  customer: v.string(),
   id_payment_stripe: v.string(),
   valor: v.number(),
   data_pagamento: v.number(),
