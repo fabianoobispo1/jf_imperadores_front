@@ -37,20 +37,20 @@ export const ConfirmacaoSeletiva = ({ nome }: ConfirmacaoSeletivaProps) => {
             </Row>
           </Section>
           <Section style={content}>
-            <Text style={paragraph}>Ola {nome},</Text>
+            <Text style={paragraph}>Olá {nome},</Text>
             <Text style={paragraph}>
-              Seu regeitro foi feito na seletiva para o Jf imperadores.
+              Seu registro foi realizado na seletiva do JF Imperadores.
             </Text>
 
             <Text style={paragraph}>
-              A seletiva será realizada no dia 19 de Janeiro. Horário: 9 horas
-              Local: Ginásio da Faefid-UFJF
+              A seletiva será realizada no dia 19 de janeiro. Horário: 9 horas
+              Local: Ginásio da FAEFID-UFJF
             </Text>
 
             <Text style={paragraph}>
               Obrigado,
               <br />
-              Jf Imperadores
+              JF Imperadores
             </Text>
           </Section>
         </Container>
@@ -58,9 +58,9 @@ export const ConfirmacaoSeletiva = ({ nome }: ConfirmacaoSeletivaProps) => {
         <Section style={footer}>
           <Row>
             <Text style={{ textAlign: 'center', color: '#706a7b' }}>
-              © Jf Imperadores, Todos os direitos reservados.
+              © JF Imperadores, todos os direitos reservados.
               <br />
-            </Text>
+            </Text>{' '}
           </Row>
         </Section>
       </Body>
