@@ -2,7 +2,9 @@
 import { useEffect, useState } from 'react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import axios from 'axios'
+import { jsPDF } from 'jspdf'
 
+import 'jspdf-autotable'
 import { useSidebar } from '@/components/ui/sidebar'
 import {
   Table,
@@ -146,6 +148,66 @@ export function TryoutList() {
       setApprovingId(null)
     }
   }
+
+  const exportToPDF = async () => {
+    // Fetch all records for PDF
+    const allSeletivas = await fetchQuery(api.seletiva.getAll, {})
+
+    // eslint-disable-next-line new-cap
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4',
+    })
+
+    doc.setFontSize(16)
+    doc.text('Lista Completa de Candidatos - Seletiva', 14, 15)
+
+    const tableData = allSeletivas.map((seletiva) => [
+      seletiva.nome,
+      seletiva.email,
+      formatPhoneNumber(seletiva.celular),
+      seletiva.data_nascimento
+        ? new Date(seletiva.data_nascimento).toLocaleDateString()
+        : '-',
+      `${seletiva.altura}m`,
+      `${seletiva.peso}kg`,
+      SETOR_LABELS[seletiva.setor as keyof typeof SETOR_LABELS],
+      seletiva.posicao,
+      seletiva.tem_experiencia ? 'Sim' : 'Não',
+      seletiva.equipe_anterior || '-',
+      EQUIPAMENTO_LABELS[
+        seletiva.equipamento as keyof typeof EQUIPAMENTO_LABELS
+      ],
+    ])
+
+    // @ts-expect-error - Specific reason for expecting the error
+    doc.autoTable({
+      head: [
+        [
+          'Nome',
+          'Email',
+          'Celular',
+          'Data Nasc.',
+          'Altura',
+          'Peso',
+          'Setor',
+          'Posição',
+          'Experiência',
+          'Equipe Anterior',
+          'Equipamento',
+        ],
+      ],
+      body: tableData,
+      startY: 25,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [0, 51, 102] },
+      margin: { top: 25, right: 7, bottom: 7, left: 7 }, // Adicione esta linha
+    })
+
+    doc.save('lista-completa-seletiva.pdf')
+  }
+
   return (
     <>
       <div
@@ -155,7 +217,10 @@ export function TryoutList() {
         )}
       >
         <div className="w-full overflow-auto">
-          <div className="w-full pr-4">
+          <Button variant="outline" size="sm" onClick={exportToPDF}>
+            Exportar PDF
+          </Button>
+          <div className="w-full pr-4 pt-2">
             {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
             <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border   pr-2 ">
               <div className="">

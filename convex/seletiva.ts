@@ -28,6 +28,14 @@ export const getAllPaginated = query({
   },
 })
 
+export const getAll = query({
+  handler: async (ctx) => {
+    const seletivas = await ctx.db.query('seletiva').order('desc').collect()
+
+    return seletivas
+  },
+})
+
 export const getByNome = query({
   args: {
     nome: v.string(),
