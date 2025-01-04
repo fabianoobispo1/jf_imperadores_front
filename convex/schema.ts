@@ -72,6 +72,7 @@ export const seletivaSchema = {
   posicao: v.string(),
   equipamento: v.number(),
   img_link: v.string(),
+  aprovado: v.optional(v.boolean()),
 }
 
 export const atletasSchema = {

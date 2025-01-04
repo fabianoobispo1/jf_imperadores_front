@@ -1,18 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { /* Trash,  */ MessageCircleMore, MailPlusIcon } from 'lucide-react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import axios from 'axios'
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
-} from '@/components/ui/dialog'
-import { Textarea } from '@/components/ui/textarea'
 import { useSidebar } from '@/components/ui/sidebar'
 import {
   Table,
@@ -22,16 +12,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { LoadingButton } from '@/components/ui/loading-button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
-import {
-  cn,
-  formatPhone,
-  formatPhoneNumber,
-  formatWhatsAppNumber,
-} from '@/lib/utils'
+import { cn, formatPhoneNumber } from '@/lib/utils'
+import { MessageButtons } from '@/components/MessageButtons'
 
 import type { Id } from '../../../../../convex/_generated/dataModel'
 import { api } from '../../../../../convex/_generated/api'
@@ -67,6 +52,7 @@ interface Seletivas {
   setor: number
   posicao: string
   equipamento: number
+  aprovado?: boolean
 }
 
 export function TryoutList() {
@@ -77,15 +63,12 @@ export function TryoutList() {
   const limit = 10
   const { open } = useSidebar()
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedCandidate, setSelectedCandidate] = useState<Seletivas | null>(
-    null,
-  )
-  const [message, setMessage] = useState('')
   const [whatsappStatus, setWhatsappStatus] = useState('')
 
   const [numeroConectado, setNumeroConectado] = useState('')
   const [nomeConectado, setNomeConectado] = useState('')
+
+  const [approvingId, setApprovingId] = useState<Id<'seletiva'> | null>(null)
 
   const checkWhatsappStatus = async () => {
     try {
@@ -139,33 +122,30 @@ export function TryoutList() {
   const handleNext = () => setOffset((prev) => prev + limit)
   const handlePrev = () => setOffset((prev) => Math.max(prev - limit, 0))
 
-  const removeCandidato = async (id: Id<'seletiva'>) => {
+  /*  const removeCandidato = async (id: Id<'seletiva'>) => {
     setLoading(true)
     await fetchMutation(api.seletiva.remove, { seletivaId: id })
     fetchSeletivaPaginated(offset, limit)
     setLoading(false)
-  }
+  } */
 
-  const handleSendWhatsApp = async () => {
-    if (!selectedCandidate) return
-
+  const handleApproveAthlete = async (seletiva: Seletivas) => {
+    setApprovingId(seletiva._id)
     try {
-      const response = await axios.post('/api/whatsapp/sendMessage', {
-        chatId: formatWhatsAppNumber(selectedCandidate.celular),
-        contentType: 'string',
-        content: message,
+      // Update seletiva status
+      await fetchMutation(api.seletiva.update, {
+        id: seletiva._id,
+        aprovado: true,
       })
 
-      /* setSessionData(response.data) */
-      console.log(response.data)
+      // Refresh list
+      fetchSeletivaPaginated(offset, limit)
     } catch (error) {
-      console.error('Error sending message:', error)
+      console.error('Erro ao aprovar atleta:', error)
+    } finally {
+      setApprovingId(null)
     }
-
-    setIsModalOpen(false)
-    setMessage('')
   }
-
   return (
     <>
       <div
@@ -223,7 +203,10 @@ export function TryoutList() {
                       </TableRow>
                     ) : (
                       seletivas.map((seletiva) => (
-                        <TableRow key={seletiva._id}>
+                        <TableRow
+                          key={seletiva._id}
+                          className={cn(seletiva.aprovado && 'bg-green-100')}
+                        >
                           {/*  <TableCell className="text-center">
                           {seletiva.numerio_seletiva}
                         </TableCell> */}
@@ -271,35 +254,36 @@ export function TryoutList() {
                             }
                           </TableCell>
                           <TableCell>
-                            <div className="flex justify-center gap-2">
-                              <LoadingButton
-                                loading={loading}
-                                disabled={
-                                  whatsappStatus !== 'session_connected'
-                                }
-                                onClick={() => {
-                                  setSelectedCandidate(seletiva)
-                                  setIsModalOpen(true)
+                            <div className="flex flex-col items-center justify-center gap-2">
+                              <MessageButtons
+                                recipient={{
+                                  nome: seletiva.nome,
+                                  email: seletiva.email,
+                                  celular: seletiva.celular,
                                 }}
-                              >
-                                <MessageCircleMore className="h-4 w-4" />
-                              </LoadingButton>
-
-                              <LoadingButton
+                                whatsappStatus={whatsappStatus}
+                                nomeConectado={nomeConectado}
+                                numeroConectado={numeroConectado}
                                 loading={loading}
-                                disabled
-                                onClick={() => removeCandidato(seletiva._id)}
+                              />
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleApproveAthlete(seletiva)}
+                                disabled={
+                                  seletiva.aprovado ||
+                                  approvingId === seletiva._id
+                                }
+                                className="w-full"
                               >
-                                <MailPlusIcon className="h-4 w-4" />
-                              </LoadingButton>
-                              {/*  <LoadingButton
-                              loading={loading}
-                              disabled
-                              variant={'destructive'}
-                              onClick={() => removeCandidato(seletiva._id)}
-                            >
-                              <Trash className="h-4 w-4" />
-                            </LoadingButton> */}
+                                {approvingId === seletiva._id ? (
+                                  <Spinner className="h-4 w-4" />
+                                ) : seletiva.aprovado ? (
+                                  'Aprovado'
+                                ) : (
+                                  'Aprovar'
+                                )}
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -341,36 +325,6 @@ export function TryoutList() {
           </div>
         </div>
       </div>
-      {/* Modal Mensagem whatsapp */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              Enviar mensagem para {selectedCandidate?.nome}
-            </DialogTitle>
-            <DialogDescription>
-              Digite a mensagem que será enviada via WhatsApp do{' '}
-              {numeroConectado === '' ? '-' : formatPhone(numeroConectado)}
-              {' - '}
-              {nomeConectado === '' ? '-' : nomeConectado}
-            </DialogDescription>
-          </DialogHeader>
-          <Textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Digite sua mensagem..."
-            className="min-h-[100px]"
-          />
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleSendWhatsApp} disabled={!message}>
-              Enviar WhatsApp
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   )
 }

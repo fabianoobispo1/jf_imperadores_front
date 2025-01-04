@@ -78,3 +78,17 @@ export const getCount = query({
     return count.length
   },
 })
+
+export const update = mutation({
+  args: {
+    id: v.id('seletiva'),
+    aprovado: v.boolean(),
+  },
+  handler: async ({ db }, { id, aprovado }) => {
+    await db.patch(id, {
+      aprovado,
+    })
+
+    return { success: true }
+  },
+})

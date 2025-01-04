@@ -9,8 +9,11 @@ export function formatWhatsAppNumber(phone: string) {
   // Remove any non-digits
   const cleanNumber = phone.replace(/\D/g, '')
 
+  // Remove the '9' from third position if it exists
+  const numberWithout9 = cleanNumber.substring(0, 2) + cleanNumber.substring(3)
+
   // Add country code and WhatsApp suffix
-  return `55${cleanNumber}@c.us`
+  return `55${numberWithout9}@c.us`
 }
 
 export function formatPhoneNumber(phone: string) {
