@@ -163,6 +163,14 @@ export function TryoutList() {
     // Fetch all records for PDF
     const allSeletivas = await fetchQuery(api.seletiva.getAll, {})
 
+    // Apply the same sorting logic used in the table
+    const sortedSeletivas = [...allSeletivas].sort((a, b) => {
+      if (sortDirection === 'desc') {
+        return a.nome.localeCompare(b.nome)
+      }
+      return b.nome.localeCompare(a.nome)
+    })
+
     // eslint-disable-next-line new-cap
     const doc = new jsPDF({
       orientation: 'landscape',
@@ -173,7 +181,7 @@ export function TryoutList() {
     doc.setFontSize(16)
     doc.text('Lista Completa de Candidatos - Seletiva', 14, 15)
 
-    const tableData = allSeletivas.map((seletiva) => [
+    const tableData = sortedSeletivas.map((seletiva) => [
       seletiva.nome,
       seletiva.email,
       formatPhoneNumber(seletiva.celular),
