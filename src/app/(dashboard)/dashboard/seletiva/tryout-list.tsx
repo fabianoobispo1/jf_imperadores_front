@@ -4,6 +4,13 @@ import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import axios from 'axios'
 import { jsPDF } from 'jspdf'
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import 'jspdf-autotable'
 import { useSidebar } from '@/components/ui/sidebar'
 import {
@@ -63,6 +70,9 @@ export function TryoutList() {
   const [offset, setOffset] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const limit = 10
+  const [pageLimit, setPageLimit] = useState(10)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+
   const { open } = useSidebar()
 
   const [whatsappStatus, setWhatsappStatus] = useState('')
@@ -118,11 +128,11 @@ export function TryoutList() {
   }
 
   useEffect(() => {
-    fetchSeletivaPaginated(offset, limit)
-  }, [offset])
+    fetchSeletivaPaginated(offset, pageLimit)
+  }, [offset, pageLimit])
 
-  const handleNext = () => setOffset((prev) => prev + limit)
-  const handlePrev = () => setOffset((prev) => Math.max(prev - limit, 0))
+  const handleNext = () => setOffset((prev) => prev + pageLimit)
+  const handlePrev = () => setOffset((prev) => Math.max(prev - pageLimit, 0))
 
   /*  const removeCandidato = async (id: Id<'seletiva'>) => {
     setLoading(true)
@@ -208,6 +218,16 @@ export function TryoutList() {
     doc.save('lista-completa-seletiva.pdf')
   }
 
+  // Adicione esta função de ordenação
+  const sortSeletivas = (data: Seletivas[]) => {
+    return [...data].sort((a, b) => {
+      if (sortDirection === 'asc') {
+        return a.nome.localeCompare(b.nome)
+      }
+      return b.nome.localeCompare(a.nome)
+    })
+  }
+
   return (
     <>
       <div
@@ -228,8 +248,16 @@ export function TryoutList() {
                   <TableHeader className="sticky top-0 bg-background">
                     <TableRow>
                       {/* <TableHead className="text-center w-16">Nº</TableHead> */}
-                      <TableHead className="text-center min-w-[200px]">
-                        Nome
+                      <TableHead
+                        className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
+                        onClick={() => {
+                          setSortDirection((prev) =>
+                            prev === 'asc' ? 'desc' : 'asc',
+                          )
+                          setSeletivas(sortSeletivas(seletivas))
+                        }}
+                      >
+                        Nome {sortDirection === 'asc' ? '↑' : '↓'}
                       </TableHead>
                       <TableHead className="text-center min-w-[200px]">
                         Email
@@ -361,14 +389,30 @@ export function TryoutList() {
             </ScrollArea>
           </div>
         </div>
-
         <div className="flex items-center justify-end space-x-2 py-4 pr-4">
           <div className="flex-1 text-sm text-muted-foreground">
             <p>
-              Página {Math.ceil(offset / limit) + 1} de{' '}
-              {Math.ceil(totalCount / limit)} | Total de registros: {totalCount}
+              Página {Math.ceil(offset / pageLimit) + 1} de{' '}
+              {Math.ceil(totalCount / pageLimit)} | Total de registros:{' '}
+              {totalCount}
             </p>
           </div>
+          <Select
+            value={pageLimit.toString()}
+            onValueChange={(value) => {
+              setPageLimit(Number(value))
+              setOffset(0)
+            }}
+          >
+            <SelectTrigger className="w-[100px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
           <div className="space-x-2">
             <Button
               variant="outline"
@@ -378,12 +422,11 @@ export function TryoutList() {
             >
               Anterior
             </Button>
-
             <Button
               variant="outline"
               size="sm"
               onClick={handleNext}
-              disabled={loading || seletivas.length < limit}
+              disabled={loading || seletivas.length < pageLimit}
             >
               Próxima
             </Button>
