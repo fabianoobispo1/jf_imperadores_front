@@ -276,7 +276,7 @@ export function TryoutList() {
                       <TableHead className="text-center w-28">
                         Data Nasc.
                       </TableHead>
-                       <TableHead
+                      <TableHead
                         className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
                         onClick={() => {
                           setSortDirection((prev) =>
@@ -287,7 +287,7 @@ export function TryoutList() {
                       >
                         Altura {sortDirection === 'asc' ? '↑' : '↓'}
                       </TableHead>
-                       <TableHead
+                      <TableHead
                         className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
                         onClick={() => {
                           setSortDirection((prev) =>
