@@ -276,8 +276,28 @@ export function TryoutList() {
                       <TableHead className="text-center w-28">
                         Data Nasc.
                       </TableHead>
-                      <TableHead className="text-center w-24">Altura</TableHead>
-                      <TableHead className="text-center w-24">Peso</TableHead>
+                       <TableHead
+                        className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
+                        onClick={() => {
+                          setSortDirection((prev) =>
+                            prev === 'asc' ? 'desc' : 'asc',
+                          )
+                          setSeletivas(sortSeletivas(seletivas))
+                        }}
+                      >
+                        Altura {sortDirection === 'asc' ? '↑' : '↓'}
+                      </TableHead>
+                       <TableHead
+                        className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
+                        onClick={() => {
+                          setSortDirection((prev) =>
+                            prev === 'asc' ? 'desc' : 'asc',
+                          )
+                          setSeletivas(sortSeletivas(seletivas))
+                        }}
+                      >
+                        Peso {sortDirection === 'asc' ? '↑' : '↓'}
+                      </TableHead>
                       <TableHead className="text-center w-32">Setor</TableHead>
                       <TableHead className="text-center w-28">
                         Posição
