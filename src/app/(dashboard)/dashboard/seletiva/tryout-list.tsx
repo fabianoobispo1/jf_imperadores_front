@@ -72,6 +72,8 @@ export function TryoutList() {
   const limit = 10
   const [pageLimit, setPageLimit] = useState(10)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [pesoDirection, setPesoDirection] = useState<'asc' | 'desc'>('asc')
+  const [alturaDirection, setAlturaDirection] = useState<'asc' | 'desc'>('asc')
 
   const { open } = useSidebar()
 
@@ -235,6 +237,22 @@ export function TryoutList() {
       return b.nome.localeCompare(a.nome)
     })
   }
+  const sortPesoSeletivas = (data: Seletivas[]) => {
+    return [...data].sort((a, b) => {
+      if (pesoDirection === 'asc') {
+        return a.peso - b.peso
+      }
+      return b.peso - a.peso
+    })
+  }
+  const sortAlturaSeletivas = (data: Seletivas[]) => {
+    return [...data].sort((a, b) => {
+      if (alturaDirection === 'asc') {
+        return a.altura - b.altura
+      }
+      return b.altura - a.altura
+    })
+  }
 
   return (
     <>
@@ -279,10 +297,10 @@ export function TryoutList() {
                       <TableHead
                         className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
                         onClick={() => {
-                          setSortDirection((prev) =>
+                          setAlturaDirection((prev) =>
                             prev === 'asc' ? 'desc' : 'asc',
                           )
-                          setSeletivas(sortSeletivas(seletivas))
+                          setSeletivas(sortAlturaSeletivas(seletivas))
                         }}
                       >
                         Altura {sortDirection === 'asc' ? '↑' : '↓'}
@@ -290,10 +308,10 @@ export function TryoutList() {
                       <TableHead
                         className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
                         onClick={() => {
-                          setSortDirection((prev) =>
+                          setPesoDirection((prev) =>
                             prev === 'asc' ? 'desc' : 'asc',
                           )
-                          setSeletivas(sortSeletivas(seletivas))
+                          setSeletivas(sortPesoSeletivas(seletivas))
                         }}
                       >
                         Peso {sortDirection === 'asc' ? '↑' : '↓'}
