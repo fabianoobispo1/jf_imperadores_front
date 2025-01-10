@@ -1,6 +1,8 @@
 'use client'
 import { useQuery } from 'convex/react'
 import { UsersIcon, UserCheckIcon, UserPlusIcon } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -8,11 +10,19 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { api } from '../../convex/_generated/api'
 
 export default function DadosIniciais() {
+  const { data: session } = useSession()
+  const router = useRouter()
   const totalAtletas = useQuery(api.atletas.getCount)
   const totalAtletasAtivos = useQuery(api.atletas.getCountByStatus, {
     status: 1,
   })
   const totalSeletiva = useQuery(api.seletiva.getCount)
+
+  const handleSeletivaClick = () => {
+    if (session?.user?.role === 'admin') {
+      router.push('/dashboard/seletiva')
+    }
+  }
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
@@ -50,7 +60,14 @@ export default function DadosIniciais() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card
+        className={
+          session?.user?.role === 'admin'
+            ? 'cursor-pointer hover:bg-gray-100'
+            : ''
+        }
+        onClick={handleSeletivaClick}
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
             Inscrições para a Seletiva
