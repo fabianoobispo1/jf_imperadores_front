@@ -2,11 +2,11 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   const response = await fetch(
-    'https://apiwhatsapp.fabianoobispo.com.br/session/status/jfimperadores',
+    `${process.env.WHATSAPP_API_URL}/session/status/jfimperadores`,
     {
       headers: {
         accept: 'application/json',
-        'x-api-key': 'fabianotoken',
+        'x-api-key': process.env.WHATSAPP_API_KEY ?? '',
       },
     },
   )

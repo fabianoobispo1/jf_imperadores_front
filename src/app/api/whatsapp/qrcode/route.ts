@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   const response = await fetch(
-    'https://apiwhatsapp.fabianoobispo.com.br/session/qr/jfimperadores/image',
+    `${process.env.WHATSAPP_API_URL}/session/qr/jfimperadores/image`,
     {
       headers: {
         accept: 'image/png',
