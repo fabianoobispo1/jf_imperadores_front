@@ -1,15 +1,22 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const response = await fetch(
-    `${process.env.WHATSAPP_API_URL}/client/getClassInfo/jfimperadores`,
-    {
-      headers: {
-        accept: 'application/json',
-        'x-api-key': process.env.WHATSAPP_API_KEY ?? '',
-      },
+  const baseUrl = process.env.API_WHATSAPP
+  const apiKey = process.env.WHATSAPP_API_KEY
+
+  if (!baseUrl || !apiKey) {
+    return NextResponse.json(
+      { error: 'WHATSAPP_API_URL or API_KEY not configured' },
+      { status: 500 },
+    )
+  }
+
+  const response = await fetch(`${baseUrl}/client/getClassInfo/jfimperadores`, {
+    headers: {
+      accept: 'application/json',
+      'x-api-key': apiKey,
     },
-  )
+  })
 
   const data = await response.json()
   return NextResponse.json(data)
