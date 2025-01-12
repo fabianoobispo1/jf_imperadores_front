@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as atletas from "../atletas.js";
 import type * as files from "../files.js";
+import type * as financas from "../financas.js";
 import type * as links from "../links.js";
 import type * as mensalidade from "../mensalidade.js";
 import type * as recuperaSenha from "../recuperaSenha.js";
@@ -36,6 +37,7 @@ import type * as user from "../user.js";
 declare const fullApi: ApiFromModules<{
   atletas: typeof atletas;
   files: typeof files;
+  financas: typeof financas;
   links: typeof links;
   mensalidade: typeof mensalidade;
   recuperaSenha: typeof recuperaSenha;

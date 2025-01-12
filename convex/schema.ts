@@ -117,6 +117,27 @@ export const mensalidadeSchema = {
   data_cancelamento: v.number(),
   cancelado: v.boolean(),
 }
+export const financasSchema = {
+  tipo: v.union(v.literal('receita'), v.literal('despesa')),
+  descricao: v.string(),
+  valor: v.number(),
+  data: v.number(),
+  categoria: v.union(
+    v.literal('mensalidade'),
+    v.literal('equipamento'),
+    v.literal('viagem'),
+    v.literal('patrocinio'),
+    v.literal('evento'),
+    v.literal('outros'),
+  ),
+  comprovante_url: v.optional(v.string()),
+  comprovante_key: v.optional(v.string()),
+  status: v.union(v.literal('pendente'), v.literal('confirmado')),
+  observacao: v.optional(v.string()),
+  created_at: v.number(),
+  updated_at: v.number(),
+  userId: v.id('user'),
+}
 
 // Definição do Schema completo
 export default defineSchema({
@@ -124,7 +145,6 @@ export default defineSchema({
     .index('by_email', ['email'])
     .index('by_username', ['nome']),
   recuperaSenha: defineTable(recuperaSenhaSchema).index('by_email', ['email']),
-
   todo: defineTable(todoSchema).index('by_user', ['userId']), // Índice para buscar todos de um usuário
   telaLinks: defineTable(telaLinksSchema)
     .index('by_nome', ['nome'])
@@ -146,4 +166,5 @@ export default defineSchema({
   mensalidade: defineTable(mensalidadeSchema)
     .index('by_data_pagamento', ['data_pagamento'])
     .index('by_email', ['email']),
+  financas: defineTable(financasSchema).index('by_data', ['data']),
 })
