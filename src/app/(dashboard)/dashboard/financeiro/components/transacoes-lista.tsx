@@ -17,7 +17,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { MoreHorizontal, Pencil, Plus, Trash } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { fetchMutation } from 'convex/nextjs'
 
 import { api } from '@/convex/_generated/api'
@@ -63,13 +62,17 @@ interface TransacaoType {
 
 export function TransacoesLista() {
   const { data: session } = useSession()
-  const router = useRouter()
+
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
+
+  const [selectedTransaction, setSelectedTransaction] = useState<
+    string | undefined
+  >(undefined)
 
   const transacoes = useQuery(api.financas.getTransacoes, {
     userId: session?.user?.id as string,
@@ -178,7 +181,12 @@ export function TransacoesLista() {
   })
 
   const handleEdit = (id: string) => {
-    router.push(`/dashboard/financeiro/${id}`)
+    setSelectedTransaction(id)
+    setOpen(true)
+  }
+  const handleCloseModal = () => {
+    setSelectedTransaction(undefined)
+    setOpen(false)
   }
 
   const handleDelete = async (id: string) => {
@@ -290,12 +298,19 @@ export function TransacoesLista() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Nova Transação</DialogTitle>
+            <DialogTitle>
+              {selectedTransaction ? 'Editar Transação' : 'Nova Transação'}
+            </DialogTitle>
             <DialogDescription>
-              Registre uma nova movimentação financeira
+              {selectedTransaction
+                ? 'Atualize os dados da transação financeira'
+                : 'Registre uma nova movimentação financeira'}
             </DialogDescription>
           </DialogHeader>
-          <TransacaoForm onSuccess={() => setOpen(false)} />
+          <TransacaoForm
+            id={selectedTransaction}
+            onSuccess={handleCloseModal}
+          />
         </DialogContent>
       </Dialog>
     </div>

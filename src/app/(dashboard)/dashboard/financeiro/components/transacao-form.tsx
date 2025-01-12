@@ -2,10 +2,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { useState } from 'react'
-import { useMutation } from 'convex/react'
+import { useEffect, useState } from 'react'
+import { useMutation, useQuery } from 'convex/react'
 import { Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { NumericFormat } from 'react-number-format'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -58,7 +59,9 @@ export function TransacaoForm({ onSuccess, id }: TransacaoFormProps) {
   const { toast } = useToast()
   const { data: session } = useSession()
   const [loading, setLoading] = useState(false)
+
   const create = useMutation(api.financas.create)
+  const update = useMutation(api.financas.update)
 
   const form = useForm<TransacaoFormValues>({
     resolver: zodResolver(formSchema),
@@ -73,12 +76,50 @@ export function TransacaoForm({ onSuccess, id }: TransacaoFormProps) {
     },
   })
 
+  const transacao = useQuery(
+    api.financas.getById,
+    id && session?.user?.id
+      ? {
+          id: id as Id<'financas'>,
+          userId: session.user.id as string,
+        }
+      : 'skip',
+  )
+
+  // Effect para preencher o form quando os dados chegarem
+  useEffect(() => {
+    if (transacao) {
+      form.reset({
+        tipo: transacao.tipo,
+        descricao: transacao.descricao,
+        valor: transacao.valor,
+        data: new Date(transacao.data),
+        categoria: transacao.categoria,
+        status: transacao.status,
+        observacao: transacao.observacao || '',
+      })
+    }
+  }, [transacao, form])
+
   async function onSubmit(data: TransacaoFormValues) {
     try {
       setLoading(true)
       if (!session?.user?.id) return
       if (id) {
-        console.log('update')
+        const transacao = await update({
+          id: id as Id<'financas'>,
+          tipo: data.tipo,
+          descricao: data.descricao,
+          valor: data.valor,
+          data: data.data.getTime(),
+          categoria: data.categoria,
+          status: data.status,
+          userId: session.user.id as Id<'user'>,
+          comprovante_url: data.comprovante?.url,
+          comprovante_key: data.comprovante?.key,
+          observacao: data.observacao,
+        })
+        console.log(transacao)
       } else {
         const transacao = await create({
           tipo: data.tipo,
@@ -92,6 +133,7 @@ export function TransacaoForm({ onSuccess, id }: TransacaoFormProps) {
           userId: session.user.id as Id<'user'>,
           comprovante_url: data.comprovante?.url,
           comprovante_key: data.comprovante?.key,
+          observacao: data.observacao,
         })
         console.log(transacao)
       }
@@ -190,27 +232,32 @@ export function TransacaoForm({ onSuccess, id }: TransacaoFormProps) {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="valor"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Valor (R$)</FormLabel>
+                <FormLabel>Valor</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
+                  <NumericFormat
+                    customInput={Input}
+                    value={field.value}
+                    onValueChange={(values) => {
+                      field.onChange(values.floatValue)
+                    }}
+                    prefix="R$ "
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    decimalScale={2}
+                    fixedDecimalScale
                     disabled={loading}
-                    placeholder="0,00"
-                    {...field}
-                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    className="w-full"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="data"
