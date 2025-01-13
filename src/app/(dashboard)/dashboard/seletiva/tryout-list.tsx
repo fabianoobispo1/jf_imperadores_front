@@ -69,7 +69,7 @@ export function TryoutList() {
   const [seletivas, setSeletivas] = useState<Seletivas[]>([])
   const [offset, setOffset] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const limit = 10
+  const limit = 100
   const [pageLimit, setPageLimit] = useState(10)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [pesoDirection, setPesoDirection] = useState<'asc' | 'desc'>('asc')
@@ -484,6 +484,7 @@ export function TryoutList() {
               <SelectItem value="10">10</SelectItem>
               <SelectItem value="50">50</SelectItem>
               <SelectItem value="100">100</SelectItem>
+              <SelectItem value="150">150</SelectItem>
             </SelectContent>
           </Select>
           <div className="space-x-2">
