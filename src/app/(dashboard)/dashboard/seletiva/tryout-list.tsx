@@ -74,6 +74,9 @@ export function TryoutList() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [pesoDirection, setPesoDirection] = useState<'asc' | 'desc'>('asc')
   const [alturaDirection, setAlturaDirection] = useState<'asc' | 'desc'>('asc')
+  const [dataCradastroDirection, setDataCradastroDirection] = useState<
+    'asc' | 'desc'
+  >('asc')
 
   const { open } = useSidebar()
 
@@ -245,6 +248,14 @@ export function TryoutList() {
       return b.peso - a.peso
     })
   }
+  const sortDataCadastroSeletivas = (data: Seletivas[]) => {
+    return [...data].sort((a, b) => {
+      if (dataCradastroDirection === 'asc') {
+        return a._creationTime - b._creationTime
+      }
+      return b._creationTime - a._creationTime
+    })
+  }
   const sortAlturaSeletivas = (data: Seletivas[]) => {
     return [...data].sort((a, b) => {
       if (alturaDirection === 'asc') {
@@ -326,11 +337,19 @@ export function TryoutList() {
                       <TableHead className="text-center min-w-[150px]">
                         Equipe Anterior
                       </TableHead>
-                      <TableHead className="text-center w-28">
-                        Data Cadastro
-                      </TableHead>
                       <TableHead className="text-center min-w-[150px]">
                         Equipamento
+                      </TableHead>
+                      <TableHead
+                        className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
+                        onClick={() => {
+                          setDataCradastroDirection((prev) =>
+                            prev === 'asc' ? 'desc' : 'asc',
+                          )
+                          setSeletivas(sortDataCadastroSeletivas(seletivas))
+                        }}
+                      >
+                        Data Cadastro {sortDirection === 'asc' ? '↑' : '↓'}
                       </TableHead>
                       <TableHead className="text-center w-24">Opções</TableHead>
                     </TableRow>
