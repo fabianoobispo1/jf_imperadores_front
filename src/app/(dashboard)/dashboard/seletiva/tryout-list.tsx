@@ -326,6 +326,9 @@ export function TryoutList() {
                       <TableHead className="text-center min-w-[150px]">
                         Equipe Anterior
                       </TableHead>
+                      <TableHead className="text-center w-28">
+                        Data Cadastro
+                      </TableHead>
                       <TableHead className="text-center min-w-[150px]">
                         Equipamento
                       </TableHead>
@@ -391,6 +394,11 @@ export function TryoutList() {
                                 seletiva.equipamento as keyof typeof EQUIPAMENTO_LABELS
                               ]
                             }
+                          </TableCell>
+                          <TableCell className="text-center whitespace-nowrap">
+                            {new Date(
+                              seletiva._creationTime,
+                            ).toLocaleDateString()}
                           </TableCell>
                           <TableCell>
                             <div className="flex flex-col items-center justify-center gap-2">
