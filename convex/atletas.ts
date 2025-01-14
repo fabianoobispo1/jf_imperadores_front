@@ -194,3 +194,19 @@ export const updateStatus = mutation({
     return atleta
   },
 })
+
+export const getAll = query({
+  args: {},
+  handler: async (ctx) => {
+    const atletas = await ctx.db
+      .query('atletas')
+      .filter((q) => q.eq(q.field('status'), 1))
+      .collect()
+
+    return atletas.map((atleta) => ({
+      email: atleta.email,
+      celular: atleta.celular,
+      nome: atleta.nome,
+    }))
+  },
+})
