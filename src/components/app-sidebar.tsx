@@ -10,6 +10,7 @@ import {
   User,
   NotebookPenIcon,
   CircleDollarSign,
+  MessageCircleMore,
   /*  CircleDollarSign, */
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
@@ -92,6 +93,11 @@ const itemsAdm = [
     title: 'Finanças',
     url: '/dashboard/financeiro',
     icon: CircleDollarSign,
+  },
+  {
+    title: 'Mensagens',
+    url: '/dashboard/mensagens',
+    icon: MessageCircleMore,
   },
 ]
 
