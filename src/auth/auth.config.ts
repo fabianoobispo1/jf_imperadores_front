@@ -68,10 +68,10 @@ const authConfig = {
         }
 
         // Atualiza o último login após autenticação bem sucedida
-        await fetchMutation(api.user.UpdateUserLogin, {
+        /*     await fetchMutation(api.user.UpdateUserLogin, {
           userId: user._id,
           last_login: Date.now(),
-        })
+        }) */
         return {
           id: user._id.toString(),
           image: user.image || '',
@@ -111,7 +111,6 @@ const authConfig = {
               role: 'user',
               image,
               nome: String(profile.name),
-              last_login: Date.now(),
             })
             user.image = String(profile?.image)
             user.nome = String(profile?.name)
@@ -123,7 +122,6 @@ const authConfig = {
               image,
               provider,
               password: '',
-              last_login: Date.now(),
             })
             user.image = String(updateeUser?.image)
             user.nome = String(updateeUser?.nome)
