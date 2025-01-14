@@ -1,8 +1,8 @@
 'use client'
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+/* import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation' */
 import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
@@ -12,12 +12,10 @@ import { formatPhone } from '@/lib/utils'
 import { ScrollArea } from './ui/scroll-area'
 
 export function WhatsAppComponent() {
-  const { data: session } = useSession()
+  /*   const { data: session } = useSession()
   const [carregou, setiscarregou] = useState(false)
   const router = useRouter()
   if (session) {
-    /*     console.log(session) */
-
     if (!carregou) {
       console.log(session.user.nome)
       if (
@@ -30,7 +28,7 @@ export function WhatsAppComponent() {
       }
       setiscarregou(true)
     }
-  }
+  } */
 
   /*  const [sessionData, setSessionData] = useState(null) */
   const [loading, setLoading] = useState(false)
