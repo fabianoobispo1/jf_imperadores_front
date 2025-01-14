@@ -222,8 +222,8 @@ export function WhatsAppComponent() {
                 key={qrKey}
                 src="/api/whatsapp/qrcode"
                 alt="WhatsApp QR Code"
-                width={256}
-                height={256}
+                width={450}
+                height={450}
                 className="object-contain"
               />
             </div>
