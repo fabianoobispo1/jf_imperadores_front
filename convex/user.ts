@@ -88,8 +88,12 @@ export const UpdateUserLogin = mutation({
     provider: v.optional(v.string()),
     image: v.optional(v.string()),
     password: v.optional(v.string()),
+    last_login: v.optional(v.number()),
   },
-  handler: async ({ db }, { userId, provider, image, password }) => {
+  handler: async (
+    { db },
+    { userId, provider, image, password, last_login },
+  ) => {
     // Buscar o usuario atual
     const verificaUsuario = await db.get(userId)
     if (!verificaUsuario) {
@@ -100,6 +104,7 @@ export const UpdateUserLogin = mutation({
       provider,
       image,
       password,
+      last_login,
     })
     const usuario = await db.get(userId)
     return usuario

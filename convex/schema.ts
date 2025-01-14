@@ -12,6 +12,7 @@ export const userSchema = {
   password: v.string(),
   data_nascimento: v.optional(v.number()),
   cpf: v.optional(v.string()),
+  last_login: v.optional(v.number()),
 }
 
 export const recuperaSenhaSchema = {
