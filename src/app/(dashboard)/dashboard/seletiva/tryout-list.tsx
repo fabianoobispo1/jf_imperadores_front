@@ -165,10 +165,8 @@ export function TryoutList() {
   }
 
   const exportToPDF = async () => {
-    // Fetch all records for PDF
     const allSeletivas = await fetchQuery(api.seletiva.getAll, {})
 
-    // Apply the same sorting logic used in the table
     const sortedSeletivas = [...allSeletivas].sort((a, b) => {
       if (sortDirection === 'desc') {
         return a.nome.localeCompare(b.nome)
@@ -314,7 +312,7 @@ export function TryoutList() {
                           setSeletivas(sortAlturaSeletivas(seletivas))
                         }}
                       >
-                        Altura {sortDirection === 'asc' ? '↑' : '↓'}
+                        Altura {alturaDirection === 'asc' ? '↑' : '↓'}
                       </TableHead>
                       <TableHead
                         className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
@@ -325,7 +323,7 @@ export function TryoutList() {
                           setSeletivas(sortPesoSeletivas(seletivas))
                         }}
                       >
-                        Peso {sortDirection === 'asc' ? '↑' : '↓'}
+                        Peso {pesoDirection === 'asc' ? '↑' : '↓'}
                       </TableHead>
                       <TableHead className="text-center w-32">Setor</TableHead>
                       <TableHead className="text-center w-28">
@@ -349,7 +347,8 @@ export function TryoutList() {
                           setSeletivas(sortDataCadastroSeletivas(seletivas))
                         }}
                       >
-                        Data Cadastro {sortDirection === 'asc' ? '↑' : '↓'}
+                        Data Cadastro{' '}
+                        {dataCradastroDirection === 'asc' ? '↑' : '↓'}
                       </TableHead>
                       <TableHead className="text-center w-24">Opções</TableHead>
                     </TableRow>
