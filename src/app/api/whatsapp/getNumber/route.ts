@@ -11,12 +11,15 @@ export async function GET() {
     )
   }
 
-  const response = await fetch(`${baseUrl}/client/getClassInfo/jfimperadores`, {
-    headers: {
-      accept: 'application/json',
-      'x-api-key': apiKey,
+  const response = await fetch(
+    `${baseUrl}/client/getClassInfo/jfimperadores5`,
+    {
+      headers: {
+        accept: 'application/json',
+        'x-api-key': apiKey,
+      },
     },
-  })
+  )
 
   const data = await response.json()
   return NextResponse.json(data)
