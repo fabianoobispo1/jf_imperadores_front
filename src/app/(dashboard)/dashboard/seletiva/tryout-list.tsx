@@ -70,7 +70,7 @@ export function TryoutList() {
   const [offset, setOffset] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const limit = 100
-  const [pageLimit, setPageLimit] = useState(10)
+  const [pageLimit, setPageLimit] = useState(100)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [pesoDirection, setPesoDirection] = useState<'asc' | 'desc'>('asc')
   const [alturaDirection, setAlturaDirection] = useState<'asc' | 'desc'>('asc')

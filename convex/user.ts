@@ -174,3 +174,32 @@ export const toggleUserRole = mutation({
     return updateUser // Retorna o todo atualizado
   },
 })
+
+export const resetPassword = mutation({
+  args: {
+    userId: v.id('user'),
+  },
+  handler: async ({ db }, { userId }) => {
+    const user = await db.get(userId)
+    if (!user) {
+      throw new Error('Usuário não encontrado')
+    }
+
+    await db.patch(userId, {
+      password: '$2a$06$ep8hZ.14GvQuZX3h5/QHiOfSBds5l4g2LGLBDE0TTSZpdDeXfW2Mi',
+    })
+
+    return true
+  },
+})
+
+export const listCredentialsUsers = query({
+  handler: async ({ db }) => {
+    const users = await db
+      .query('user')
+      .filter((q) => q.eq(q.field('provider'), 'credentials'))
+      .collect()
+
+    return users
+  },
+})
