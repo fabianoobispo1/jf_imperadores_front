@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const response = await fetch(`${baseUrl}/client/sendMessage/jfimperadores6`, {
+  const response = await fetch(`${baseUrl}/client/sendMessage/jfimperadores7`, {
     method: 'POST',
     headers: {
       accept: '*/*',
