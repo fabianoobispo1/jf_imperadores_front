@@ -20,6 +20,7 @@ import type * as links from "../links.js";
 import type * as mensalidade from "../mensalidade.js";
 import type * as recuperaSenha from "../recuperaSenha.js";
 import type * as seletiva from "../seletiva.js";
+import type * as seletivaConfig from "../seletivaConfig.js";
 import type * as socialIcons from "../socialIcons.js";
 import type * as telaLinks from "../telaLinks.js";
 import type * as todo from "../todo.js";
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   mensalidade: typeof mensalidade;
   recuperaSenha: typeof recuperaSenha;
   seletiva: typeof seletiva;
+  seletivaConfig: typeof seletivaConfig;
   socialIcons: typeof socialIcons;
   telaLinks: typeof telaLinks;
   todo: typeof todo;

@@ -139,6 +139,16 @@ export const financasSchema = {
   updated_at: v.number(),
   userId: v.id('user'),
 }
+export const seletivaConfigSchema = {
+  titulo: v.string(),
+  descricao: v.string(),
+  data_inicio: v.number(), // timestamp
+  data_fim: v.number(), // timestamp
+  local: v.string(),
+  horario: v.string(),
+  status: v.boolean(), // ativa/inativa
+  created_at: v.number(),
+}
 
 // Definição do Schema completo
 export default defineSchema({
@@ -168,4 +178,7 @@ export default defineSchema({
     .index('by_data_pagamento', ['data_pagamento'])
     .index('by_email', ['email']),
   financas: defineTable(financasSchema).index('by_data', ['data']),
+  seletivaConfig: defineTable(seletivaConfigSchema).index('by_status', [
+    'status',
+  ]),
 })
