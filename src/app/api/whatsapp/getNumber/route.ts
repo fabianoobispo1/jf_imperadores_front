@@ -12,7 +12,7 @@ export async function GET() {
   }
 
   const response = await fetch(
-    `${baseUrl}/client/getClassInfo/jfimperadores5`,
+    `${baseUrl}/client/getClassInfo/jfimperadores6`,
     {
       headers: {
         accept: 'application/json',
