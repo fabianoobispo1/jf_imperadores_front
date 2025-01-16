@@ -10,6 +10,13 @@ import { Input } from '@/components/ui/input'
 import { formatPhone } from '@/lib/utils'
 
 import { ScrollArea } from './ui/scroll-area'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
 
 export function WhatsAppComponent() {
   /*   const { data: session } = useSession()
@@ -40,6 +47,7 @@ export function WhatsAppComponent() {
   const [numeroConectado, setNumeroConectado] = useState('')
   const [nomeConectado, setNomeConectado] = useState('')
   const [mesageColor, setMesageColor] = useState('')
+  const [messageType, setMessageType] = useState('string')
 
   const startWhatsAppSession = async () => {
     setLoading(true)
@@ -79,10 +87,27 @@ export function WhatsAppComponent() {
       const formattedPhone = phoneNumber.replace(/\D/g, '')
       const chatId = `55${formattedPhone}@c.us`
 
+      let body
+      if (messageType === 'string') {
+        body = {
+          chatId,
+          contentType: messageType,
+          content: message,
+        }
+      } else if (messageType === 'MessageMedia') {
+        body = {
+          chatId,
+          contentType: messageType,
+          content: {
+            mimetype: 'image/jpeg',
+            data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+            filename: 'image.jpg',
+          },
+        }
+      }
+
       const response = await axios.post('/api/whatsapp/sendMessage', {
-        chatId,
-        contentType: 'string',
-        content: message,
+        body,
       })
 
       setMessage('')
@@ -190,6 +215,17 @@ export function WhatsAppComponent() {
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
+
+            <Select value={messageType} onValueChange={setMessageType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Tipo de mensagem" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="string">Texto</SelectItem>
+                <SelectItem value="MessageMedia">imagem</SelectItem>
+              </SelectContent>
+            </Select>
+
             <Input
               placeholder="Mensagem"
               value={message}
