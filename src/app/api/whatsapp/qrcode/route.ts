@@ -11,7 +11,7 @@ export async function GET() {
     )
   }
 
-  const response = await fetch(`${baseUrl}/session/qr/jfimperadores9/image`, {
+  const response = await fetch(`${baseUrl}/session/qr/jfimperadores8/image`, {
     headers: {
       accept: 'image/png',
       'x-api-key': apiKey,
