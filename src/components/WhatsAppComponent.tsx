@@ -48,6 +48,13 @@ export function WhatsAppComponent() {
   const [nomeConectado, setNomeConectado] = useState('')
   const [mesageColor, setMesageColor] = useState('')
   const [messageType, setMessageType] = useState('string')
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0])
+    }
+  }
 
   const startWhatsAppSession = async () => {
     setLoading(true)
@@ -87,36 +94,36 @@ export function WhatsAppComponent() {
       const formattedPhone = phoneNumber.replace(/\D/g, '')
       const chatId = `55${formattedPhone}@c.us`
 
-      let body
-      if (messageType === 'string') {
-        body = {
+      if (messageType === 'MessageMedia' && selectedFile) {
+        const reader = new FileReader()
+        reader.readAsDataURL(selectedFile)
+        reader.onload = async () => {
+          const base64Data = (reader.result as string).split(',')[1]
+
+          const response = await axios.post('/api/whatsapp/sendMessage', {
+            chatId,
+            contentType: 'MessageMedia',
+            content: {
+              mimetype: selectedFile.type,
+              data: base64Data,
+              filename: selectedFile.name,
+            },
+          })
+          console.log(response.data)
+          setSelectedFile(null)
+        }
+      } else {
+        const response = await axios.post('/api/whatsapp/sendMessage', {
           chatId,
-          contentType: messageType,
+          contentType: 'string',
           content: message,
-        }
-      } else if (messageType === 'MessageMedia') {
-        body = {
-          chatId,
-          contentType: messageType,
-          content: {
-            mimetype: 'image/jpeg',
-            data: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
-            filename: 'image.jpg',
-          },
-        }
+        })
+        console.log(response.data)
+        setMessage('')
       }
-
-      const response = await axios.post('/api/whatsapp/sendMessage', {
-        body,
-      })
-
-      setMessage('')
-      /* setSessionData(response.data) */
-      console.log(response.data)
     } catch (error) {
       console.error('Error sending message:', error)
     }
-    /*  checkStatus() */
     setLoading(false)
   }
 
@@ -226,14 +233,22 @@ export function WhatsAppComponent() {
               </SelectContent>
             </Select>
 
-            <Input
-              placeholder="Mensagem"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
+            {messageType === 'string' ? (
+              <Input
+                placeholder="Mensagem de texto"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+            ) : (
+              <Input type="file" accept="image/*" onChange={handleFileChange} />
+            )}
             <Button
               onClick={sendMessage}
-              disabled={loading || !phoneNumber || !message}
+              disabled={
+                loading ||
+                !phoneNumber ||
+                (messageType === 'string' ? !message : !selectedFile)
+              }
             >
               Enviar
             </Button>
