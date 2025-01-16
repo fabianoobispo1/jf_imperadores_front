@@ -1,6 +1,6 @@
 'use client'
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, /*  useEffect, */ useState } from 'react'
 /* import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation' */
 import Image from 'next/image'
@@ -50,7 +50,7 @@ export function WhatsAppComponent() {
     } catch (error) {
       console.error('Error starting WhatsApp session:', error)
     }
-    checkStatus()
+    /*  checkStatus() */
     setLoading(false)
   }
 
@@ -64,7 +64,7 @@ export function WhatsAppComponent() {
     } catch (error) {
       console.error('Error terminating WhatsApp sessions:', error)
     }
-    checkStatus()
+    /*  checkStatus() */
     setLoading(false)
   }
 
@@ -91,7 +91,7 @@ export function WhatsAppComponent() {
     } catch (error) {
       console.error('Error sending message:', error)
     }
-    checkStatus()
+    /*  checkStatus() */
     setLoading(false)
   }
 
@@ -136,12 +136,12 @@ export function WhatsAppComponent() {
     setLoading(false)
   }, [getNumber, setLoading, setStatusMessage, setMesageColor])
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const interval = setInterval(checkStatus, 5000)
     checkStatus() // Initial check
 
     return () => clearInterval(interval)
-  }, [checkStatus])
+  }, [checkStatus]) */
   return (
     <ScrollArea className="h-[calc(100vh-220px)] w-full overflow-x-auto ">
       <div className=" space-y-4">
