@@ -11,7 +11,7 @@ export async function GET() {
     )
   }
 
-  const response = await fetch(`${baseUrl}/session/status/jfimperadores7`, {
+  const response = await fetch(`${baseUrl}/session/status/jfimperadores8`, {
     headers: {
       accept: 'application/json',
       'x-api-key': apiKey,
