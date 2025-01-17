@@ -1,6 +1,6 @@
 import { v } from 'convex/values'
 
-import { mutation } from './_generated/server'
+import { mutation, query } from './_generated/server'
 
 export const generateUploadUrl = mutation({
   args: {},
@@ -9,13 +9,11 @@ export const generateUploadUrl = mutation({
   },
 })
 
-// this mutation is required to generate the url after uploading the file to the storage.
-export const getUrl = mutation({
-  args: {
-    storageId: v.id('_storage'),
-  },
+export const getImageUrl = query({
+  args: { imageId: v.id('_storage') },
   handler: async (ctx, args) => {
-    return await ctx.storage.getUrl(args.storageId)
+    const imageUrl = await ctx.storage.getUrl(args.imageId)
+    return imageUrl
   },
 })
 

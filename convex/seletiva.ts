@@ -100,3 +100,17 @@ export const update = mutation({
     return { success: true }
   },
 })
+
+export const updateImg = mutation({
+  args: {
+    id: v.id('seletiva'),
+    img_link: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const { id, img_link } = args
+
+    return await ctx.db.patch(id, {
+      img_link,
+    })
+  },
+})
