@@ -6,6 +6,9 @@ import { fetchQuery } from 'convex/nextjs'
 import { DataTable } from '@/components/ui/data-table'
 import type { Id } from '@/convex/_generated/dataModel'
 import { api } from '@/convex/_generated/api'
+import { Heading } from '@/components/ui/heading'
+import { cn } from '@/lib/utils'
+import { useSidebar } from '@/components/ui/sidebar'
 
 import { transactionColumns } from './_columns'
 
@@ -31,7 +34,7 @@ interface Seletivas {
 
 export const TryoutImg: React.FC = () => {
   const { data: session } = useSession()
-
+  const { open } = useSidebar()
   const [seltivas, setSeletivas] = useState<Seletivas[]>([])
 
   const loadList = useCallback(async () => {
@@ -51,11 +54,25 @@ export const TryoutImg: React.FC = () => {
 
   return (
     <>
-      <DataTable
-        searchKey="nome"
-        columns={transactionColumns(loadList)} // Modificar aqui para passar a função
-        data={JSON.parse(JSON.stringify(seltivas))}
-      />
+      <div className="flexrow flex items-start justify-between gap-4 ">
+        <Heading
+          title="Seletiva Imagem"
+          description="Adicionar fotos para os cadastrados na seletiva."
+        />
+      </div>
+
+      <div
+        className={cn(
+          'space-y-8 w-screen pr-8 ',
+          open ? 'md:max-w-[calc(100%-16rem)] ' : 'md:max-w-[calc(100%-5rem)] ',
+        )}
+      >
+        <DataTable
+          searchKey="nome"
+          columns={transactionColumns(loadList)} // Modificar aqui para passar a função
+          data={JSON.parse(JSON.stringify(seltivas))}
+        />
+      </div>
     </>
   )
 }

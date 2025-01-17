@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/table'
 
 import { Input } from './input'
-import { Button } from './button'
+/* import { Button } from './button' */
 import { ScrollArea, ScrollBar } from './scroll-area'
 
 interface DataTableProps<TData, TValue> {
@@ -108,7 +108,7 @@ export function DataTable<TData, TValue>({
           {table.getFilteredSelectedRowModel().rows.length} de{' '}
           {table.getFilteredRowModel().rows.length} linha(s) selecionada.
         </div> */}
-        <div className="space-x-2">
+        {/*  <div className="space-x-2">
           <Button
             variant="outline"
             size="sm"
@@ -125,7 +125,7 @@ export function DataTable<TData, TValue>({
           >
             Proxima
           </Button>
-        </div>
+        </div> */}
       </div>
     </>
   )

@@ -25,3 +25,13 @@ export const removeFile = mutation({
     return await ctx.storage.delete(args.storageId)
   },
 })
+
+export const deleteFile = mutation({
+  args: {
+    storageId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.storage.delete(args.storageId)
+    return true
+  },
+})

@@ -4,6 +4,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { fetchMutation } from 'convex/nextjs'
 import { Trash2 } from 'lucide-react'
+import { useState } from 'react'
 
 import type { Id } from '@/convex/_generated/dataModel'
 import { FileUpload } from '@/components/file-upload'
@@ -40,7 +41,9 @@ export const transactionColumns = (
     cell: ({ row }) => {
       const seletiva = row.original
       const ImageCell = () => {
+        const [isUploading, setIsUploading] = useState(false)
         const imageUrl = useStorageUrl(seletiva.img_link)
+
         return (
           <div className="flex items-center gap-2">
             {seletiva.img_link ? (
@@ -51,15 +54,23 @@ export const transactionColumns = (
               />
             ) : (
               <div className="flex items-center gap-2">
-                <FileUpload
-                  onUploadComplete={async (url) => {
-                    await fetchMutation(api.seletiva.updateImg, {
-                      id: seletiva._id,
-                      img_link: url,
-                    })
-                    onListUpdate()
-                  }}
-                />
+                {isUploading ? (
+                  <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  </div>
+                ) : (
+                  <FileUpload
+                    onUploadComplete={async (url) => {
+                      setIsUploading(true)
+                      await fetchMutation(api.seletiva.updateImg, {
+                        id: seletiva._id,
+                        img_link: url,
+                      })
+                      setIsUploading(false)
+                      onListUpdate()
+                    }}
+                  />
+                )}
               </div>
             )}
           </div>
@@ -79,6 +90,12 @@ export const transactionColumns = (
     header: 'Ações',
     cell: ({ row: { original: Seletivas } }) => {
       const handleRemoveImage = async () => {
+        if (!Seletivas.img_link) {
+          return
+        }
+        await fetchMutation(api.files.deleteFile, {
+          storageId: Seletivas.img_link,
+        })
         await fetchMutation(api.seletiva.updateImg, {
           id: Seletivas._id,
           img_link: '', // Limpa o link da imagem

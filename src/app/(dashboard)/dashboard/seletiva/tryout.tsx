@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { redirect } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { Heading } from '@/components/ui/heading'
@@ -45,14 +46,13 @@ export const Tryout: React.FC = () => {
               title="Seletiva"
               description="Lista dos cadastrados na seletiva."
             />
-            {/*  <Button
+            <Button
               onClick={() => {
-                setExibeBotoes(true)
-                setExibeListar(false)
+                redirect('/dashboard/seletivaimg')
               }}
             >
-              Voltar
-            </Button> */}
+              Adicionar foto
+            </Button>
           </div>
 
           <TryoutList />
