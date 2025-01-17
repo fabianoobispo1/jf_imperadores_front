@@ -48,7 +48,7 @@ export const transactionColumns = (
           <div className="flex items-center gap-2">
             {seletiva.img_link ? (
               <Image
-                src={imageUrl || ''}
+                src={imageUrl ?? '/carousel-1.svg'} // Add a fallback image path
                 alt={seletiva.nome}
                 className="h-20 w-20 rounded-full object-cover"
                 width={80}
