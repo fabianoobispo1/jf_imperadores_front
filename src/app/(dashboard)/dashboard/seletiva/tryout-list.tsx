@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import axios from 'axios'
 import { jsPDF } from 'jspdf'
+import { redirect } from 'next/navigation'
 
 import {
   Select,
@@ -272,9 +273,18 @@ export function TryoutList() {
         )}
       >
         <div className="w-full overflow-auto">
-          <Button variant="outline" size="sm" onClick={exportToPDF}>
-            Exportar PDF
-          </Button>
+          <div className="flex justify-between items-center  pr-4">
+            <Button variant="outline" size="sm" onClick={exportToPDF}>
+              Exportar PDF
+            </Button>
+            <Button
+              onClick={() => {
+                redirect('/dashboard/seletivaimg')
+              }}
+            >
+              Adicionar foto
+            </Button>
+          </div>
           <div className="w-full pr-4 pt-2">
             {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
             <ScrollArea className="h-[calc(80vh-220px)] w-full  rounded-md border   pr-2 ">
