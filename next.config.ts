@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'jfimperadores.com.br',
+        hostname: 'strong-reindeer-272.convex.cloud',
         pathname: '/**', // Permite qualquer caminho
       },
     ],
