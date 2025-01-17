@@ -28,6 +28,11 @@ const nextConfig: NextConfig = {
         hostname: 'files.stripe.com',
         pathname: '/**', // Permite qualquer caminho
       },
+      {
+        protocol: 'https',
+        hostname: 'jfimperadores.com.br',
+        pathname: '/**', // Permite qualquer caminho
+      },
     ],
   },
 }
