@@ -1,10 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
 import { fetchMutation } from 'convex/nextjs'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import Image from 'next/image'
 
 import type { Id } from '@/convex/_generated/dataModel'
 import { FileUpload } from '@/components/file-upload'
@@ -47,10 +47,12 @@ export const transactionColumns = (
         return (
           <div className="flex items-center gap-2">
             {seletiva.img_link ? (
-              <img
+              <Image
                 src={imageUrl || ''}
                 alt={seletiva.nome}
                 className="h-20 w-20 rounded-full object-cover"
+                width={80}
+                height={80}
               />
             ) : (
               <div className="flex items-center gap-2">
