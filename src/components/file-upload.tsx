@@ -32,6 +32,7 @@ export const FileUpload = ({
         <input
           type="file"
           className="hidden"
+          capture="environment"
           accept="image/*"
           onChange={handleUpload}
         />
