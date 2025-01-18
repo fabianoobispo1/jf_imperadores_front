@@ -174,7 +174,7 @@ export function MessagesForm() {
   const enviarWhats = async (
     destinatarios: Array<{ email: string; celular: string }>,
     mensagem: string,
-    sessao: string,
+    sessionName: string,
   ) => {
     setEnviando(true)
     setProgress(0)
@@ -188,7 +188,7 @@ export function MessagesForm() {
           chatId: formatWhatsAppNumber(destinatario.celular),
           contentType: 'string',
           content: mensagem,
-          sessionName: sessao,
+          params: { sessionName },
         })
 
         setEmailsEnviados((prev) => prev + 1)
