@@ -4,13 +4,11 @@ import { ColumnDef } from '@tanstack/react-table'
 import { fetchMutation } from 'convex/nextjs'
 import Image from 'next/image'
 import { useState } from 'react'
-import { ArrowUpDown } from 'lucide-react'
 
 import type { Id } from '@/convex/_generated/dataModel'
 import { FileUpload } from '@/components/file-upload'
 import { api } from '@/convex/_generated/api'
 import { useStorageUrl } from '@/hooks/useStorageUrl'
-import { Button } from '@/components/ui/button'
 
 import ActionCell from './ActionCell'
 
@@ -91,18 +89,9 @@ export const transactionColumns = (
   },
   {
     accessorKey: 'cod_seletiva',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Código Seletiva
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: 'Cod. Seletiva',
   },
+
   {
     accessorKey: 'actions',
     header: 'Ações',
