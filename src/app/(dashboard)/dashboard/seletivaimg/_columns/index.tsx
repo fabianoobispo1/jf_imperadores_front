@@ -2,15 +2,15 @@
 
 import { ColumnDef } from '@tanstack/react-table'
 import { fetchMutation } from 'convex/nextjs'
-import { Trash2 } from 'lucide-react'
-import { useState } from 'react'
 import Image from 'next/image'
+import { useState } from 'react'
 
 import type { Id } from '@/convex/_generated/dataModel'
 import { FileUpload } from '@/components/file-upload'
 import { api } from '@/convex/_generated/api'
 import { useStorageUrl } from '@/hooks/useStorageUrl'
-import { Button } from '@/components/ui/button'
+
+import ActionCell from './ActionCell'
 
 interface Seletivas {
   _id: Id<'seletiva'>
@@ -30,6 +30,7 @@ interface Seletivas {
   equipamento: number
   aprovado?: boolean
   img_link?: string
+  cod_seletiva?: string
 }
 
 export const transactionColumns = (
@@ -86,36 +87,15 @@ export const transactionColumns = (
     accessorKey: 'nome',
     header: 'Nome',
   },
-
+  {
+    accessorKey: 'cod_seletiva',
+    header: 'Cod. Seletiva',
+  },
   {
     accessorKey: 'actions',
     header: 'Ações',
-    cell: ({ row: { original: Seletivas } }) => {
-      const handleRemoveImage = async () => {
-        if (!Seletivas.img_link) {
-          return
-        }
-        await fetchMutation(api.files.deleteFile, {
-          storageId: Seletivas.img_link,
-        })
-        await fetchMutation(api.seletiva.updateImg, {
-          id: Seletivas._id,
-          img_link: '', // Limpa o link da imagem
-        })
-        // Recarrega a lista após remover
-        onListUpdate()
-      }
-      return (
-        <div className="flex items-center gap-2">
-          {Seletivas.img_link ? (
-            <Button variant="destructive" size="sm" onClick={handleRemoveImage}>
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          ) : (
-            <></>
-          )}
-        </div>
-      )
-    },
+    cell: ({ row }) => (
+      <ActionCell seletiva={row.original} onListUpdate={onListUpdate} />
+    ),
   },
 ]

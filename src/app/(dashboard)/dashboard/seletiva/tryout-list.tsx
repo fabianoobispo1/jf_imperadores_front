@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
-import axios from 'axios'
+/* import axios from 'axios' */
 import { jsPDF } from 'jspdf'
 import { redirect } from 'next/navigation'
 
@@ -26,8 +26,9 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { cn, formatPhoneNumber } from '@/lib/utils'
-import { MessageButtons } from '@/components/MessageButtons'
 
+/* import { MessageButtons } from '@/components/MessageButtons'
+ */
 import type { Id } from '../../../../../convex/_generated/dataModel'
 import { api } from '../../../../../convex/_generated/api'
 
@@ -63,6 +64,8 @@ interface Seletivas {
   posicao: string
   equipamento: number
   aprovado?: boolean
+  img_link?: string
+  cod_seletiva?: string
 }
 
 export function TryoutList() {
@@ -81,14 +84,13 @@ export function TryoutList() {
 
   const { open } = useSidebar()
 
-  const [whatsappStatus, setWhatsappStatus] = useState('')
-
+  /*   const [whatsappStatus, setWhatsappStatus] = useState('')
   const [numeroConectado, setNumeroConectado] = useState('')
-  const [nomeConectado, setNomeConectado] = useState('')
+  const [nomeConectado, setNomeConectado] = useState('') */
 
   const [approvingId, setApprovingId] = useState<Id<'seletiva'> | null>(null)
 
-  const checkWhatsappStatus = async () => {
+  /*  const checkWhatsappStatus = async () => {
     try {
       const responseStatus = await axios.get('/api/whatsapp/status')
       setWhatsappStatus(responseStatus.data.message)
@@ -105,15 +107,15 @@ export function TryoutList() {
     } catch (error) {
       console.error('Error checking whatsapp status:', error)
     }
-  }
+  } */
 
   // Add useEffect to check status periodically
-  useEffect(() => {
+  /*   useEffect(() => {
     const interval = setInterval(checkWhatsappStatus, 5000)
     checkWhatsappStatus() // Initial check
 
     return () => clearInterval(interval)
-  }, [])
+  }, []) */
 
   const fetchSeletivaPaginated = async (offset: number, limit: number) => {
     setLoading(true)
@@ -360,6 +362,10 @@ export function TryoutList() {
                         Data Cadastro{' '}
                         {dataCradastroDirection === 'asc' ? '↑' : '↓'}
                       </TableHead>
+                      <TableHead className="text-center w-32">
+                        Cod. Seletiva
+                      </TableHead>
+
                       <TableHead className="text-center w-24">Opções</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -428,9 +434,12 @@ export function TryoutList() {
                               seletiva._creationTime,
                             ).toLocaleDateString()}
                           </TableCell>
+                          <TableCell className="text-center">
+                            {seletiva.cod_seletiva || '-'}
+                          </TableCell>
                           <TableCell>
                             <div className="flex flex-col items-center justify-center gap-2">
-                              <MessageButtons
+                              {/*  <MessageButtons
                                 recipient={{
                                   nome: seletiva.nome,
                                   email: seletiva.email,
@@ -440,7 +449,7 @@ export function TryoutList() {
                                 nomeConectado={nomeConectado}
                                 numeroConectado={numeroConectado}
                                 loading={loading}
-                              />
+                              /> */}
                               <Button
                                 variant="outline"
                                 size="sm"

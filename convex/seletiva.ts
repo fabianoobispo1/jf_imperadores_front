@@ -114,3 +114,24 @@ export const updateImg = mutation({
     })
   },
 })
+
+export const updateCodSeletiva = mutation({
+  args: {
+    id: v.id('seletiva'),
+    cod_seletiva: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { cod_seletiva: args.cod_seletiva })
+  },
+})
+
+export const getByCodSeletiva = query({
+  args: { cod_seletiva: v.string() },
+  handler: async (ctx, args) => {
+    const seletiva = await ctx.db
+      .query('seletiva')
+      .filter((q) => q.eq(q.field('cod_seletiva'), args.cod_seletiva))
+      .first()
+    return seletiva
+  },
+})

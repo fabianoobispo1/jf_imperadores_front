@@ -4,6 +4,7 @@ import BreadCrumb from '@/components/breadcrumb'
 import { TryoutImg } from './tryoutimg'
 
 const breadcrumbItems = [
+  { title: 'Seletiva', link: '/dashboard/seletiva' },
   { title: 'Seletiva Imagem', link: '/dashboard/seletivaimg' },
 ]
 export default function page() {

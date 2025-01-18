@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const sessionName = searchParams.get('sessionName')
   const body = await request.json()
 
   const baseUrl = process.env.API_WHATSAPP
@@ -28,7 +30,7 @@ export async function POST(request: Request) {
               value: { chatId: '6281288888888@c.us', contentType: 'Poll', content: { pollName: 'Cats or Dogs?', pollOptions: ['Cats', 'Dogs'], options: { allowMultipleAnswers: true } } }
             }, */
 
-  const response = await fetch(`${baseUrl}/client/sendMessage/jfimperadores8`, {
+  const response = await fetch(`${baseUrl}/client/sendMessage/${sessionName}`, {
     method: 'POST',
     headers: {
       accept: '*/*',

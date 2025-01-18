@@ -1,6 +1,6 @@
 'use client'
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 /* import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation' */
 import Image from 'next/image'
@@ -49,6 +49,9 @@ export function WhatsAppComponent() {
   const [mesageColor, setMesageColor] = useState('')
   const [messageType, setMessageType] = useState('string')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [sessionName, setSessionName] = useState('')
+
+  const [qrCodeImage, setQrCodeImage] = useState<string>('')
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -59,9 +62,10 @@ export function WhatsAppComponent() {
   const startWhatsAppSession = async () => {
     setLoading(true)
     try {
-      const response = await axios.get('/api/whatsapp/start')
-      /* setSessionData(response.data) */
-      console.log(response.data)
+      await axios.get('/api/whatsapp/start', {
+        params: { sessionName },
+      })
+      await checkStatus()
     } catch (error) {
       console.error('Error starting WhatsApp session:', error)
     }
@@ -72,7 +76,9 @@ export function WhatsAppComponent() {
   const terminateWhatsAppSessions = async () => {
     setLoading(true)
     try {
-      const response = await axios.get('/api/whatsapp/terminate')
+      const response = await axios.get('/api/whatsapp/terminate', {
+        params: { sessionName },
+      })
       /* setSessionData(response.data) */
       console.log(response.data)
       setShowQR(false)
@@ -83,9 +89,23 @@ export function WhatsAppComponent() {
     setLoading(false)
   }
 
-  const fetchQRCode = () => {
-    setShowQR(true)
-    setQrKey((prev) => prev + 1)
+  const fetchQRCode = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get(`/api/whatsapp/qrcode`, {
+        params: { sessionName },
+        responseType: 'blob', // Importante para receber a imagem
+      })
+
+      // Converter o blob para URL
+      const imageUrl = URL.createObjectURL(response.data)
+      setQrCodeImage(imageUrl)
+      setShowQR(true)
+      setQrKey((prev) => prev + 1)
+    } catch (error) {
+      console.error('Error fetching QR code:', error)
+    }
+    setLoading(false)
   }
 
   const sendMessage = async () => {
@@ -108,6 +128,7 @@ export function WhatsAppComponent() {
               data: base64Data,
               filename: selectedFile.name,
             },
+            sessionName,
           })
           console.log(response.data)
           setSelectedFile(null)
@@ -117,6 +138,7 @@ export function WhatsAppComponent() {
           chatId,
           contentType: 'string',
           content: message,
+          sessionName,
         })
         console.log(response.data)
         setMessage('')
@@ -130,7 +152,9 @@ export function WhatsAppComponent() {
   const getNumber = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await axios.get('/api/whatsapp/getNumber')
+      const response = await axios.get('/api/whatsapp/getNumber', {
+        params: { sessionName },
+      })
       setNomeConectado(response.data.sessionInfo.pushname)
       setNumeroConectado(
         response.data.sessionInfo.me.user.slice(2, 4) +
@@ -141,13 +165,15 @@ export function WhatsAppComponent() {
       console.error('Error:', error)
     }
     setLoading(false)
-  }, [setLoading, setNumeroConectado])
+  }, [setLoading, setNumeroConectado, sessionName])
 
   const checkStatus = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await axios.get('/api/whatsapp/status')
-
+      const response = await axios.get('/api/whatsapp/status', {
+        params: { sessionName },
+      })
+      console.log(response.data)
       if (response.data.message === 'session_not_found') {
         setStatusMessage('Sessão não iniciada.')
         setMesageColor('text-red-500')
@@ -166,14 +192,8 @@ export function WhatsAppComponent() {
       console.error('Error checking status:', error)
     }
     setLoading(false)
-  }, [getNumber, setLoading, setStatusMessage, setMesageColor])
+  }, [getNumber, setLoading, setStatusMessage, setMesageColor, sessionName])
 
-  useEffect(() => {
-    /* const interval = setInterval(checkStatus, 5000) */
-    checkStatus() // Initial check
-
-    /*    return () => clearInterval(interval) */
-  }, [checkStatus])
   return (
     <ScrollArea className="h-[calc(100vh-220px)] w-full overflow-x-auto ">
       <div className=" space-y-4">
@@ -192,8 +212,19 @@ export function WhatsAppComponent() {
             {nomeConectado === '' ? '-' : nomeConectado}
           </span>
         </p>
+
+        <div className="flex flex-col gap-2 max-w-md">
+          <Input
+            placeholder="Nome da sessão"
+            value={sessionName}
+            onChange={(e) => setSessionName(e.target.value)}
+          />
+        </div>
         <div className="flex gap-4 flex-wrap">
-          <Button onClick={startWhatsAppSession} disabled={loading}>
+          <Button
+            onClick={startWhatsAppSession}
+            disabled={loading || !sessionName}
+          >
             Iniciar sessão
           </Button>
 
@@ -205,11 +236,19 @@ export function WhatsAppComponent() {
             Terminar sessão
           </Button>
 
-          <Button onClick={fetchQRCode} disabled={loading} variant="outline">
+          <Button
+            onClick={fetchQRCode}
+            disabled={loading || !sessionName}
+            variant="outline"
+          >
             gerar QR Code
           </Button>
 
-          <Button onClick={checkStatus} disabled={loading} variant="secondary">
+          <Button
+            onClick={checkStatus}
+            disabled={loading || !sessionName}
+            variant="secondary"
+          >
             Verfica status
           </Button>
         </div>
@@ -259,22 +298,16 @@ export function WhatsAppComponent() {
           <div className="mt-4">
             <h3 className="text-lg font-semibold mb-2">QR Code</h3>
             <div className="border rounded p-4 inline-block bg-white relative">
-              <Button
-                onClick={() => setShowQR(false)}
-                variant="destructive"
-                size="sm"
-                className="absolute -top-2 -right-2 h-8 w-8 rounded-full"
-              >
-                ✕
-              </Button>
-              <Image
-                key={qrKey}
-                src="/api/whatsapp/qrcode"
-                alt="WhatsApp QR Code"
-                width={450}
-                height={450}
-                className="object-contain"
-              />
+              {qrCodeImage && (
+                <Image
+                  key={qrKey}
+                  src={qrCodeImage}
+                  alt="WhatsApp QR Code"
+                  width={450}
+                  height={450}
+                  className="object-contain"
+                />
+              )}
             </div>
           </div>
         )}

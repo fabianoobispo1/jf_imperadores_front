@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const sessionName = searchParams.get('sessionName')
   const baseUrl = process.env.API_WHATSAPP
   const apiKey = process.env.WHATSAPP_API_KEY
 
@@ -11,13 +13,15 @@ export async function GET() {
     )
   }
 
-  const response = await fetch(`${baseUrl}/session/status/jfimperadores8`, {
+  const response = await fetch(`${baseUrl}/session/status/${sessionName}`, {
     headers: {
       accept: 'application/json',
       'x-api-key': apiKey,
     },
   })
-  /* console.log(response) */
+
   const data = await response.json()
+  console.log(response)
+  console.log(data)
   return NextResponse.json(data)
 }
