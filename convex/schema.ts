@@ -151,6 +151,21 @@ export const seletivaConfigSchema = {
   created_at: v.number(),
 }
 
+export const exerciciosSchema = {
+  nome: v.string(),
+  descricao: v.string(),
+  status: v.boolean(),
+}
+
+// Tabela de tentativas dos exercícios
+export const exercicios_tentativasSchema = {
+  seletiva_id: v.id('seletiva'),
+  exercicio_id: v.id('exercicios'),
+  tentativa: v.number(), // 1, 2 ou 3
+  tempo: v.number(), // tempo em segundos
+  data_registro: v.number(), // timestamp
+}
+
 // Definição do Schema completo
 export default defineSchema({
   user: defineTable(userSchema)
@@ -182,4 +197,9 @@ export default defineSchema({
   seletivaConfig: defineTable(seletivaConfigSchema).index('by_status', [
     'status',
   ]),
+  exercicios: defineTable(exerciciosSchema).index('by_nome', ['nome']),
+  exercicios_tentativas: defineTable(exercicios_tentativasSchema).index(
+    'by_seletiva_id',
+    ['seletiva_id'],
+  ),
 })

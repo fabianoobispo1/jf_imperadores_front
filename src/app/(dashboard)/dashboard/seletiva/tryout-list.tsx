@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 /* import axios from 'axios' */
 import { jsPDF } from 'jspdf'
@@ -31,6 +31,7 @@ import { cn, formatPhoneNumber } from '@/lib/utils'
  */
 import type { Id } from '../../../../../convex/_generated/dataModel'
 import { api } from '../../../../../convex/_generated/api'
+import { ExercicioTentativas } from './exercicio-tentativas'
 
 // Enums para mostrar valores legíveis
 const SETOR_LABELS = {
@@ -67,7 +68,13 @@ interface Seletivas {
   img_link?: string
   cod_seletiva?: string
 }
-
+interface Exercicios {
+  _id: Id<'exercicios'>
+  _creationTime: number
+  nome: string
+  status: boolean
+  descricao: string
+}
 export function TryoutList() {
   const [loading, setLoading] = useState<boolean>(false)
   const [seletivas, setSeletivas] = useState<Seletivas[]>([])
@@ -81,7 +88,7 @@ export function TryoutList() {
   const [dataCradastroDirection, setDataCradastroDirection] = useState<
     'asc' | 'desc'
   >('asc')
-
+  const [exercicios, setExercicios] = useState<Exercicios[]>([])
   const { open } = useSidebar()
 
   /*   const [whatsappStatus, setWhatsappStatus] = useState('')
@@ -231,6 +238,15 @@ export function TryoutList() {
 
     doc.save('lista-completa-seletiva.pdf')
   }
+  // Adicione essa função para buscar os exercícios e tempos
+  const loadExercicios = useCallback(async () => {
+    const allExercicios = await fetchQuery(api.exercicios.getAll, {})
+    setExercicios(allExercicios)
+  }, [])
+
+  useEffect(() => {
+    loadExercicios()
+  }, [loadExercicios])
 
   // Adicione esta função de ordenação
   const sortSeletivas = (data: Seletivas[]) => {
@@ -279,13 +295,23 @@ export function TryoutList() {
             <Button variant="outline" size="sm" onClick={exportToPDF}>
               Exportar PDF
             </Button>
-            <Button
-              onClick={() => {
-                redirect('/dashboard/seletivaimg')
-              }}
-            >
-              Adicionar foto
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => {
+                  redirect('/dashboard/seletivaexercicios')
+                }}
+              >
+                Adicionar Informações
+              </Button>
+
+              {/*  <Button
+                onClick={() => {
+                  redirect('/dashboard/seletivaimg')
+                }}
+              >
+                Adicionar Foto
+              </Button> */}
+            </div>
           </div>
           <div className="w-full pr-4 pt-2">
             {/* Largura mínima para garantir que todas as colunas fiquem visíveis */}
@@ -309,6 +335,14 @@ export function TryoutList() {
                       <TableHead className="text-center min-w-[200px]">
                         Email
                       </TableHead>
+                      {exercicios.map((exercicio) => (
+                        <TableHead
+                          className="text-center min-w-[200px]"
+                          key={exercicio._id}
+                        >
+                          {exercicio.nome}
+                        </TableHead>
+                      ))}
                       <TableHead className="text-center w-32">
                         Celular
                       </TableHead>
@@ -390,6 +424,17 @@ export function TryoutList() {
                             {seletiva.nome}
                           </TableCell>
                           <TableCell>{seletiva.email}</TableCell>
+                          {exercicios.map((exercicio) => (
+                            <TableCell
+                              className="text-center  font-medium"
+                              key={exercicio._id}
+                            >
+                              <ExercicioTentativas
+                                seletivaId={seletiva._id}
+                                exercicioId={exercicio._id}
+                              />
+                            </TableCell>
+                          ))}
                           <TableCell className="text-center whitespace-nowrap">
                             {formatPhoneNumber(seletiva.celular)}
                           </TableCell>

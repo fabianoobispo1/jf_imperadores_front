@@ -16,6 +16,9 @@ export default function Page() {
   const handleNavigationSeletiva = () => {
     router.push('/dashboard/admin/configseletiva')
   }
+  const handleNavigationExercicio = () => {
+    router.push('/dashboard/admin/exercicios')
+  }
 
   return (
     <ScrollArea className="h-full w-full">
@@ -34,6 +37,11 @@ export default function Page() {
         <div>
           <Button onClick={handleNavigationSeletiva}>
             Configuração seletiva
+          </Button>
+        </div>
+        <div>
+          <Button onClick={handleNavigationExercicio}>
+            Configuração Exercício
           </Button>
         </div>
       </div>
