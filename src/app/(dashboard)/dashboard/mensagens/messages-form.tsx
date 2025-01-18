@@ -39,6 +39,7 @@ const formSchema = z
     tipoMensagem: z.string().min(1, 'Selecione o tipo de mensagem'),
     assunto: z.string(),
     mensagem: z.string().min(10, 'Mensagem deve ter no mínimo 10 caracteres'),
+    sessao: z.string(),
   })
   .refine(
     (data) => {
@@ -79,6 +80,7 @@ export function MessagesForm() {
       tipoMensagem: '',
       assunto: '',
       mensagem: '',
+      sessao: '',
     },
   })
 
@@ -175,6 +177,7 @@ export function MessagesForm() {
   const enviarWhats = async (
     destinatarios: Array<{ email: string; celular: string }>,
     mensagem: string,
+    sessao: string,
   ) => {
     setEnviando(true)
     setProgress(0)
@@ -188,6 +191,7 @@ export function MessagesForm() {
           chatId: formatWhatsAppNumber(destinatario.celular),
           contentType: 'string',
           content: mensagem,
+          sessionName: sessao,
         })
 
         setEmailsEnviados((prev) => prev + 1)
@@ -214,7 +218,7 @@ export function MessagesForm() {
         })
       } else {
         // Enviar email em massa
-        await enviarWhats(destinatarios, data.mensagem)
+        await enviarWhats(destinatarios, data.mensagem, data.sessao)
 
         toast({
           title: 'Sucesso',
@@ -287,6 +291,26 @@ export function MessagesForm() {
                 </FormItem>
               )}
             />
+
+            {form.watch('tipoMensagem') === 'whatsapp' && (
+              <FormField
+                control={form.control}
+                name="sessao"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sessão</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Digite o nome da sessão"
+                        {...field}
+                        required
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
