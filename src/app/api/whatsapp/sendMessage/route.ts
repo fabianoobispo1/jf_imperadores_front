@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const sessionName = searchParams.get('sessionName')
   const body = await request.json()
+  const sessionName = body.params.sessionName
 
   const baseUrl = process.env.API_WHATSAPP
   const apiKey = process.env.WHATSAPP_API_KEY

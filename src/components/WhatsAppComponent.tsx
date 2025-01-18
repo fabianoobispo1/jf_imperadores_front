@@ -119,7 +119,7 @@ export function WhatsAppComponent() {
         reader.readAsDataURL(selectedFile)
         reader.onload = async () => {
           const base64Data = (reader.result as string).split(',')[1]
-
+          console.log(sessionName)
           const response = await axios.post('/api/whatsapp/sendMessage', {
             chatId,
             contentType: 'MessageMedia',
@@ -128,17 +128,18 @@ export function WhatsAppComponent() {
               data: base64Data,
               filename: selectedFile.name,
             },
-            sessionName,
+            params: { sessionName },
           })
           console.log(response.data)
           setSelectedFile(null)
         }
       } else {
+        console.log(sessionName)
         const response = await axios.post('/api/whatsapp/sendMessage', {
           chatId,
           contentType: 'string',
           content: message,
-          sessionName,
+          params: { sessionName },
         })
         console.log(response.data)
         setMessage('')

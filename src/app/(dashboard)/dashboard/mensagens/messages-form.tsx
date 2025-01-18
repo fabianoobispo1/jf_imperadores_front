@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -63,10 +63,7 @@ export function MessagesForm() {
   const [destinatarios, setDestinatarios] = useState<
     Array<{ email: string; celular: string }>
   >([])
-
-  const [whatsappStatus, setWhatsappStatus] = useState('')
-  const [nomeConectado, setNomeConectado] = useState('')
-  const [numeroConectado, setNumeroConectado] = useState('')
+  const [error, setError] = useState(false)
 
   const [progress, setProgress] = useState(0)
   const [enviando, setEnviando] = useState(false)
@@ -85,7 +82,7 @@ export function MessagesForm() {
   })
 
   // Sua função checkWhatsappStatus existente
-  const checkWhatsappStatus = async () => {
+  /*   const checkWhatsappStatus = async () => {
     try {
       const responseStatus = await axios.get('/api/whatsapp/status')
       setWhatsappStatus(responseStatus.data.message)
@@ -102,14 +99,14 @@ export function MessagesForm() {
     } catch (error) {
       console.error('Error checking whatsapp status:', error)
     }
-  }
+  } */
 
   // Adicione o useEffect para verificar o status periodicamente
-  useEffect(() => {
+  /*  useEffect(() => {
     checkWhatsappStatus()
     const interval = setInterval(checkWhatsappStatus, 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, []) */
 
   const carregarDestinatarios = async (grupo: string) => {
     setLoading(true)
@@ -183,7 +180,7 @@ export function MessagesForm() {
     setProgress(0)
     setEmailsEnviados(0)
     setTotalEmails(destinatarios.length)
-
+    setError(false)
     // Processamento um a um para respeitar o rate limit
     for (const [index, destinatario] of destinatarios.entries()) {
       try {
@@ -200,9 +197,28 @@ export function MessagesForm() {
 
         await delay(10)
       } catch (error) {
+        setError(true)
         console.error(`Erro ao enviar para ${destinatario.email}:`, error)
       }
     }
+    if (error) {
+      toast({
+        title: 'Erro',
+        variant: 'destructive',
+        description: 'Erro ao emviar mensagem',
+      })
+    } else {
+      toast({
+        title: 'Sucesso',
+        description: 'Mensagens enviadas com sucesso',
+      })
+    }
+
+    setEnviando(false)
+    setProgress(0)
+    setEmailsEnviados(0)
+    setTotalEmails(destinatarios.length)
+    setError(false)
   }
   const onSubmit = async (data: FormValues) => {
     setLoading(true)
@@ -219,17 +235,8 @@ export function MessagesForm() {
       } else {
         // Enviar email em massa
         await enviarWhats(destinatarios, data.mensagem, data.sessao)
-
-        toast({
-          title: 'Sucesso',
-          description: `Mensagem emviada para ${destinatarios.length} destinatários`,
-        })
       }
 
-      toast({
-        title: 'Sucesso',
-        description: 'Mensagens enviadas com sucesso',
-      })
       form.reset()
     } catch (error) {
       console.error(error)
@@ -329,23 +336,9 @@ export function MessagesForm() {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="email">Email</SelectItem>
-                      <SelectItem
-                        value="whatsapp"
-                        disabled={whatsappStatus !== 'session_connected'}
-                      >
-                        WhatsApp{' '}
-                        {whatsappStatus === 'session_connected'
-                          ? `(Conectado: ${numeroConectado} ${nomeConectado})`
-                          : '(Desconectado)'}
-                      </SelectItem>
+                      <SelectItem value="whatsapp">WhatsApp</SelectItem>
                     </SelectContent>
                   </Select>
-                  {whatsappStatus !== 'session_connected' && (
-                    <p className="text-sm text-yellow-600 mt-1">
-                      WhatsApp não está conectado. Acesse as configurações para
-                      conectar.
-                    </p>
-                  )}
                   <FormMessage />
                 </FormItem>
               )}
