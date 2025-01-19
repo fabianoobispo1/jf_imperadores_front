@@ -19,6 +19,9 @@ export default function Page() {
   const handleNavigationExercicio = () => {
     router.push('/dashboard/admin/exercicios')
   }
+  const handleNavigationGerenciarTempo = () => {
+    router.push('/dashboard/admin/gerenciartempos')
+  }
 
   return (
     <ScrollArea className="h-full w-full">
@@ -42,6 +45,11 @@ export default function Page() {
         <div>
           <Button onClick={handleNavigationExercicio}>
             Configuração Exercício
+          </Button>
+        </div>
+        <div>
+          <Button onClick={handleNavigationGerenciarTempo}>
+            Gerenciar Tempos
           </Button>
         </div>
       </div>

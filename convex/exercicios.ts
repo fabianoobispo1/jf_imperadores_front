@@ -82,3 +82,29 @@ export const getTentativasBySeletivaExercicio = query({
       .collect()
   },
 })
+export const removeTentativa = mutation({
+  args: {
+    tentativaId: v.id('exercicios_tentativas'),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.tentativaId)
+  },
+})
+export const getAllTentativas = query({
+  handler: async (ctx) => {
+    const tentativas = await ctx.db.query('exercicios_tentativas').collect()
+
+    // Busca informações do atleta para cada tentativa
+    const tentativasComNome = await Promise.all(
+      tentativas.map(async (tentativa) => {
+        const atleta = await ctx.db.get(tentativa.seletiva_id)
+        return {
+          ...tentativa,
+          atleta_nome: atleta?.nome || 'Atleta não encontrado',
+        }
+      }),
+    )
+
+    return tentativasComNome.sort((a, b) => b.data_registro - a.data_registro)
+  },
+})
