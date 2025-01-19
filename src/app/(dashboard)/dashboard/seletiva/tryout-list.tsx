@@ -4,6 +4,7 @@ import { fetchMutation, fetchQuery } from 'convex/nextjs'
 /* import axios from 'axios' */
 import { jsPDF } from 'jspdf'
 import { redirect } from 'next/navigation'
+import Image from 'next/image'
 
 import {
   Select,
@@ -26,9 +27,14 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { cn, formatPhoneNumber } from '@/lib/utils'
+import { useStorageUrl } from '@/hooks/useStorageUrl'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
-/* import { MessageButtons } from '@/components/MessageButtons'
- */
 import type { Id } from '../../../../../convex/_generated/dataModel'
 import { api } from '../../../../../convex/_generated/api'
 import { ExercicioTentativas } from './exercicio-tentativas'
@@ -85,9 +91,17 @@ export function TryoutList() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [pesoDirection, setPesoDirection] = useState<'asc' | 'desc'>('asc')
   const [alturaDirection, setAlturaDirection] = useState<'asc' | 'desc'>('asc')
+
   const [dataCradastroDirection, setDataCradastroDirection] = useState<
     'asc' | 'desc'
   >('asc')
+  const [codSeletivaDirection, setCodSeletivaDirection] = useState<
+    'asc' | 'desc'
+  >('asc')
+  const [selectedSeletiva, setSelectedSeletiva] = useState<Seletivas | null>(
+    null,
+  )
+
   const [exercicios, setExercicios] = useState<Exercicios[]>([])
   const { open } = useSidebar()
 
@@ -282,6 +296,52 @@ export function TryoutList() {
     })
   }
 
+  const sortCodSeletivaSeletivas = (data: Seletivas[]) => {
+    return [...data].sort((a, b) => {
+      const codA = a.cod_seletiva || ''
+      const codB = b.cod_seletiva || ''
+      if (codSeletivaDirection === 'asc') {
+        return codA.localeCompare(codB)
+      }
+      return codB.localeCompare(codA)
+    })
+  }
+  // Inside the TryoutList component, before the return statement
+
+  const ImageCell = ({
+    imageUrl,
+    className,
+  }: {
+    imageUrl: string
+    className?: string
+  }) => {
+    const url = useStorageUrl(imageUrl)
+    const [isError, setIsError] = useState(false)
+
+    if (!url || isError) {
+      return (
+        <Image
+          src="/carousel-1.svg"
+          alt="Fallback image"
+          className={className || 'w-12 h-12 rounded-full object-cover mx-auto'}
+          width={className?.includes('w-64') ? 256 : 80}
+          height={className?.includes('h-64') ? 256 : 80}
+        />
+      )
+    }
+
+    return (
+      <Image
+        src={url}
+        alt="Candidate photo"
+        className={className || 'w-12 h-12 rounded-full object-cover mx-auto'}
+        width={className?.includes('w-64') ? 256 : 80}
+        height={className?.includes('h-64') ? 256 : 80}
+        onError={() => setIsError(true)}
+        loading="eager"
+      />
+    )
+  }
   return (
     <>
       <div
@@ -321,6 +381,21 @@ export function TryoutList() {
                   <TableHeader className="sticky top-0 bg-background">
                     <TableRow>
                       {/* <TableHead className="text-center w-16">Nº</TableHead> */}
+                      <TableHead
+                        className="text-center min-w-[150px] cursor-pointer hover:bg-muted"
+                        onClick={() => {
+                          setCodSeletivaDirection((prev) =>
+                            prev === 'asc' ? 'desc' : 'asc',
+                          )
+                          setSeletivas(sortCodSeletivaSeletivas(seletivas))
+                        }}
+                      >
+                        Cod. Seletiva{' '}
+                        {codSeletivaDirection === 'asc' ? '↑' : '↓'}
+                      </TableHead>
+                      <TableHead className="text-center min-w-[100px]">
+                        Imagem
+                      </TableHead>
                       <TableHead
                         className="text-center min-w-[200px] cursor-pointer hover:bg-muted"
                         onClick={() => {
@@ -396,9 +471,6 @@ export function TryoutList() {
                         Data Cadastro{' '}
                         {dataCradastroDirection === 'asc' ? '↑' : '↓'}
                       </TableHead>
-                      <TableHead className="text-center w-32">
-                        Cod. Seletiva
-                      </TableHead>
 
                       <TableHead className="text-center w-24">Opções</TableHead>
                     </TableRow>
@@ -415,11 +487,25 @@ export function TryoutList() {
                       seletivas.map((seletiva) => (
                         <TableRow
                           key={seletiva._id}
-                          className={cn(seletiva.aprovado && 'bg-green-100')}
+                          className={cn(
+                            seletiva.aprovado && 'bg-green-100',
+                            'cursor-pointer hover:bg-muted/50',
+                          )}
+                          onClick={() => setSelectedSeletiva(seletiva)}
                         >
                           {/*  <TableCell className="text-center">
                           {seletiva.numerio_seletiva}
                         </TableCell> */}
+                          <TableCell className="text-center">
+                            {seletiva.cod_seletiva || '-'}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            {seletiva.img_link ? (
+                              <ImageCell imageUrl={seletiva.img_link} />
+                            ) : (
+                              '-'
+                            )}
+                          </TableCell>
                           <TableCell className="text-center  font-medium">
                             {seletiva.nome}
                           </TableCell>
@@ -479,9 +565,7 @@ export function TryoutList() {
                               seletiva._creationTime,
                             ).toLocaleDateString()}
                           </TableCell>
-                          <TableCell className="text-center">
-                            {seletiva.cod_seletiva || '-'}
-                          </TableCell>
+
                           <TableCell>
                             <div className="flex flex-col items-center justify-center gap-2">
                               {/*  <MessageButtons
@@ -570,6 +654,45 @@ export function TryoutList() {
           </div>
         </div>
       </div>
+
+      {selectedSeletiva && (
+        <Dialog
+          open={!!selectedSeletiva}
+          onOpenChange={() => setSelectedSeletiva(null)}
+        >
+          <DialogContent className="max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>Detalhes do Candidato</DialogTitle>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-4">
+              {selectedSeletiva.img_link && (
+                <div className="col-span-2 flex justify-center">
+                  <ImageCell
+                    imageUrl={selectedSeletiva.img_link}
+                    className="w-64 h-64 rounded-lg object-cover"
+                  />
+                </div>
+              )}
+              <div>
+                <h3 className="font-semibold">Nome</h3>
+                <p>{selectedSeletiva.nome}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold">Código Seletiva</h3>
+                <p>{selectedSeletiva.cod_seletiva || '-'}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold">Email</h3>
+                <p>{selectedSeletiva.email}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold">Celular</h3>
+                <p>{formatPhoneNumber(selectedSeletiva.celular)}</p>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   )
 }
