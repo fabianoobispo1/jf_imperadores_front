@@ -41,7 +41,11 @@ export const TryoutExercicios: React.FC = () => {
   const loadList = useCallback(async () => {
     const allSeletivas = await fetchQuery(api.seletiva.getAll, {})
 
-    const sortedSeletivas = [...allSeletivas].sort((a, b) => {
+    const filteredSeletivas = allSeletivas.filter(
+      (seletiva) => seletiva.cod_seletiva,
+    )
+
+    const sortedSeletivas = [...filteredSeletivas].sort((a, b) => {
       return a.nome.localeCompare(b.nome)
     })
     setSeletivas(sortedSeletivas)

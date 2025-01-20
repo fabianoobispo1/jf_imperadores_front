@@ -69,6 +69,8 @@ export const transactionColumns = (
               }
             } catch (error) {
               console.error('Upload failed:', error)
+            } finally {
+              setIsUploading(false)
             }
           },
           [isUploading, startUpload],
