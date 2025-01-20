@@ -24,12 +24,13 @@ export default function seletiva() {
           </h2>
           <p className="text-sm text-muted-foreground">
             Bem-vindo ao Juiz de Fora Imperadores. Este formulário deve ser
-            preenchido por todos que queiram participar da 1ª seletiva do JF
-            Imperadores de 2025.
+            preenchido por todos que queiram participar da 2ª chamada da 1ª
+            seletiva do JF Imperadores de 2025.
           </p>
           <p className="text-sm text-muted-foreground">
-            A seletiva será realizada no dia 19 de Janeiro. Horário: 9 horas
-            Local: Ginásio da Faefid-UFJF
+            A 2ª chamada da seletiva será realizada no dia {/* 19 */} de
+            Janeiro. Horário: {/* 9 horas */} Local: Ginásio da Secretaria de
+            Esporte e Lazer - Av. Rui Barbosa, 530
           </p>
         </div>
         <SeletivaForm />
