@@ -43,8 +43,9 @@ export const ConfirmacaoSeletiva = ({ nome }: ConfirmacaoSeletivaProps) => {
             </Text>
 
             <Text style={paragraph}>
-              A seletiva será realizada no dia 19 de janeiro. Horário: 9 horas
-              Local: Ginásio da FAEFID-UFJF
+              A 2ª chamada da seletiva será realizada no dia 26 de Janeiro.
+              Horário: 9 horas Local: Ginásio da SEL - Rua custódio trsitão, 11
+              - Santa Terezinha
             </Text>
 
             <Text style={paragraph}>

@@ -28,9 +28,9 @@ export default function seletiva() {
             seletiva do JF Imperadores de 2025.
           </p>
           <p className="text-sm text-muted-foreground">
-            A 2ª chamada da seletiva será realizada no dia {/* 19 */} de
-            Janeiro. Horário: {/* 9 horas */} Local: Ginásio da Secretaria de
-            Esporte e Lazer - Av. Rui Barbosa, 530
+            A 2ª chamada da seletiva será realizada no dia 26 de Janeiro.
+            Horário: 9 horas Local: Ginásio da SEL - Rua custódio trsitão, 11 -
+            Santa Terezinha
           </p>
         </div>
         <SeletivaForm />
