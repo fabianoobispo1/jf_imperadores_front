@@ -3,12 +3,13 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { fetchMutation } from 'convex/nextjs'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { Upload } from 'lucide-react'
 
+import { useUploadThing } from '@/lib/uploadthing'
 import type { Id } from '@/convex/_generated/dataModel'
-import { FileUpload } from '@/components/file-upload'
 import { api } from '@/convex/_generated/api'
-import { useStorageUrl } from '@/hooks/useStorageUrl'
+import { Button } from '@/components/ui/button'
 
 import ActionCell from './ActionCell'
 
@@ -43,38 +44,70 @@ export const transactionColumns = (
       const seletiva = row.original
       const ImageCell = () => {
         const [isUploading, setIsUploading] = useState(false)
-        const imageUrl = useStorageUrl(seletiva.img_link)
+        const { startUpload } = useUploadThing('imageUploader', {
+          onClientUploadComplete: () => {
+            setIsUploading(false)
+          },
+          onUploadError: () => {
+            setIsUploading(false)
+          },
+        })
+
+        const handleFileUpload = useCallback(
+          async (file: File) => {
+            if (isUploading) return
+            setIsUploading(true)
+
+            try {
+              const uploadResult = await startUpload([file])
+              if (uploadResult && uploadResult[0]) {
+                await fetchMutation(api.seletiva.updateImg, {
+                  id: seletiva._id,
+                  img_link: uploadResult[0].url,
+                })
+                await onListUpdate()
+              }
+            } catch (error) {
+              console.error('Upload failed:', error)
+            }
+          },
+          [isUploading, startUpload],
+        )
 
         return (
           <div className="flex items-center gap-2">
             {seletiva.img_link ? (
               <Image
-                src={imageUrl ?? '/carousel-1.svg'} // Add a fallback image path
+                src={seletiva.img_link}
                 alt={seletiva.nome}
                 className="h-20 w-20 rounded-full object-cover"
                 width={80}
                 height={80}
               />
             ) : (
-              <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-20 h-20 rounded-full"
+                disabled={isUploading}
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
                 {isUploading ? (
-                  <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                  </div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                 ) : (
-                  <FileUpload
-                    onUploadComplete={async (url) => {
-                      setIsUploading(true)
-                      await fetchMutation(api.seletiva.updateImg, {
-                        id: seletiva._id,
-                        img_link: url,
-                      })
-                      setIsUploading(false)
-                      onListUpdate()
-                    }}
-                  />
+                  <Upload className="h-6 w-6" />
                 )}
-              </div>
+                <input
+                  id="file-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) handleFileUpload(file)
+                  }}
+                  className="hidden"
+                />
+              </Button>
             )}
           </div>
         )
@@ -82,7 +115,6 @@ export const transactionColumns = (
       return <ImageCell />
     },
   },
-
   {
     accessorKey: 'nome',
     header: 'Nome',
@@ -91,7 +123,6 @@ export const transactionColumns = (
     accessorKey: 'cod_seletiva',
     header: 'Cod. Seletiva',
   },
-
   {
     accessorKey: 'actions',
     header: 'Ações',

@@ -78,9 +78,18 @@ const ActionCell = ({ seletiva, onListUpdate }: ActionCellProps) => {
 
     setIsLoading(true)
     try {
-      await fetchMutation(api.files.deleteFile, {
-        storageId: seletiva.img_link,
+      // Extract the file key from the URL
+      const imageKey = seletiva.img_link.split('/').pop()
+
+      // Call the uploadthing remove endpoint
+      await fetch('/api/uploadthing/remove', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageKey }),
       })
+
       await fetchMutation(api.seletiva.updateImg, {
         id: seletiva._id,
         img_link: '',

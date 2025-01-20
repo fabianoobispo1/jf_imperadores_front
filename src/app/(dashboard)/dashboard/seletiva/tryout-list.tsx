@@ -27,7 +27,6 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { cn, formatPhoneNumber } from '@/lib/utils'
-import { useStorageUrl } from '@/hooks/useStorageUrl'
 import {
   Dialog,
   DialogContent,
@@ -315,11 +314,7 @@ export function TryoutList() {
     imageUrl: string
     className?: string
   }) => {
-    const url = useStorageUrl(imageUrl)
-    const [isError, setIsError] = useState(false)
-
-    if (!url || isError) {
-      return (
+    /*       return (
         <Image
           src="/carousel-1.svg"
           alt="Fallback image"
@@ -328,16 +323,15 @@ export function TryoutList() {
           height={className?.includes('h-64') ? 256 : 80}
         />
       )
-    }
+  */
 
     return (
       <Image
-        src={url}
+        src={imageUrl}
         alt="Candidate photo"
         className={className || 'w-12 h-12 rounded-full object-cover mx-auto'}
         width={className?.includes('w-64') ? 256 : 80}
         height={className?.includes('h-64') ? 256 : 80}
-        onError={() => setIsError(true)}
         loading="eager"
       />
     )
