@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-/* #9A6A15*/
+/* #9A6A15 */
 module.exports = {
   darkMode: ['class'],
   content: [
@@ -26,6 +26,10 @@ module.exports = {
     },
     extend: {
       colors: {
+        'imperial-gold': '#B8860B', // Dourado
+        'imperial-black': '#000000', // Preto
+        'imperial-white': '#FFFFFF', // Branco
+
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

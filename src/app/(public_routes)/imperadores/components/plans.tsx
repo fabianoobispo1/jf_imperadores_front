@@ -40,7 +40,7 @@ export const Plans = () => {
         {plans.map((plan, index) => (
           <div
             key={index}
-            className="rounded-lg bg-gradient-to-r from-[#1a2a6c] to-[#b21f1f] p-6 border-2 border-yellow-400"
+            className="rounded-lg bg-gradient-to-r from-[#1a2a6c] to-imperial-gold p-6 border-2 border-yellow-400"
           >
             <h3 className="text-xl font-bold text-yellow-400">{plan.title}</h3>
             <p className="my-4">Investimento: R$ {plan.price}/ano</p>

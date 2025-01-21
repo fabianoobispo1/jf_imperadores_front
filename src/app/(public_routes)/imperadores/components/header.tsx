@@ -1,10 +1,14 @@
+import Image from 'next/image'
+
 export const Header = () => {
   return (
-    <div className="mb-8 rounded-xl bg-black/50 py-10 text-center">
-      <img
-        src="/logo-imperadores.png"
+    <div className=" mb-8 rounded-xl py-10 text-center">
+      <Image
+        src="/logo.png"
         alt="Logo Imperadores"
-        className="mx-auto h-[150px] w-[150px] rounded-full border-3 border-yellow-400"
+        width={250}
+        height={250}
+        className="mx-auto rounded-full border-3 border-yellow-400"
       />
       <h1 className="mt-4 text-5xl font-bold text-yellow-400 drop-shadow-lg">
         Juiz de Fora Imperadores

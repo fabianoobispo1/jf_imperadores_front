@@ -11,7 +11,7 @@ export const Contact = () => {
           desenvolvimento do Futebol Americano em nossa região.
         </p>
         <p className="mb-6">
-          📧 marketing@jfimperadores.com.br
+          📧 contato@jfimperadores.com.br
           <br />
           📱 (32) XXXX-XXXX
         </p>

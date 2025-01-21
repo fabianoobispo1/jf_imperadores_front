@@ -10,7 +10,7 @@ export const Objectives = () => {
 
   return (
     <Section title="Objetivos 2025">
-      <div className="rounded-lg bg-gradient-to-r from-[#1a2a6c] to-[#b21f1f] p-6">
+      <div className="rounded-lg bg-gradient-to-r from-[#1a2a6c] to-imperial-gold p-6">
         <ul className="list-disc pl-6 space-y-2">
           {objectives.map((objective, index) => (
             <li key={index}>{objective}</li>

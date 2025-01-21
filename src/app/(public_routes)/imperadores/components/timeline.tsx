@@ -36,7 +36,7 @@ const timelineEvents = [
 export const Timeline = () => {
   return (
     <Section title="Nossa História">
-      <div className="space-y-4">
+      <div className="space-y-4 ">
         {timelineEvents.map((event) => (
           <div
             key={event.year}

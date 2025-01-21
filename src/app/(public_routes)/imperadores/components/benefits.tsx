@@ -37,7 +37,7 @@ export const Benefits = () => {
         {benefitCards.map((card, index) => (
           <div
             key={index}
-            className="rounded-lg bg-gradient-to-r from-[#1a2a6c] to-[#b21f1f] p-6 border-2 border-yellow-400"
+            className="rounded-lg bg-gradient-to-r from-[#1a2a6c] to-imperial-gold p-6 border-2 border-yellow-400"
           >
             <h3 className="mb-4 text-xl font-bold">{card.title}</h3>
             <ul className="list-disc pl-6 space-y-2">
