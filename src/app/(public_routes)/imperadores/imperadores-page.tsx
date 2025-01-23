@@ -15,6 +15,9 @@ import { History } from './components/history'
 import { Goals } from './components/goals' */
 import { HeroSection } from './components/hero'
 import { StatsSection } from './components/stats'
+import { HistorySection } from './components/history'
+import { MissionVisionValues } from './components/mission-vision-values'
+import { SocialImpact } from './components/social-impact'
 
 export const ImperadoresPage = () => {
   return (
@@ -27,8 +30,16 @@ export const ImperadoresPage = () => {
         <section className="snap-start h-screen">
           <StatsSection />
         </section>
-        {/* <HistorySection />
-        <TeamSection />
+        <section className="snap-start h-screen">
+          <HistorySection />
+        </section>
+        <section className="snap-start h-screen">
+          <MissionVisionValues />
+        </section>
+        <section className="snap-start h-screen">
+          <SocialImpact />
+        </section>
+        {/* <TeamSection />
         <NewsSection />
         <PartnersSection />
         <InvestSection />

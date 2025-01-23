@@ -18,7 +18,7 @@ export const StatsSection = () => {
 
   const stats = [
     {
-      number: '10+',
+      number: '8+',
       label: 'Anos de História',
       icon: <HistoryIcon />,
       description: 'Uma década formando atletas',
