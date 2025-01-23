@@ -151,7 +151,8 @@ export function MessagesForm() {
           allCandidates = await fetchQuery(api.seletiva.getAll, {})
           lista = allCandidates.filter(
             (candidate) =>
-              !candidate.cod_seletiva && candidate._creationTime < dataLimite,
+              candidate.cod_seletiva === '' &&
+              candidate._creationTime < dataLimite,
           )
           console.log(lista)
           break
@@ -159,7 +160,8 @@ export function MessagesForm() {
           allCandidates = await fetchQuery(api.seletiva.getAll, {})
           lista = allCandidates.filter(
             (candidate) =>
-              !candidate.cod_seletiva && candidate._creationTime >= dataLimite,
+              candidate.cod_seletiva === '' &&
+              candidate._creationTime >= dataLimite,
           )
           console.log(lista)
           break
