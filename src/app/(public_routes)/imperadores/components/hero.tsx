@@ -30,8 +30,8 @@ export const HeroSection = () => {
       </video>
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
-        <h1 className="text-6xl font-bold mb-8">JF Imperadores</h1>
-        <p className="text-2xl mb-12">Faça parte desse time</p>
+        <h1 className="text-5xl font-bold mb-8">JF Imperadores</h1>
+        {/*  <p className="text-2xl mb-12">Faça parte desse time</p> */}
         <CTAButton />
       </div>
     </section>

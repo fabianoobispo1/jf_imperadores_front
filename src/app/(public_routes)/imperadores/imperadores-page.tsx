@@ -13,6 +13,9 @@ import { Objectives } from './components/objectives'
 import { Contact } from './components/contact'
 import { History } from './components/history'
 import { Goals } from './components/goals' */
+
+import { ScrollArea } from '@/components/ui/scroll-area'
+
 import { HeroSection } from './components/hero'
 import { StatsSection } from './components/stats'
 import { HistorySection } from './components/history'
@@ -22,7 +25,7 @@ import { SocialImpact } from './components/social-impact'
 export const ImperadoresPage = () => {
   return (
     <ParallaxProvider>
-      <main className="h-screen overflow-y-auto snap-y md:snap-mandatory">
+      <ScrollArea className="h-screen overflow-y-auto snap-y md:snap-mandatory">
         <section className="snap-start h-screen">
           <HeroSection />
         </section>
@@ -44,7 +47,7 @@ export const ImperadoresPage = () => {
         <PartnersSection />
         <InvestSection />
         <ContactSection /> */}
-      </main>
+      </ScrollArea>
     </ParallaxProvider>
   )
 }
