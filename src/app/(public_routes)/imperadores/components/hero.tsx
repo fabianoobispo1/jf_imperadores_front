@@ -4,8 +4,13 @@ export const HeroSection = () => {
   // Micro-interações nos botões
 
   const CTAButton = () => {
+    const scrollToContact = () => {
+      const contactSection = document.getElementById('contact')
+      contactSection?.scrollIntoView({ behavior: 'smooth' })
+    }
     return (
       <motion.button
+        onClick={scrollToContact}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className="bg-imperial-gold px-8 py-4 rounded-full"

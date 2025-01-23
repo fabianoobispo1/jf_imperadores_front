@@ -21,6 +21,9 @@ import { StatsSection } from './components/stats'
 import { HistorySection } from './components/history'
 import { MissionVisionValues } from './components/mission-vision-values'
 import { SocialImpact } from './components/social-impact'
+import { Benefits } from './components/benefits'
+import { Plans } from './components/plans'
+import { Contact } from './components/contact'
 
 export const ImperadoresPage = () => {
   return (
@@ -42,6 +45,16 @@ export const ImperadoresPage = () => {
         <section className="snap-start  h-fulll">
           <SocialImpact />
         </section>
+        <section className="snap-start  h-fulll">
+          <Benefits />
+        </section>
+        <section className="snap-start  h-fulll">
+          <Plans />
+        </section>
+        <section className="snap-start  h-fulll">
+          <Contact />
+        </section>
+
         {/* <TeamSection />
         <NewsSection />
         <PartnersSection />
