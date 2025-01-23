@@ -21,10 +21,10 @@ export const StatsSection = () => {
       number: '8+',
       label: 'Anos de História',
       icon: <HistoryIcon />,
-      description: 'Uma década formando atletas',
+      description: 'Formando atletas',
     },
     {
-      number: '300+',
+      number: '100+',
       label: 'Atletas Formados',
       icon: <AthleteIcon />,
       description: 'Talentos desenvolvidos',
@@ -36,7 +36,7 @@ export const StatsSection = () => {
       description: 'Conquistas importantes',
     },
     {
-      number: '5000+',
+      number: '1000+',
       label: 'Torcedores',
       icon: <FansIcon />,
       description: 'Família Imperadores',

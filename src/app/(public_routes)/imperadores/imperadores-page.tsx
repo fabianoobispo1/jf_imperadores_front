@@ -22,21 +22,21 @@ import { SocialImpact } from './components/social-impact'
 export const ImperadoresPage = () => {
   return (
     <ParallaxProvider>
-      <main className="h-screen overflow-y-auto snap-y snap-mandatory">
+      <main className="h-screen overflow-y-auto snap-y md:snap-mandatory">
         <section className="snap-start h-screen">
           <HeroSection />
         </section>
 
-        <section className="snap-start h-screen">
+        <section className=" snap-start h-fulll">
           <StatsSection />
         </section>
-        <section className="snap-start h-screen">
+        <section className=" snap-start h-fulll">
           <HistorySection />
         </section>
-        <section className="snap-start h-screen">
+        <section className="snap-start  h-fulll">
           <MissionVisionValues />
         </section>
-        <section className="snap-start h-screen">
+        <section className="snap-start  h-fulll">
           <SocialImpact />
         </section>
         {/* <TeamSection />
