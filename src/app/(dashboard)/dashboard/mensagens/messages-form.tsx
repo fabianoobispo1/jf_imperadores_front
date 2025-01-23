@@ -132,8 +132,6 @@ export function MessagesForm() {
     try {
       let lista: Array<{ email: string; celular: string }> = []
       let allCandidates: Array<Seletiva> = []
-      // 19/01/2024 12:00:00
-      const dataLimite = 1705672800000
 
       switch (grupo) {
         case 'atletas':
@@ -147,21 +145,12 @@ export function MessagesForm() {
           lista = allCandidates.filter((candidate) => candidate.cod_seletiva)
           console.log(lista)
           break
-        case 'seletiva_antes':
+
+        case 'seletiva_faltantes':
           allCandidates = await fetchQuery(api.seletiva.getAll, {})
           lista = allCandidates.filter(
             (candidate) =>
-              (!candidate.cod_seletiva || candidate.cod_seletiva === '') &&
-              candidate._creationTime < dataLimite,
-          )
-          console.log(lista)
-          break
-        case 'seletiva_depois':
-          allCandidates = await fetchQuery(api.seletiva.getAll, {})
-          lista = allCandidates.filter(
-            (candidate) =>
-              (!candidate.cod_seletiva || candidate.cod_seletiva === '') &&
-              candidate._creationTime >= dataLimite,
+              !candidate.cod_seletiva || candidate.cod_seletiva === '',
           )
           console.log(lista)
           break
@@ -338,11 +327,8 @@ export function MessagesForm() {
                       <SelectItem value="seletiva_codigos">
                         Candidatos que compareceu na primeira seletiva
                       </SelectItem>
-                      <SelectItem value="seletiva_antes">
-                        Candidatos Antes 19/01 12h
-                      </SelectItem>
-                      <SelectItem value="seletiva_depois">
-                        Candidatos Após 19/01 12h
+                      <SelectItem value="seletiva_faltantes">
+                        Candidatos Faltantes
                       </SelectItem>
                     </SelectContent>
                   </Select>
