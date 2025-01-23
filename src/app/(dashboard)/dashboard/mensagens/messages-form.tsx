@@ -32,6 +32,25 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { cn, formatWhatsAppNumber } from '@/lib/utils'
 
 import { api } from '../../../../../convex/_generated/api'
+interface Seletiva {
+  numerio_seletiva: number
+  nome: string
+  cpf: string
+  data_nascimento?: number
+  email: string
+  altura: number
+  peso: number
+  celular: string
+  tem_experiencia: boolean
+  equipe_anterior: string
+  setor: number
+  posicao: string
+  equipamento: number
+  img_link: string
+  aprovado?: boolean
+  cod_seletiva?: string
+  _creationTime: number
+}
 
 const formSchema = z
   .object({
@@ -112,14 +131,37 @@ export function MessagesForm() {
     setLoading(true)
     try {
       let lista: Array<{ email: string; celular: string }> = []
+      let allCandidates: Array<Seletiva> = []
+      // 19/01/2024 12:00:00
+      const dataLimite = 1705672800000
+
       switch (grupo) {
         case 'atletas':
           lista = await fetchQuery(api.atletas.getAll, {})
-
           break
         case 'seletiva':
           lista = await fetchQuery(api.seletiva.getAll, {})
-
+          break
+        case 'seletiva_codigos':
+          allCandidates = await fetchQuery(api.seletiva.getAll, {})
+          lista = allCandidates.filter((candidate) => candidate.cod_seletiva)
+          console.log(lista)
+          break
+        case 'seletiva_antes':
+          allCandidates = await fetchQuery(api.seletiva.getAll, {})
+          lista = allCandidates.filter(
+            (candidate) =>
+              !candidate.cod_seletiva && candidate._creationTime < dataLimite,
+          )
+          console.log(lista)
+          break
+        case 'seletiva_depois':
+          allCandidates = await fetchQuery(api.seletiva.getAll, {})
+          lista = allCandidates.filter(
+            (candidate) =>
+              !candidate.cod_seletiva && candidate._creationTime >= dataLimite,
+          )
+          console.log(lista)
           break
       }
       setDestinatarios(lista)
@@ -134,7 +176,6 @@ export function MessagesForm() {
       setLoading(false)
     }
   }
-
   // Função auxiliar para criar delay
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms))
@@ -291,6 +332,15 @@ export function MessagesForm() {
                       <SelectItem value="atletas">Atletas</SelectItem>
                       <SelectItem value="seletiva">
                         Candidatos Seletiva
+                      </SelectItem>
+                      <SelectItem value="seletiva_codigos">
+                        Candidatos que compareceu na primeira seletiva
+                      </SelectItem>
+                      <SelectItem value="seletiva_antes">
+                        Candidatos Antes 19/01 12h
+                      </SelectItem>
+                      <SelectItem value="seletiva_depois">
+                        Candidatos Após 19/01 12h
                       </SelectItem>
                     </SelectContent>
                   </Select>
