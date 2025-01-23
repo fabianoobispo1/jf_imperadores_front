@@ -20,9 +20,13 @@ export const HeroSection = () => {
         autoPlay
         muted
         loop
+        playsInline
+        preload="auto"
         className="absolute inset-0 w-full h-full object-cover opacity-50"
+        poster="/images/hero-poster.jpg"
       >
         <source src="/videos/team-highlight.mp4" type="video/mp4" />
+        <source src="/videos/team-highlight.webm" type="video/webm" />
       </video>
 
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">

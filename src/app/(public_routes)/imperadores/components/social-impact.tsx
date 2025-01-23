@@ -9,10 +9,7 @@ export const SocialImpact = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 })
 
   return (
-    <motion.section
-      ref={sectionRef}
-      className="min-h-screen bg-gradient-to-r from-black via-imperial-gold/10 to-black py-20"
-    >
+    <motion.section ref={sectionRef} className="min-h-screen bg-black/90 py-20">
       <div className="max-w-7xl mx-auto px-4">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}

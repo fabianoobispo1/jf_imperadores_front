@@ -35,7 +35,7 @@ export const MissionVisionValues = () => {
   return (
     <motion.section
       ref={sectionRef}
-      className="relative min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-imperial-gold/5 via-black to-black overflow-hidden py-20"
+      className="relative min-h-screen bg-black/90 overflow-hidden py-20"
     >
       {/* Decorative elements */}
       <div className="absolute inset-0">
