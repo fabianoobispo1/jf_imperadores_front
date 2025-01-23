@@ -3,14 +3,32 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Users, Heart, Trophy } from 'lucide-react'
+import Image from 'next/image'
 
 export const SocialImpact = () => {
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 })
 
   return (
-    <motion.section ref={sectionRef} className="min-h-screen bg-black/90 py-20">
-      <div className="max-w-7xl mx-auto px-4">
+    <motion.section
+      ref={sectionRef}
+      className="relative min-h-screen overflow-hidden"
+    >
+      {/* Background Image */}
+      <div className="absolute inset-0 bg-black/90">
+        <Image
+          src="/images/994B1403.jpg"
+          alt="História JF Imperadores"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={75}
+          loading="eager"
+          className="object-cover opacity-20"
+        />
+        {/*    <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black" /> */}
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}

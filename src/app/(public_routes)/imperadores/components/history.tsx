@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+import Image from 'next/image'
 
 export const HistorySection = () => {
   const sectionRef = useRef(null)
@@ -33,8 +34,32 @@ export const HistorySection = () => {
     },
   ]
   return (
-    <motion.section ref={sectionRef} className="min-h-screen bg-black/90 py-20">
-      <div className="max-w-7xl mx-auto px-4">
+    <motion.section
+      ref={sectionRef}
+      className="relative min-h-screen overflow-hidden"
+    >
+      {/* Background Image */}
+      <div className="absolute inset-0 bg-black/90">
+        <Image
+          src="/images/994B1369.jpg"
+          alt="História JF Imperadores"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          quality={75}
+          loading="eager"
+          className="object-cover opacity-20"
+        />
+        {/*    <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black" /> */}
+      </div>
+
+      {/* Golden Details */}
+      {/*       <div className="absolute inset-0">
+        <div className="absolute top-0 w-full h-20 bg-gradient-to-b from-imperial-gold/10 to-transparent" />
+        <div className="absolute bottom-0 w-full h-20 bg-gradient-to-t from-imperial-gold/10 to-transparent" />
+      </div> */}
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -51,7 +76,7 @@ export const HistorySection = () => {
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="bg-black/60 backdrop-blur-sm p-8 rounded-xl border border-imperial-gold/20"
+              className="bg-black/60 backdrop-blur-sm p-8 rounded-xl border border-imperial-gold/20 hover:border-imperial-gold/40 transition-all"
             >
               <h3 className="text-2xl font-bold text-imperial-gold mb-4">
                 {item.title}
@@ -60,17 +85,6 @@ export const HistorySection = () => {
               <div className="h-1 w-20 bg-imperial-gold/50 mt-4" />
             </motion.div>
           ))}
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 0.2 } : {}}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                'radial-gradient(circle at center, rgba(212, 175, 55, 0.1) 0%, transparent 70%)',
-            }}
-          />
         </div>
       </div>
     </motion.section>

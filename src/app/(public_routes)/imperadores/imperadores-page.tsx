@@ -51,6 +51,7 @@ export const ImperadoresPage = () => {
         <section className="snap-start  h-fulll">
           <Plans />
         </section>
+
         <section className="snap-start  h-fulll">
           <Contact />
         </section>
