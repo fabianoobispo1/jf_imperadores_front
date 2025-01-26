@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import ThemeToggle from '@/components/layout/ThemeToggle/theme-toggle'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
-import { SeletivaForm } from './seletiva-form'
+/* import { SeletivaForm } from './seletiva-form' */
 
 export const metadata: Metadata = {
   title: 'Seletiva jf imperadores',
@@ -20,9 +20,10 @@ export default function seletiva() {
       <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
         <div className="flex flex-col items-start gap-2 space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">
-            Seletiva 2025 - Juiz de Fora Imperadores
+            Seletiva 2025 - Juiz de Fora Imperadores - Finalizada.
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p>Resultado em breve</p>
+          {/*     <p className="text-sm text-muted-foreground">
             Bem-vindo ao Juiz de Fora Imperadores. Este formulário deve ser
             preenchido por todos que queiram participar da 2ª chamada da 1ª
             seletiva do JF Imperadores de 2025.
@@ -31,9 +32,9 @@ export default function seletiva() {
             A 2ª chamada da seletiva será realizada no dia 26 de Janeiro.
             Horário: 9 horas Local: Ginásio da SEL - Rua custódio trsitão, 11 -
             Santa Terezinha
-          </p>
+          </p> */}
         </div>
-        <SeletivaForm />
+        {/*         <SeletivaForm /> */}
       </div>
     </ScrollArea>
   )
