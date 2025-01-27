@@ -495,7 +495,10 @@ export function TryoutList() {
                           >
                             {seletiva.cod_seletiva || '-'}
                           </TableCell>
-                          <TableCell className="text-center">
+                          <TableCell
+                            className="text-center"
+                            onClick={() => setSelectedSeletiva(seletiva)}
+                          >
                             {seletiva.img_link ? (
                               <ImageCell imageUrl={seletiva.img_link} />
                             ) : (
