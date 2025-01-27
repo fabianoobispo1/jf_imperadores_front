@@ -485,12 +485,14 @@ export function TryoutList() {
                             seletiva.aprovado && 'bg-green-100',
                             'cursor-pointer hover:bg-muted/50',
                           )}
-                          onClick={() => setSelectedSeletiva(seletiva)}
                         >
                           {/*  <TableCell className="text-center">
                           {seletiva.numerio_seletiva}
                         </TableCell> */}
-                          <TableCell className="text-center">
+                          <TableCell
+                            className="text-center"
+                            onClick={() => setSelectedSeletiva(seletiva)}
+                          >
                             {seletiva.cod_seletiva || '-'}
                           </TableCell>
                           <TableCell className="text-center">
