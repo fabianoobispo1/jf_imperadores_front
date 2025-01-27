@@ -502,7 +502,10 @@ export function TryoutList() {
                               '-'
                             )}
                           </TableCell>
-                          <TableCell className="text-center  font-medium">
+                          <TableCell
+                            className="text-center  font-medium"
+                            onClick={() => setSelectedSeletiva(seletiva)}
+                          >
                             {seletiva.nome}
                           </TableCell>
                           <TableCell>{seletiva.email}</TableCell>
