@@ -154,6 +154,14 @@ export function MessagesForm() {
           )
           console.log(lista)
           break
+
+        case 'seletiva_aprovados':
+          allCandidates = await fetchQuery(api.seletiva.getAll, {})
+          lista = allCandidates.filter(
+            (candidate) => candidate.aprovado === true,
+          )
+          console.log(lista)
+          break
       }
       setDestinatarios(lista)
     } catch (error: unknown) {
@@ -329,6 +337,9 @@ export function MessagesForm() {
                       </SelectItem>
                       <SelectItem value="seletiva_faltantes">
                         Candidatos Faltantes
+                      </SelectItem>
+                      <SelectItem value="seletiva_aprovados">
+                        Candidatos Aprovados
                       </SelectItem>
                     </SelectContent>
                   </Select>
