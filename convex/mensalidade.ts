@@ -11,6 +11,12 @@ export const create = mutation({
   },
 })
 
+export const getAll = query({
+  handler: async (ctx) => {
+    return await ctx.db.query('mensalidade').order('desc').collect()
+  },
+})
+
 export const getByEmail = query({
   args: {
     email: v.string(),
