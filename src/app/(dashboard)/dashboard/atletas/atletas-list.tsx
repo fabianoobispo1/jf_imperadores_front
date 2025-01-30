@@ -338,8 +338,7 @@ export const AtletasList = () => {
                                   Você tem certeza?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Esta ação al tará a exclusão do atleta para
-                                  inativo.
+                                  Esta ação ira desativar o atleta.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
