@@ -17,11 +17,15 @@ export default function DadosIniciais() {
     status: 1,
   })
   const totalSeletiva = useQuery(api.seletiva.getCount)
+  const totalAprovados = useQuery(api.seletiva.getCountByAprovados)
 
   const handleSeletivaClick = () => {
     if (session?.user?.role === 'admin') {
       router.push('/dashboard/seletiva')
     }
+  }
+  const handleAtletaClick = () => {
+    router.push('/dashboard/atletas')
   }
 
   return (
@@ -44,9 +48,18 @@ export default function DadosIniciais() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card
+        className={
+          session?.user?.role === 'admin'
+            ? 'cursor-pointer hover:bg-gray-100'
+            : ''
+        }
+        onClick={handleAtletaClick}
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Atletas Ativos</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Atletas Ativos + Aprovados
+          </CardTitle>
           <UserCheckIcon className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -56,7 +69,19 @@ export default function DadosIniciais() {
             ) : (
               totalAtletasAtivos || 0
             )}
+            {' + '}
+            {totalAprovados === undefined ? (
+              <Skeleton className="h-8 w-20" />
+            ) : (
+              totalAprovados || 0
+            )}
           </div>
+          {' Total '}
+          {totalAtletasAtivos === undefined || totalAprovados === undefined ? (
+            <Skeleton className="h-8 w-20" />
+          ) : (
+            (totalAtletasAtivos || 0) + (totalAprovados || 0)
+          )}
         </CardContent>
       </Card>
 

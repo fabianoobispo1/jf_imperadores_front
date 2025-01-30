@@ -135,3 +135,14 @@ export const getByCodSeletiva = query({
     return seletiva
   },
 })
+
+export const getCountByAprovados = query({
+  handler: async (ctx) => {
+    const aprovados = await ctx.db
+      .query('seletiva')
+      .filter((q) => q.eq(q.field('aprovado'), true))
+      .collect()
+
+    return aprovados.length
+  },
+})
