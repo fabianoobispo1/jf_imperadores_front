@@ -207,6 +207,7 @@ export const getAllAtivos = query({
       email: atleta.email,
       celular: atleta.celular,
       nome: atleta.nome,
+      cpf: atleta.cpf,
     }))
   },
 })

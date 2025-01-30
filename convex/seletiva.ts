@@ -146,3 +146,14 @@ export const getCountByAprovados = query({
     return aprovados.length
   },
 })
+
+export const getAllApproved = query({
+  handler: async (ctx) => {
+    const seletivas = await ctx.db
+      .query('seletiva')
+      .filter((q) => q.eq(q.field('aprovado'), true))
+      .collect()
+
+    return seletivas
+  },
+})

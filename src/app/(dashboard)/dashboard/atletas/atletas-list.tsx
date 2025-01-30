@@ -145,34 +145,34 @@ export const AtletasList = () => {
   }
 
   const exportToPDF = async () => {
-    const response = await fetchQuery(api.atletas.getAllAtivos, {})
+    const activeAtletas = await fetchQuery(api.atletas.getAllAtivos, {})
+    const approvedSeletivas = await fetchQuery(api.seletiva.getAllApproved, {})
+
+    const allPeople = [...activeAtletas, ...approvedSeletivas]
+      .sort((a, b) => a.nome.localeCompare(b.nome))
+      .map((person) => [person.nome.toUpperCase(), person.cpf])
 
     // eslint-disable-next-line new-cap
     const doc = new jsPDF({
-      orientation: 'landscape',
+      orientation: 'portrait',
       unit: 'mm',
       format: 'a4',
     })
 
     doc.setFontSize(16)
-    doc.text('Lista Completa de Candidatos - Seletiva', 14, 15)
-    const tableData = response.map((atleta) => [
-      atleta.nome,
-      atleta.email,
-      atleta.celular,
-    ])
+    doc.text('Lista Completa de Atletas Ativos e Aprovados', 14, 15)
 
-    // @ts-expect-error - Specific reason for expecting the error
+    // @ts-expect-error - jsPDF types
     doc.autoTable({
-      head: [['Nome', 'Email', 'Celular']],
-      body: tableData,
+      head: [['Nome', 'CPF']],
+      body: allPeople,
       startY: 25,
       styles: { fontSize: 8 },
       headStyles: { fillColor: [0, 51, 102] },
-      margin: { top: 25, right: 7, bottom: 7, left: 7 }, // Adicione esta linha
+      margin: { top: 25, right: 7, bottom: 7, left: 7 },
     })
 
-    doc.save('atletas ativos.pdf')
+    doc.save('lista_completa.pdf')
   }
 
   return (
@@ -188,7 +188,7 @@ export const AtletasList = () => {
         </Button>
         <Button variant="outline" onClick={() => exportToPDF()}>
           <FileDown className="mr-2 h-4 w-4" />
-          Baixar PDF
+          PDF Ativos e aporvados
         </Button>
       </div>
 
