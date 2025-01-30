@@ -1,9 +1,11 @@
 'use-client'
 import { useEffect, useState } from 'react'
-import { PenBoxIcon, Trash } from 'lucide-react'
+import { PenBoxIcon, Trash, FileDown } from 'lucide-react'
 import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import { useSession } from 'next-auth/react'
+import { jsPDF } from 'jspdf'
 
+import 'jspdf-autotable'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Table,
@@ -141,16 +143,54 @@ export const AtletasList = () => {
     fetchAtletasPaginated(offset, limit)
     setLoading(false)
   }
+
+  const exportToPDF = async () => {
+    const response = await fetchQuery(api.atletas.getAllAtivos, {})
+
+    // eslint-disable-next-line new-cap
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4',
+    })
+
+    doc.setFontSize(16)
+    doc.text('Lista Completa de Candidatos - Seletiva', 14, 15)
+    const tableData = response.map((atleta) => [
+      atleta.nome,
+      atleta.email,
+      atleta.celular,
+    ])
+
+    // @ts-expect-error - Specific reason for expecting the error
+    doc.autoTable({
+      head: [['Nome', 'Email', 'Celular']],
+      body: tableData,
+      startY: 25,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [0, 51, 102] },
+      margin: { top: 25, right: 7, bottom: 7, left: 7 }, // Adicione esta linha
+    })
+
+    doc.save('atletas ativos.pdf')
+  }
+
   return (
     <div
       className={cn(
-        'space-y-4 w-screen pr-4 ',
+        'space-y-4 w-screen pr-2 ',
         open ? 'md:max-w-[calc(100%-18rem)] ' : 'md:max-w-[calc(100%-7rem)] ',
       )}
     >
-      <Button disabled={!isAdmin} onClick={() => setIsAddModalOpen(true)}>
-        Adicionar Atleta
-      </Button>
+      <div className="flex justify-between items-center gap-2 w-full overflow-auto  pr-4">
+        <Button disabled={!isAdmin} onClick={() => setIsAddModalOpen(true)}>
+          Adicionar Atleta
+        </Button>
+        <Button variant="outline" onClick={() => exportToPDF()}>
+          <FileDown className="mr-2 h-4 w-4" />
+          Baixar PDF
+        </Button>
+      </div>
 
       <div className="w-full overflow-auto">
         <div className="w-full pr-4">

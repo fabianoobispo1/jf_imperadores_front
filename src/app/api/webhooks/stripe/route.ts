@@ -5,6 +5,8 @@ import { ConvexHttpClient } from 'convex/browser'
 
 import { buffer } from 'node:stream/consumers'
 
+import { getMesAtual } from '@/constants/dates'
+
 import { api } from '../../../../../convex/_generated/api'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -69,6 +71,7 @@ export async function POST(req: Request) {
         data_pagamento: Date.now(),
         data_cancelamento: 0,
         cancelado: false,
+        mes_referencia: getMesAtual(),
       })
 
       return NextResponse.json({ status: 'success' }, { status: 200 })

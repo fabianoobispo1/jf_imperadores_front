@@ -116,6 +116,7 @@ export const mensalidadeSchema = {
   id_payment_stripe: v.string(),
   valor: v.number(),
   data_pagamento: v.number(),
+  mes_referencia: v.string(),
   data_cancelamento: v.number(),
   cancelado: v.boolean(),
 }

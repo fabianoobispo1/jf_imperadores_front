@@ -1,7 +1,7 @@
 'use-client'
 import { fetchQuery } from 'convex/nextjs'
 import { useEffect, useState } from 'react'
-import { DialogTitle } from '@radix-ui/react-dialog'
+import { useRouter } from 'next/navigation'
 
 import { api } from '@/convex/_generated/api'
 import type { Id } from '@/convex/_generated/dataModel'
@@ -18,9 +18,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Spinner } from '@/components/ui/spinner'
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
-
-import { MensalidadeForm } from './mensalidades-form'
 
 export interface Mensalidade {
   _id: Id<'mensalidade'>
@@ -37,9 +34,9 @@ export interface Mensalidade {
 
 export const MensalidadesList: React.FC = () => {
   const { open } = useSidebar()
+  const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
   const [mensalidades, setMensalidades] = useState<Mensalidade[]>([])
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
   const loadList = async () => {
     setLoading(true)
@@ -65,7 +62,11 @@ export const MensalidadesList: React.FC = () => {
         open ? 'md:max-w-[calc(100%-16rem)] ' : 'md:max-w-[calc(100%-7rem)] ',
       )}
     >
-      <Button onClick={() => setIsAddModalOpen(true)}>
+      <Button
+        onClick={() => {
+          router.push('/dashboard/mensalidades/cadastrar')
+        }}
+      >
         Adicionar Mensalidade
       </Button>
 
@@ -107,20 +108,6 @@ export const MensalidadesList: React.FC = () => {
           </ScrollArea>
         </div>
       </div>
-
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <DialogContent className="max-w-[900px] h-[80vh]">
-          <DialogHeader>
-            <DialogTitle>Adicionar Nova Mensalidade</DialogTitle>
-          </DialogHeader>
-          <MensalidadeForm
-            onSuccess={() => {
-              setIsAddModalOpen(false)
-              loadList()
-            }}
-          />
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

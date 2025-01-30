@@ -5,6 +5,7 @@ import { fetchMutation, fetchQuery } from 'convex/nextjs'
 import { jsPDF } from 'jspdf'
 import { redirect } from 'next/navigation'
 import Image from 'next/image'
+import { FileDown } from 'lucide-react'
 
 import {
   Select,
@@ -347,7 +348,8 @@ export function TryoutList() {
         <div className="w-full overflow-auto">
           <div className="flex justify-between items-center  pr-4">
             <Button variant="outline" size="sm" onClick={exportToPDF}>
-              Exportar PDF
+              <FileDown className="mr-2 h-4 w-4" />
+              Baixar PDF
             </Button>
             <div className="flex items-center space-x-2">
               <Button

@@ -195,7 +195,7 @@ export const updateStatus = mutation({
   },
 })
 
-export const getAll = query({
+export const getAllAtivos = query({
   args: {},
   handler: async (ctx) => {
     const atletas = await ctx.db

@@ -135,7 +135,7 @@ export function MessagesForm() {
 
       switch (grupo) {
         case 'atletas':
-          lista = await fetchQuery(api.atletas.getAll, {})
+          lista = await fetchQuery(api.atletas.getAllAtivos, {})
           break
         case 'seletiva':
           lista = await fetchQuery(api.seletiva.getAll, {})
