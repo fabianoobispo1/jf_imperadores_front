@@ -54,11 +54,18 @@ export const Contact = () => {
 
             <div className="bg-black/60 backdrop-blur-sm p-6 rounded-xl border border-imperial-gold/20">
               <Phone className="w-8 h-8 text-imperial-gold mb-4 mx-auto" />
-              <p className="text-gray-300">(32) XXXX-XXXX</p>
+              <p className="text-gray-300">(32) 99164-6300</p>
             </div>
           </div>
 
-          <Button className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:scale-105 transition-transform group">
+          <Button
+            onClick={() =>
+              window.open(
+                'https://wa.me/5532991646300?text=Olá! Tenho interesse em ser um patrocinador do JF Imperadores.',
+              )
+            }
+            className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:scale-105 transition-transform group"
+          >
             SEJA UM PATROCINADOR
             <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
