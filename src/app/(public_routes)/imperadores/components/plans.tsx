@@ -84,9 +84,18 @@ export const Plans = () => {
                 <h3 className="text-2xl font-bold text-imperial-gold mb-2">
                   {plan.title}
                 </h3>
-                <p className="text-3xl font-bold text-white mb-6">
-                  R$ {plan.price}
-                  <span className="text-sm text-gray-400">/ano</span>
+                <p className="mb-6">
+                  <span className="text-4xl font-bold text-white">
+                    R${' '}
+                    {Math.round(
+                      parseInt(plan.price.replace(/\D/g, '')) / 12,
+                    ).toLocaleString('pt-BR')}
+                  </span>
+                  <span className="text-lg text-gray-400">/mês</span>
+                  <br />
+                  <span className="text-sm text-gray-400">
+                    (R$ {parseInt(plan.price).toLocaleString('pt-BR')} anual)
+                  </span>
                 </p>
                 <ul className="space-y-4">
                   {plan.features.map((feature, idx) => (

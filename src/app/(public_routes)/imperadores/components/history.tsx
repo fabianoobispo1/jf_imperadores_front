@@ -15,22 +15,23 @@ export const HistorySection = () => {
     {
       title: 'Fundação e Conquistas',
       content:
-        'Formada pela fusão dos times Mamutes e Red Fox, a equipe rapidamente se destacou, conquistando o título da Conferência Sudeste e o terceiro lugar na Liga Nacional em seu primeiro ano.',
+        'Completaremos agora em Fevereiro de 2025 8 anos de fundação, de onde o JF Imperadores surgiu da fusão entre JF Mamutes e Juiz de Fora Red Fox, que eram equipes que praticavam a modalidade NoPads (Sem Capacete e Ombreira), a união proporcionou a possibilidade de jogar a modalidade FullPads (Com todos os equipamentos).',
     },
     {
-      title: 'Parcerias Estratégicas',
+      title: 'Nosso Nome',
       content:
-        'Em 2018, firmamos uma parceria com o Cruzeiro, que ampliou nossa visibilidade, embora tenha enfrentado desafios financeiros.',
+        '“Imperadores” vem em homenagem ao Brasil Imperial que está marcado na história e na cultura do nosso país e cidade, onde a família real se instalou no Museu Mariano Pocópio e o Morro do Imperador onde em 1861, Dom Pedro II o escalou para apreciar a vista da cidade.',
     },
+
     {
-      title: 'Retorno e Superação',
+      title: 'Nosos atletas',
       content:
-        'Após uma reformulação em 2019, conquistamos o título da Copa Ouro e, após a pausa forçada pela pandemia, retornamos com força, destacando-nos no Campeonato Mineiro e conquistando o título nacional da segunda divisão.',
+        'São + de 200 atletas formados nas Modalidades Tackle (Fullpads), Flag Football 5v5 Masculino e Flag Football 5v5 Feminino, um ponto relevante é de que a equipe serviu como ascensão social para diversos individuos, muitos saíram das drogas, do alcool, da depressão, muitos jovens se formaramadultos vestindo nosso manto.',
     },
     {
       title: 'Recentes Conquistas',
       content:
-        'Em 2024, trouxemos para Juiz de Fora o título mineiro, um feito histórico, mas a falta de recursos nos impediu de participar da disputa nacional.',
+        'Em 2024, trouxemos para Juiz de Fora o Gerais Bowl, um feito histórico, mas a falta de recursos nos impediu de participar da disputa nacional.',
     },
   ]
   return (

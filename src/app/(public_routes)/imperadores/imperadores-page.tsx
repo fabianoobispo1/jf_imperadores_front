@@ -20,10 +20,11 @@ import { HeroSection } from './components/hero'
 import { StatsSection } from './components/stats'
 import { HistorySection } from './components/history'
 import { MissionVisionValues } from './components/mission-vision-values'
-import { SocialImpact } from './components/social-impact'
+/* import { SocialImpact } from './components/social-impact' */
 import { Benefits } from './components/benefits'
 import { Plans } from './components/plans'
 import { Contact } from './components/contact'
+import { ConquistasSection } from './components/conquistas'
 
 export const ImperadoresPage = () => {
   return (
@@ -42,9 +43,13 @@ export const ImperadoresPage = () => {
         <section className="snap-start  h-fulll">
           <MissionVisionValues />
         </section>
-        <section className="snap-start  h-fulll">
-          <SocialImpact />
+
+        <section className="snap-start h-fulll">
+          <ConquistasSection />
         </section>
+        {/*   <section className="snap-start  h-fulll">
+          <SocialImpact />
+        </section> */}
         <section className="snap-start  h-fulll">
           <Benefits />
         </section>

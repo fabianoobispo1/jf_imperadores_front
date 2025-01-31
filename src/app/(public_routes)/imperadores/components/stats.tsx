@@ -21,25 +21,27 @@ export const StatsSection = () => {
       number: '8+',
       label: 'Anos de História',
       icon: <HistoryIcon />,
-      description: 'Formando atletas',
+      description: 'Surgiu da fusão entre JF Mamutes e Juiz de Fora Red Fox',
     },
     {
-      number: '100+',
+      number: '200+',
       label: 'Atletas Formados',
       icon: <AthleteIcon />,
-      description: 'Talentos desenvolvidos',
+      description:
+        'Modalidades Tackle (Fullpads), Flag Football 5v5 Masculino e Flag Football 5v5 Feminino',
     },
     {
-      number: '50+',
-      label: 'Vitórias',
+      number: '40+',
+      label: 'Jogos Oficiais',
       icon: <TrophyIcon />,
       description: 'Conquistas importantes',
     },
     {
-      number: '1000+',
+      number: '5000+',
       label: 'Torcedores',
       icon: <FansIcon />,
-      description: 'Família Imperadores',
+      description:
+        'Seja onde o Império for jogar, conosco nossa torcida estará!',
     },
   ]
 

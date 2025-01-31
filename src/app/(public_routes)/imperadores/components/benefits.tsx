@@ -33,6 +33,7 @@ export const Benefits = () => {
         'Conteúdo exclusivo personalizado',
         'Campanhas digitais integradas',
         'Alcance orgânico qualificado',
+        'Alcance nacional, transmissão campeonato mineiro pela Bandsports',
       ],
     },
   ]
