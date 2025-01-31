@@ -14,22 +14,19 @@ export const MissionVisionValues = () => {
       title: 'Missão',
       icon: <Target className="w-12 h-12" />,
       content:
-        'Promover a formação de cidadãos e atletas por meio de uma estrutura profissional, que privilegie estratégias e ações que resultem em uma maior competitividade do clube, construindo diariamente um clube reconhecido e levando nome da cidade de Juiz de Fora em âmbito nacional.',
+        'Promover a formação de cidadãos e atletas por meio de uma estrutura profissional, que vai além do esporte e incentiva valores como disciplina, superação e trabalho em equipe. \nNosso compromisso é fortalecer o futebol americano em Juiz de Fora, proporcionando oportunidades para jovens e adultos, e servindo como um instrumento de transformação social. Com planejamento e dedicação, buscamos aumentar nossa competitividade e consolidar o JF Imperadores como uma referência no esporte, levando com orgulho o nome da nossa cidade para todo o Brasil.',
     },
     {
       title: 'Visão',
       icon: <Eye className="w-12 h-12" />,
       content:
-        'Ser um clube referência, valorizando seus atletas e torcedores, reconhecido como formador de atletas, e principalmente transformando a vida das pessoas através do Esporte.',
+        'Ser um clube referência no futebol americano, reconhecido não apenas pela sua competitividade, mas também pelo compromisso em valorizar seus atletas e torcedores. Nosso objetivo é nos consolidar como um grande formador de talentos, promovendo o desenvolvimento esportivo e social. \nMais do que um time, queremos ser um agente de transformação, impactando vidas e criando oportunidades através do esporte.',
     },
     {
       title: 'Valores',
       icon: <Heart className="w-12 h-12" />,
-      content: [
-        'Espirito vencedor e espirito de equipe',
-        'Responsabilidade, transparência e ética',
-        'Comprometimento e empenho',
-      ],
+      content:
+        '🏆 Espírito Vencedor e Trabalho em Equipe – Acreditamos na força da união e na busca constante pela excelência, dentro e fora de campo. \n✅ Responsabilidade, Transparência e Ética – Agimos com integridade, respeito e compromisso, construindo uma base sólida para o crescimento do clube e de nossos atletas. \n🔥 Comprometimento, Empenho e Disciplina – Dedicamo-nos ao máximo para alcançar nossos objetivos, sempre com paixão pelo esporte e determinação para superar desafios.',
     },
   ]
 
@@ -88,7 +85,7 @@ export const MissionVisionValues = () => {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-gray-300 leading-relaxed whitespace-pre-line">
                     {card.content}
                   </p>
                 )}

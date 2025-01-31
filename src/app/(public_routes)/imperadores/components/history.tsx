@@ -13,25 +13,25 @@ export const HistorySection = () => {
 
   const historyItems = [
     {
-      title: 'Fundação e Conquistas',
+      title: 'JF Imperadores: 8 Anos de Paixão pelo Futebol Americano',
       content:
-        'Completaremos agora em Fevereiro de 2025 8 anos de fundação, de onde o JF Imperadores surgiu da fusão entre JF Mamutes e Juiz de Fora Red Fox, que eram equipes que praticavam a modalidade NoPads (Sem Capacete e Ombreira), a união proporcionou a possibilidade de jogar a modalidade FullPads (Com todos os equipamentos).',
+        'Em fevereiro de 2025, o JF Imperadores completa oito anos de fundação! Nossa história começou com a fusão de duas equipes de Juiz de Fora: o JF Mamutes e o Juiz de Fora Red Fox.\nAntes da união, ambas as equipes competiam na modalidade NoPads (sem capacete e ombreira).\nCom a fusão, nasceu a oportunidade de evoluir para a modalidade FullPads, permitindo que nossos atletas jogassem com todos os equipamentos oficiais, elevando o nível do esporte na cidade.\nHoje, seguimos crescendo e fortalecendo o futebol americano em Juiz de Fora. Venha fazer parte dessa história!',
     },
     {
-      title: 'Nosso Nome',
+      title: 'Nosso Nome: Uma Homenagem à História',
       content:
-        '“Imperadores” vem em homenagem ao Brasil Imperial que está marcado na história e na cultura do nosso país e cidade, onde a família real se instalou no Museu Mariano Pocópio e o Morro do Imperador onde em 1861, Dom Pedro II o escalou para apreciar a vista da cidade.',
+        'O nome "Imperadores" é uma referência ao Brasil Imperial, um período marcante na história e cultura do nosso país e da cidade de Juiz de Fora. \nNossa identidade se inspira na presença da família real, que se instalou no Museu Mariano Procópio, um dos patrimônios históricos da cidade. Além disso, em 1861, Dom Pedro II escalou o Morro do Imperador para admirar a vista de Juiz de Fora, eternizando esse local como um símbolo de nossa história. \nMais do que um nome, Imperadores representa tradição, força e a grandiosidade de um legado que seguimos construindo dentro e fora de campo.',
     },
 
     {
-      title: 'Nosos atletas',
+      title: 'Nossos Atletas: Transformação Dentro e Fora de Campo',
       content:
-        'São + de 200 atletas formados nas Modalidades Tackle (Fullpads), Flag Football 5v5 Masculino e Flag Football 5v5 Feminino, um ponto relevante é de que a equipe serviu como ascensão social para diversos individuos, muitos saíram das drogas, do alcool, da depressão, muitos jovens se formaramadultos vestindo nosso manto.',
+        'Ao longo de nossa trajetória, já formamos mais de 200 atletas em diferentes modalidades do futebol americano: \n🏈 Tackle (FullPads) \n🏆 Flag Football 5x5 Masculino \n🏆 Flag Football 5x5 Feminino \nMais do que um time, o JF Imperadores é um agente de transformação social. Para muitos de nossos atletas, vestir essa camisa representou uma verdadeira ascensão na vida. Aqui, encontraram não apenas um esporte, mas também um propósito: \n✅ Superação das drogas e do álcool \n✅ Combate à depressão \n✅ Desenvolvimento pessoal e profissional \nMuitos jovens cresceram e se tornaram adultos sob nosso manto, carregando consigo valores como disciplina, união e determinação. \nInvestir no JF Imperadores é investir em histórias reais de superação!',
     },
     {
-      title: 'Recentes Conquistas',
+      title: 'Nossas Recentes Conquistas:',
       content:
-        'Em 2024, trouxemos para Juiz de Fora o Gerais Bowl, um feito histórico, mas a falta de recursos nos impediu de participar da disputa nacional.',
+        'Em 2024, alcançamos um marco histórico ao trazer para Juiz de Fora o título do Gerais Bowl, consolidando nossa força no cenário do futebol americano em Minas Gerais. \nNo entanto, apesar dessa grande conquista, a falta de recursos nos impediu de representar nossa cidade na disputa nacional. Esse desafio reforça a importância do apoio de patrocinadores para que possamos ir ainda mais longe e levar o nome de Juiz de Fora para todo o Brasil. \nJunte-se a nós nessa jornada e faça parte das próximas grandes vitórias do JF Imperadores!',
     },
   ]
   return (
@@ -82,7 +82,9 @@ export const HistorySection = () => {
               <h3 className="text-2xl font-bold text-imperial-gold mb-4">
                 {item.title}
               </h3>
-              <p className="text-gray-300 leading-relaxed">{item.content}</p>
+              <p className="text-gray-300 leading-relaxed whitespace-pre-line">
+                {item.content}
+              </p>
               <div className="h-1 w-20 bg-imperial-gold/50 mt-4" />
             </motion.div>
           ))}
