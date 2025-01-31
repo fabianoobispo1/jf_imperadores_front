@@ -99,6 +99,9 @@ export const MensalidadesList: React.FC = () => {
                   <TableHead className="text-center min-w-[50px]">
                     Tipo
                   </TableHead>
+                  <TableHead className="text-center min-w-[50px]">
+                    Valor
+                  </TableHead>
                   <TableHead className="text-center min-w-[300px]">
                     meio de pagamento
                   </TableHead>
@@ -131,6 +134,12 @@ export const MensalidadesList: React.FC = () => {
                       </TableCell>
                       <TableCell className="text-center">
                         {mensalidade.tipo}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {new Intl.NumberFormat('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL',
+                        }).format(mensalidade.valor)}
                       </TableCell>
                       <TableCell className="text-center">
                         {mensalidade.id_payment_stripe === 'manual'

@@ -7,6 +7,7 @@ import { fetchQuery } from 'convex/nextjs'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useMutation } from 'convex/react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -90,6 +91,7 @@ interface ComboboxOption {
 export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
   initialData,
 }) => {
+  const { data: session } = useSession()
   const [options, setOptions] = useState<ComboboxOption[]>([])
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -97,6 +99,7 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
   const router = useRouter()
 
   const create = useMutation(api.mensalidade.create)
+  const createTransacao = useMutation(api.financas.create)
 
   useEffect(() => {
     const loadAtletas = async () => {
@@ -152,22 +155,38 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
         console.log(`edita`)
       } else {
         console.log(`adiciona`)
+        if (session?.user?.id) {
+          await create({
+            tipo: 'avulsa',
+            email: values.email,
+            customer: '',
+            id_payment_stripe: 'manual',
+            valor: values.valor / 100, // Convert from cents to actual currency
+            data_pagamento: values.data_pagamento.getTime(),
+            data_cancelamento: 0,
+            cancelado: false,
+            mes_referencia: values.mes_referencia,
+          })
 
-        await create({
-          tipo: 'avulsa',
-          email: values.email,
-          customer: '',
-          id_payment_stripe: 'manual',
-          valor: values.valor / 100, // Convert from cents to actual currency
-          data_pagamento: values.data_pagamento.getTime(),
-          data_cancelamento: 0,
-          cancelado: false,
-          mes_referencia: values.mes_referencia,
-        })
+          await createTransacao({
+            tipo: 'receita',
+            descricao: 'mensalidade',
+            valor: values.valor / 100,
+            data: values.data_pagamento.getTime(),
+            categoria: 'mensalidade',
+            status: 'confirmado',
+            created_at: Date.now(),
+            updated_at: Date.now(),
+            userId: session.user.id as Id<'user'>,
+            comprovante_url: '',
+            comprovante_key: '',
+            observacao: '',
+          })
 
-        form.reset()
-        router.back()
-        setLoading(false)
+          form.reset()
+          router.back()
+          setLoading(false)
+        }
       }
     } catch (error) {
       console.log(error)
