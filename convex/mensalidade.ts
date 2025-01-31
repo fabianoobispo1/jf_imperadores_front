@@ -13,7 +13,27 @@ export const create = mutation({
 
 export const getAll = query({
   handler: async (ctx) => {
-    return await ctx.db.query('mensalidade').order('desc').collect()
+    const mensalidades = await ctx.db
+      .query('mensalidade')
+      .order('desc')
+      .collect()
+
+    // Get athlete data for each mensalidade
+    const mensalidadesWithAtleta = await Promise.all(
+      mensalidades.map(async (mensalidade) => {
+        const atleta = await ctx.db
+          .query('atletas')
+          .filter((q) => q.eq(q.field('email'), mensalidade.email))
+          .first()
+
+        return {
+          ...mensalidade,
+          nome: atleta?.nome || 'Não encontrado',
+        }
+      }),
+    )
+
+    return mensalidadesWithAtleta
   },
 })
 

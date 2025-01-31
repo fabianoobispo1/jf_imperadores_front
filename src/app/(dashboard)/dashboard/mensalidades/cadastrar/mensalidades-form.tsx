@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { fetchQuery } from 'convex/nextjs'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import { useMutation } from 'convex/react'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -78,7 +80,6 @@ interface MensalidadesFormProps {
     data_cancelamento: number
     cancelado: boolean
   } | null
-  onSuccess?: () => void
 }
 
 interface ComboboxOption {
@@ -88,12 +89,14 @@ interface ComboboxOption {
 
 export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
   initialData,
-  onSuccess,
 }) => {
   const [options, setOptions] = useState<ComboboxOption[]>([])
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
+
+  const create = useMutation(api.mensalidade.create)
 
   useEffect(() => {
     const loadAtletas = async () => {
@@ -150,9 +153,20 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
       } else {
         console.log(`adiciona`)
 
-        form.reset()
+        await create({
+          tipo: 'avulsa',
+          email: values.email,
+          customer: '',
+          id_payment_stripe: 'manual',
+          valor: values.valor / 100, // Convert from cents to actual currency
+          data_pagamento: values.data_pagamento.getTime(),
+          data_cancelamento: 0,
+          cancelado: false,
+          mes_referencia: values.mes_referencia,
+        })
 
-        onSuccess?.()
+        form.reset()
+        router.back()
         setLoading(false)
       }
     } catch (error) {
@@ -166,16 +180,9 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
   }
 
   return (
-    /*    <div
-      className={cn(
-        'space-y-8 w-screen pr-4 ',
-        open ? 'md:max-w-[calc(100%-18rem)] ' : 'md:max-w-[calc(100%-7rem)] ',
-      )}
-    > */
-
-    <ScrollArea className="h-[calc(100vh-270px)]  w-full px-4">
+    <ScrollArea className="h-[calc(100vh-230px)]  w-full px-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
           <FormField
             control={form.control}
             name="_id"
@@ -273,58 +280,58 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
               </FormItem>
             )}
           />
+          <div className="flex w-full items-center justify-start gap-4">
+            <FormField
+              control={form.control}
+              name="data_pagamento"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Data do Pagamento</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="date"
+                      {...field}
+                      value={
+                        field.value
+                          ? new Date(field.value).toISOString().split('T')[0]
+                          : ''
+                      }
+                      onChange={(e) =>
+                        field.onChange(new Date(e.target.value).toISOString())
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="data_pagamento"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Data do Pagamento</FormLabel>
-                <FormControl>
-                  <Input
-                    type="date"
-                    {...field}
-                    value={
-                      field.value
-                        ? new Date(field.value).toISOString().split('T')[0]
-                        : ''
-                    }
-                    onChange={(e) =>
-                      field.onChange(new Date(e.target.value).toISOString())
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="mes_referencia"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Mês de Referência</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o mês" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {MESES.map((mes) => (
-                      <SelectItem key={mes} value={mes}>
-                        {mes}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+            <FormField
+              control={form.control}
+              name="mes_referencia"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mês de Referência</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o mês" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MESES.map((mes) => (
+                        <SelectItem key={mes} value={mes}>
+                          {mes}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <Button type="submit" disabled={loading}>
             {loading ? 'Cadastrando...' : 'Cadastrar Mensalidade'}
           </Button>

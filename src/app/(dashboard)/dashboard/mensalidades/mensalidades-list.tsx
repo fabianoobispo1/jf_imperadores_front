@@ -2,13 +2,15 @@
 import { fetchQuery } from 'convex/nextjs'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { MoreHorizontal } from 'lucide-react'
+import Link from 'next/link'
 
 import { api } from '@/convex/_generated/api'
 import type { Id } from '@/convex/_generated/dataModel'
 import { useSidebar } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Table,
   TableBody,
@@ -18,6 +20,12 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Spinner } from '@/components/ui/spinner'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 export interface Mensalidade {
   _id: Id<'mensalidade'>
@@ -30,6 +38,8 @@ export interface Mensalidade {
   data_pagamento: number
   data_cancelamento: number
   cancelado: boolean
+  nome: string
+  mes_referencia: string
 }
 
 export const MensalidadesList: React.FC = () => {
@@ -77,8 +87,20 @@ export const MensalidadesList: React.FC = () => {
             <Table>
               <TableHeader className="sticky top-0 bg-background ">
                 <TableRow>
-                  <TableHead className="text-center min-w-[300px]">
+                  <TableHead className="text-center min-w-[400px]">
                     Nome
+                  </TableHead>
+                  <TableHead className="text-center min-w-[120px]">
+                    mês referência
+                  </TableHead>
+                  <TableHead className="text-center min-w-[300px]">
+                    Data Pagamento
+                  </TableHead>
+                  <TableHead className="text-center min-w-[50px]">
+                    Tipo
+                  </TableHead>
+                  <TableHead className="text-center min-w-[300px]">
+                    meio de pagamento
                   </TableHead>
 
                   <TableHead className="text-center">Opções</TableHead>
@@ -95,16 +117,52 @@ export const MensalidadesList: React.FC = () => {
                   mensalidades.map((mensalidade) => (
                     <TableRow key={mensalidade._id}>
                       <TableCell className="text-center">
-                        {mensalidade.email}
+                        {mensalidade.nome}
                       </TableCell>
                       <TableCell className="text-center">
-                        {/* Add options here */}
+                        {mensalidade.mes_referencia}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {mensalidade.data_pagamento
+                          ? new Date(
+                              mensalidade.data_pagamento,
+                            ).toLocaleDateString()
+                          : '-'}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {mensalidade.tipo}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {mensalidade.id_payment_stripe === 'manual'
+                          ? 'Manual'
+                          : 'Stripe'}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>
+                              <Link href={`#`}>Remover</Link>
+                            </DropdownMenuItem>
+                            {/*  <DropdownMenuItem>
+                              <Link href={`#`}>Avaliações</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Link href={`#`}>Histórico</Link>
+                            </DropdownMenuItem> */}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))
                 )}
               </TableBody>
             </Table>
+            <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </div>
       </div>

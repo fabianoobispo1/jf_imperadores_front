@@ -1,4 +1,5 @@
 import BreadCrumb from '@/components/breadcrumb'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 import { Mensalidades } from './mensalidades'
 
@@ -7,9 +8,11 @@ const breadcrumbItems = [
 ]
 export default function Page() {
   return (
-    <div className="w-full space-y-4 p-4 pt-6 ">
-      <BreadCrumb items={breadcrumbItems} />
-      <Mensalidades />
-    </div>
+    <ScrollArea className="h-full w-full md:w-[calc(100%-5rem)]">
+      <div className="w-full space-y-4 p-4 pt-6 ">
+        <BreadCrumb items={breadcrumbItems} />
+        <Mensalidades />
+      </div>
+    </ScrollArea>
   )
 }
