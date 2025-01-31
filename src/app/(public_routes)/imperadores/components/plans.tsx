@@ -94,7 +94,8 @@ export const Plans = () => {
                   <span className="text-lg text-gray-400">/mês</span>
                   <br />
                   <span className="text-sm text-gray-400">
-                    (R$ {parseInt(plan.price).toLocaleString('pt-BR')} anual)
+                    (R$ {parseInt(plan.price).toLocaleString('pt-BR')} mil
+                    anual)
                   </span>
                 </p>
                 <ul className="space-y-4">

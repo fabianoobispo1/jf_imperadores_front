@@ -11,29 +11,29 @@ export const Benefits = () => {
     {
       title: 'Visibilidade Premium',
       items: [
-        'Exposição em uniformes oficiais',
-        'Presença em materiais promocionais',
-        'Divulgação em eventos esportivos',
-        'Alcance de público diversificado',
+        'Exposição em Uniformes Oficiais: Sua marca estará presente em um dos maiores símbolos do time, proporcionando visibilidade constante e imediata.',
+        'Presença em Materiais Promocionais: Logo em banners, posters e outros materiais, garantindo que sua marca seja vista em diferentes contextos de marketing.',
+        'Divulgação em Eventos Esportivos: Participação em competições e eventos de grande porte, com destaque para sua marca durante todas as ativações.',
+        'Alcance de Público Diversificado: Acesso a um público fiel e engajado, composto por jovens, adultos e famílias, tanto em jogos quanto em outras atividades do time.',
       ],
     },
     {
       title: 'Engajamento Comunitário',
       items: [
-        'Associação com projeto social esportivo',
-        'Participação em eventos comunitários',
-        'Promoção da saúde e bem-estar',
-        'Impacto social positivo',
+        'Associação com um Projeto Social e Esportivo: Ao apoiar o time, sua marca se associa a um projeto que promove transformação social e o desenvolvimento de jovens através do esporte.',
+        'Promoção da Saúde e Bem-Estar: Apoio a uma equipe que valoriza a saúde física e mental dos seus atletas e da comunidade.',
+        'Participação em Eventos Comunitários: Envolvimento em ações que aproximam a marca da população local, reforçando o impacto positivo que sua empresa gera.',
+        'Impacto Social Positivo: O apoio ao JF Imperadores vai além do esporte, contribuindo diretamente para a ascensão social de jovens e adultos em situação de vulnerabilidade.',
       ],
     },
     {
-      title: 'Marketing Digital',
+      title: 'Marketing Digital e Alcance Nacional',
       items: [
-        'Presença nas redes sociais da equipe',
-        'Conteúdo exclusivo personalizado',
-        'Campanhas digitais integradas',
-        'Alcance orgânico qualificado',
-        'Alcance nacional, transmissão campeonato mineiro pela Bandsports',
+        'Presença nas Redes Sociais da Equipe: Sua marca será promovida nas principais plataformas digitais do time, com destaque para ações que envolvem engajamento online.',
+        'Conteúdo Exclusivo Personalizado: Desenvolvimento de campanhas e postagens personalizadas para integrar sua marca com a comunidade esportiva.',
+        'Campanhas Digitais Integradas: Planejamento de ações em conjunto com o time, criando experiências de promoção digital para aumentar o alcance e fortalecer sua presença.',
+        'Alcance Orgânico Qualificado: Através da nossa base de fãs e seguidores, sua marca terá um alcance orgânico e qualificado, com maior potencial de conversão.',
+        'Alcance Nacional: Com a transmissão do Campeonato Mineiro pela Bandsports, sua marca ganha visibilidade em um cenário nacional, alcançando fãs e espectadores em todo o Brasil.',
       ],
     },
   ]

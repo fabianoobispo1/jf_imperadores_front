@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Target, Eye, Heart } from 'lucide-react'
+import Image from 'next/image'
 /* import Image from 'next/image'
  */
 export const MissionVisionValues = () => {
@@ -35,9 +36,8 @@ export const MissionVisionValues = () => {
       ref={sectionRef}
       className="relative min-h-screen bg-black/90 overflow-hidden py-20"
     >
-      {/* Background Image */}
-      {/*     <div className="absolute inset-0 bg-black/90"> */}
-      {/*   <Image
+      <div className="absolute inset-0 bg-black/90">
+        <Image
           src="/images/image_1.jpeg"
           alt="História JF Imperadores"
           fill
@@ -45,9 +45,9 @@ export const MissionVisionValues = () => {
           quality={75}
           loading="eager"
           className="object-cover opacity-20"
-        /> */}
-      {/*    <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black" /> */}
-      {/*       </div> */}
+        />
+        {/*    <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black" /> */}
+      </div>
       {/* Decorative elements */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-imperial-gold/5 to-transparent" />
