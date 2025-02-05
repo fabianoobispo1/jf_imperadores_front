@@ -5,7 +5,6 @@ import { useQuery } from 'convex/react'
 
 import { api } from '@/convex/_generated/api'
 import { DataTable } from '@/components/ui/data-table'
-import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -75,7 +74,7 @@ export default function PresencaPage() {
               className="rounded-md border"
             />
           </div>
-          <DataTable columns={columns} data={data} />
+          <DataTable searchKey="nome" columns={columns} data={data} />
         </CardContent>
       </Card>
     </div>

@@ -13,11 +13,12 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form'
-import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Textarea } from '@/components/ui/textarea'
-import { useToast } from '@/components/ui/use-toast'
 import { api } from '@/convex/_generated/api'
+import { useToast } from '@/hooks/use-toast'
+import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
+import type { Id } from '@/convex/_generated/dataModel'
 
 const formSchema = z.object({
   data_treino: z.date(),
@@ -30,7 +31,11 @@ const formSchema = z.object({
   ),
 })
 
-export const PresencaForm = ({ atletas }) => {
+export const PresencaForm = ({
+  atletas,
+}: {
+  atletas: Array<{ _id: string; nome: string }>
+}) => {
   const { toast } = useToast()
   const create = useMutation(api.presenca.create)
 
@@ -45,12 +50,11 @@ export const PresencaForm = ({ atletas }) => {
       })),
     },
   })
-
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       for (const atleta of data.atletas) {
         await create({
-          atleta_id: atleta.id,
+          atleta_id: atleta.id as Id<'atletas'>,
           data_treino: data.data_treino.getTime(),
           presente: atleta.presente,
           observacao: atleta.observacao,
@@ -58,6 +62,7 @@ export const PresencaForm = ({ atletas }) => {
       }
       toast({ title: 'Presenças registradas com sucesso!' })
     } catch (error) {
+      console.log(error)
       toast({
         title: 'Erro ao registrar presenças',
         variant: 'destructive',
@@ -72,15 +77,11 @@ export const PresencaForm = ({ atletas }) => {
           control={form.control}
           name="data_treino"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Data do Treino</FormLabel>
-              <Calendar
-                mode="single"
-                selected={field.value}
-                onSelect={field.onChange}
-                className="rounded-md border"
-              />
-            </FormItem>
+            <DatePickerWithDropdown
+              label="Data do Treino"
+              date={field.value || undefined}
+              setDate={(date) => field.onChange(date || null)}
+            />
           )}
         />
 
