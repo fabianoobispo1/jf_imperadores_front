@@ -167,6 +167,14 @@ export const exercicios_tentativasSchema = {
   data_registro: v.number(), // timestamp
 }
 
+export const presencaSchema = {
+  atleta_id: v.id('atletas'),
+  data_treino: v.number(), // timestamp do treino
+  presente: v.boolean(),
+  observacao: v.optional(v.string()),
+  created_at: v.number(),
+}
+
 // Definição do Schema completo
 export default defineSchema({
   user: defineTable(userSchema)
@@ -203,4 +211,7 @@ export default defineSchema({
     'by_seletiva_id',
     ['seletiva_id'],
   ),
+  presenca: defineTable(presencaSchema)
+    .index('by_data_treino', ['data_treino'])
+    .index('by_atleta_id', ['atleta_id']),
 })

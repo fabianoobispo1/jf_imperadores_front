@@ -11,6 +11,7 @@ import {
   NotebookPenIcon,
   CircleDollarSign,
   MessageCircleMore,
+  ClipboardCheck,
   /*  CircleDollarSign, */
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
@@ -98,6 +99,11 @@ const itemsAdm = [
     title: 'Mensagens',
     url: '/dashboard/mensagens',
     icon: MessageCircleMore,
+  },
+  {
+    name: 'Controle de Presença',
+    href: '/dashboard/presenca',
+    icon: ClipboardCheck, // Importar do lucide-react
   },
 ]
 
