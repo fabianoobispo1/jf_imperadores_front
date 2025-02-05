@@ -49,3 +49,26 @@ export const getByPeriodo = query({
     return presencas
   },
 })
+
+export const getByData = query({
+  args: {
+    data: v.number(),
+  },
+  handler: async (ctx, args) => {
+    // Calcula início e fim do dia selecionado
+    const inicioDia = new Date(args.data).setHours(0, 0, 0, 0)
+    const fimDia = new Date(args.data).setHours(23, 59, 59, 999)
+
+    const presencas = await ctx.db
+      .query('presenca')
+      .filter((q) =>
+        q.and(
+          q.gte(q.field('data_treino'), inicioDia),
+          q.lte(q.field('data_treino'), fimDia),
+        ),
+      )
+      .collect()
+
+    return presencas
+  },
+})

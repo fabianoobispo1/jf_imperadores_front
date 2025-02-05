@@ -11,6 +11,7 @@ import {
   NotebookPenIcon,
   CircleDollarSign,
   MessageCircleMore,
+  ClipboardCheck,
   /*  CircleDollarSign, */
 } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
@@ -71,6 +72,11 @@ const items = [
     title: 'Mensalidades',
     url: '/dashboard/mensalidades',
     icon: User,
+  },
+  {
+    title: 'Controle de Presença',
+    url: '/dashboard/presenca',
+    icon: ClipboardCheck,
   },
 ]
 const itemsAdm = [

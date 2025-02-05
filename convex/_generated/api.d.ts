@@ -19,6 +19,7 @@ import type * as files from "../files.js";
 import type * as financas from "../financas.js";
 import type * as links from "../links.js";
 import type * as mensalidade from "../mensalidade.js";
+import type * as presenca from "../presenca.js";
 import type * as recuperaSenha from "../recuperaSenha.js";
 import type * as seletiva from "../seletiva.js";
 import type * as seletivaConfig from "../seletivaConfig.js";
@@ -43,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   financas: typeof financas;
   links: typeof links;
   mensalidade: typeof mensalidade;
+  presenca: typeof presenca;
   recuperaSenha: typeof recuperaSenha;
   seletiva: typeof seletiva;
   seletivaConfig: typeof seletivaConfig;
