@@ -6,6 +6,7 @@ import { api } from '@/convex/_generated/api'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import type { Id } from '@/convex/_generated/dataModel'
+import { Spinner } from '@/components/ui/spinner'
 
 interface ListaPresencaProps {
   data: Date
@@ -16,8 +17,8 @@ export const ListaPresenca: React.FC<ListaPresencaProps> = ({ data }) => {
   const presencas = useQuery(api.presenca.getPresencasByData, {
     data_treino: timestamp,
   })
+  // carrega atletas ativos, ordenados por nome
   const atletas = useQuery(api.atletas.getAllAtivos)
-
   const addMultiplePresencas = useMutation(api.presenca.addMultiplePresencas)
 
   const [pendingPresencas, setPendingPresencas] = useState<
@@ -37,16 +38,24 @@ export const ListaPresenca: React.FC<ListaPresencaProps> = ({ data }) => {
           atletaId !== undefined && presente !== undefined,
       )
       .map(([atletaId, presente]) => ({
-        atleta_id: atletaId as Id<'atletas'>,
+        atleta_id: atletaId as unknown as Id<'atletas'>, // Forçando a tipagem correta
         data_treino: timestamp,
-        presente: Boolean(presente), // Garante que seja boolean
+        presente: Boolean(presente),
         observacao: '',
       }))
+    console.log(presencasArray)
 
     if (presencasArray.length > 0) {
       await addMultiplePresencas({ presencas: presencasArray })
       setPendingPresencas(new Map())
     }
+  }
+  if (!atletas) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Spinner />
+      </div>
+    )
   }
 
   return (

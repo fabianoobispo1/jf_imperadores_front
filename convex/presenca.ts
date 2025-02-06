@@ -1,6 +1,7 @@
 import { v } from 'convex/values'
 
 import { mutation, query } from './_generated/server'
+import type { Id } from './_generated/dataModel'
 
 export const addMultiplePresencas = mutation({
   args: {
@@ -14,37 +15,36 @@ export const addMultiplePresencas = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    const results = []
-
     for (const presenca of args.presencas) {
-      console.log(args.presencas)
+      console.log(presenca.atleta_id)
+
       const existente = await ctx.db
         .query('presenca')
         .filter(
           (q) =>
-            q.eq(q.field('atleta_id'), presenca.atleta_id) &&
+            q.eq(q.field('atleta_id'), presenca.atleta_id as Id<'atletas'>) &&
             q.eq(q.field('data_treino'), presenca.data_treino),
         )
-        .first()
-
+        .unique()
+      console.log(existente)
       if (existente) {
         const updated = await ctx.db.patch(existente._id, {
           presente: presenca.presente,
         })
-        results.push(updated)
+        console.log(updated)
       } else {
         const novo = await ctx.db.insert('presenca', {
-          atleta_id: presenca.atleta_id,
+          atleta_id: presenca.atleta_id as Id<'atletas'>,
           data_treino: presenca.data_treino,
           presente: presenca.presente,
           observacao: presenca.observacao || '',
           created_at: Date.now(),
         })
-        results.push(novo)
+        console.log(novo)
       }
     }
 
-    return results
+    return 'ok'
   },
 })
 
@@ -79,7 +79,11 @@ export const getUltimasPresencas = query({
   args: {},
   handler: async (ctx) => {
     // Busca as últimas 10 presenças ordenadas por data decrescente
-    const presencas = await ctx.db.query('presenca').order('desc').take(10)
+    const presencas = await ctx.db
+      .query('presenca')
+      .filter((q) => q.eq(q.field('presente'), true))
+      .order('desc')
+      .take(10)
 
     // Pega os IDs únicos dos atletas
     const atletasIds = [...new Set(presencas.map((p) => p.atleta_id))]
