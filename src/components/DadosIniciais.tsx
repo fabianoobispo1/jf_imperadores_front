@@ -5,11 +5,13 @@ import {
   UserCheckIcon,
   UserPlusIcon,
   CalendarCheck2,
+  QrCodeIcon,
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import Image from 'next/image'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -53,6 +55,27 @@ export default function DadosIniciais() {
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">
+            Pix para mensalidade do mês
+          </CardTitle>
+          <QrCodeIcon className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <p>cnpj: 27.871.530/0001-61</p>
+          <Image
+            src="/qr-code.png"
+            alt="QR Code para pagamento"
+            width={200}
+            height={200}
+          />
+          <span className="text-sm text-muted-foreground">
+            Ao realizar o pagamento envie o comprovante para o MH no whatsapp
+          </span>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
