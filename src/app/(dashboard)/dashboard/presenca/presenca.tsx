@@ -9,7 +9,11 @@ import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
 import { ListaPresenca } from './lista-presenca'
 
 export const Presenca: React.FC = () => {
-  const [dataSelecionada, setDataSelecionada] = useState<Date>(new Date())
+  const [dataSelecionada, setDataSelecionada] = useState<Date>(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return today
+  })
   const methods = useForm()
 
   const handleDateChange = (date: Date | undefined) => {
@@ -34,6 +38,7 @@ export const Presenca: React.FC = () => {
             date={dataSelecionada}
             setDate={handleDateChange}
           />
+
           <ScrollArea className="h-[600px] border rounded-lg p-4">
             <ListaPresenca data={dataSelecionada} />
           </ScrollArea>

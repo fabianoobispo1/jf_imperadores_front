@@ -2,6 +2,7 @@
 import { format } from 'date-fns'
 import { CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react'
 import { ptBR } from 'date-fns/locale'
+import { useState } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -23,15 +24,21 @@ export function DatePickerWithDropdown({
   date,
   setDate,
 }: DatePickerWithDropdownProps) {
+  const [open, setOpen] = useState(false)
+
+  const handleSelect = (date: Date | undefined) => {
+    setDate(date)
+    setOpen(false)
+  }
   return (
     <FormItem className="flex flex-col gap-2">
       <Label id="datepicker-month-year-dropdown-v9">{label}</Label>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              'w-full  justify-start text-left font-normal',
+              'w-full justify-start text-left font-normal',
               !date && 'text-muted-foreground',
             )}
             aria-labelledby="datepicker-month-year-dropdown-v9"
@@ -53,7 +60,7 @@ export function DatePickerWithDropdown({
             mode="single"
             captionLayout="dropdown"
             selected={date}
-            onSelect={setDate}
+            onSelect={handleSelect}
             showOutsideDays={true}
             endMonth={new Date(2099, 11)}
             components={{
