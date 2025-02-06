@@ -1,8 +1,15 @@
 'use client'
 import { useQuery } from 'convex/react'
-import { UsersIcon, UserCheckIcon, UserPlusIcon } from 'lucide-react'
+import {
+  UsersIcon,
+  UserCheckIcon,
+  UserPlusIcon,
+  CalendarCheck2,
+} from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -18,6 +25,22 @@ export default function DadosIniciais() {
   })
   const totalSeletiva = useQuery(api.seletiva.getCount)
   const totalAprovados = useQuery(api.seletiva.getCountByAprovados)
+  const ultimasPresencas = useQuery(api.presenca.getUltimasPresencas)
+
+  // Agrupa presenças por data e conta total de presentes
+  const presencasPorData = ultimasPresencas?.reduce(
+    (acc, presenca) => {
+      const data = presenca.data_treino
+      if (!acc[data]) {
+        acc[data] = 0
+      }
+      if (presenca.presente) {
+        acc[data]++
+      }
+      return acc
+    },
+    {} as Record<number, number>,
+  )
 
   const handleSeletivaClick = () => {
     if (session?.user?.role === 'admin') {
@@ -105,6 +128,32 @@ export default function DadosIniciais() {
               <Skeleton className="h-8 w-20" />
             ) : (
               totalSeletiva || 0
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="cursor-pointer hover:bg-gray-100">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Últimos Treinos</CardTitle>
+          <CalendarCheck2 className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {presencasPorData === undefined ? (
+              <Skeleton className="h-20 w-full" />
+            ) : (
+              Object.entries(presencasPorData)
+                .sort(([dataA], [dataB]) => Number(dataB) - Number(dataA))
+                .slice(0, 3)
+                .map(([data, total]) => (
+                  <div key={data} className="flex justify-between text-sm">
+                    <span>
+                      {format(Number(data), 'dd/MM/yyyy', { locale: ptBR })}
+                    </span>
+                    <span>{total} atletas</span>
+                  </div>
+                ))
             )}
           </div>
         </CardContent>

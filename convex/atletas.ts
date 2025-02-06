@@ -204,6 +204,7 @@ export const getAllAtivos = query({
       .collect()
 
     return atletas.map((atleta) => ({
+      id: atleta._id,
       email: atleta.email,
       celular: atleta.celular,
       nome: atleta.nome,
