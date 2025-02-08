@@ -63,21 +63,6 @@ const items = [
     url: '/dashboard/perfil',
     icon: UserPen,
   },
-  {
-    title: 'Atletas',
-    url: '/dashboard/atletas',
-    icon: User,
-  },
-  {
-    title: 'Mensalidades',
-    url: '/dashboard/mensalidades',
-    icon: User,
-  },
-  {
-    title: 'Controle de Presença',
-    url: '/dashboard/presenca',
-    icon: ClipboardCheck,
-  },
 ]
 const itemsAdm = [
   {
@@ -104,6 +89,21 @@ const itemsAdm = [
     title: 'Mensagens',
     url: '/dashboard/mensagens',
     icon: MessageCircleMore,
+  },
+  {
+    title: 'Mensalidades',
+    url: '/dashboard/mensalidades',
+    icon: User,
+  },
+  {
+    title: 'Controle de Presença',
+    url: '/dashboard/presenca',
+    icon: ClipboardCheck,
+  },
+  {
+    title: 'Atletas',
+    url: '/dashboard/atletas',
+    icon: User,
   },
 ]
 

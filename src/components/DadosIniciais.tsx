@@ -3,7 +3,7 @@ import { useQuery } from 'convex/react'
 import {
   UsersIcon,
   UserCheckIcon,
-  UserPlusIcon,
+  /*   UserPlusIcon, */
   CalendarCheck2,
   QrCodeIcon,
 } from 'lucide-react'
@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { api } from '../../convex/_generated/api'
+import { ScrollArea } from './ui/scroll-area'
 
 export default function DadosIniciais() {
   const { data: session } = useSession()
@@ -25,7 +26,7 @@ export default function DadosIniciais() {
   const totalAtletasAtivos = useQuery(api.atletas.getCountByStatus, {
     status: 1,
   })
-  const totalSeletiva = useQuery(api.seletiva.getCount)
+  /*   const totalSeletiva = useQuery(api.seletiva.getCount) */
   const totalAprovados = useQuery(api.seletiva.getCountByAprovados)
   const ultimasPresencas = useQuery(api.presenca.getUltimasPresencas)
 
@@ -44,18 +45,18 @@ export default function DadosIniciais() {
     {} as Record<number, number>,
   )
 
-  const handleSeletivaClick = () => {
+  /*   const handleSeletivaClick = () => {
     if (session?.user?.role === 'admin') {
       router.push('/dashboard/seletiva')
     }
-  }
+  } */
   const handleAtletaClick = () => {
     router.push('/dashboard/atletas')
   }
 
   return (
-    <>
-      <div className="grid gap-4 md:grid-cols-3">
+    <ScrollArea className="h-[calc(100vh-220px)] w-full overflow-x-auto ">
+      <div className="grid gap-4 md:grid-cols-3 pb-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -133,7 +134,7 @@ export default function DadosIniciais() {
             )}
           </CardContent>
         </Card>
-
+        {/* 
         <Card
           className={
             session?.user?.role === 'admin'
@@ -157,7 +158,7 @@ export default function DadosIniciais() {
               )}
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card className="cursor-pointer hover:bg-gray-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -187,6 +188,6 @@ export default function DadosIniciais() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </ScrollArea>
   )
 }
