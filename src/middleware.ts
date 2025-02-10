@@ -3,6 +3,7 @@ import { getToken } from 'next-auth/jwt'
 
 // Rotas que precisam de permissão de admin
 const adminRoutes = [
+  '/dashboard/administracao',
   '/dashboard/seletiva',
   '/dashboard/presenca',
   '/dashboard/atletas',
