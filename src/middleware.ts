@@ -23,6 +23,9 @@ export async function middleware(request: Request) {
     secret: process.env.NEXTAUTH_SECRET,
   })
 
+  console.log('Token:', token) // Para debug
+  console.log('Role:', token?.role) // Para debug
+
   // Verifica se a rota atual está na lista de rotas admin
   const isAdminRoute = adminRoutes.some((route) => request.url.includes(route))
 
