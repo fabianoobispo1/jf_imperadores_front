@@ -3,9 +3,9 @@ import { getToken } from 'next-auth/jwt'
 
 // Rotas que precisam de permissão de admin
 const adminRoutes = [
-  '/dashboard/administracao',
+  /*   '/dashboard/administracao', */
   '/dashboard/seletiva',
-  '/dashboard/presenca',
+  /*   '/dashboard/presenca',
   '/dashboard/atletas',
   '/dashboard/configuracoes',
   '/dashboard/configwhatsapp',
@@ -14,7 +14,7 @@ const adminRoutes = [
   '/dashboard/mensalidade',
   '/dashboard/Mensalidades',
   '/dashboard/seletivaexercicios',
-  '/dashboard/seletivaimg',
+  '/dashboard/seletivaimg', */
 ]
 
 export async function middleware(request: Request) {
