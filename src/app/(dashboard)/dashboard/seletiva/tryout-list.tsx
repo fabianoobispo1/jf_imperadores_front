@@ -73,6 +73,7 @@ interface Seletivas {
   aprovado?: boolean
   img_link?: string
   cod_seletiva?: string
+  transferido_atleta?: boolean
 }
 interface Exercicios {
   _id: Id<'exercicios'>
@@ -306,7 +307,46 @@ export function TryoutList() {
       return codB.localeCompare(codA)
     })
   }
-  // Inside the TryoutList component, before the return statement
+
+  const handleTransferToAtleta = async (seletiva: Seletivas) => {
+    console.log('Transferir atleta:', seletiva)
+
+    try {
+      await fetchMutation(api.atletas.create, {
+        status: 1,
+        nome: seletiva.nome,
+        cpf: seletiva.cpf,
+        email: seletiva.email,
+        data_nascimento: seletiva.data_nascimento,
+        data_registro: new Date().getTime(),
+        altura: seletiva.altura,
+        peso: seletiva.peso,
+        celular: seletiva.celular,
+        setor: 4,
+        posicao: '',
+        rua: '',
+        bairro: '',
+        cidade: '',
+        cep: '',
+        uf: '',
+        complemento: '',
+        genero: 'M',
+        rg: '',
+        emisor: '',
+        uf_emisor: '',
+        img_link: seletiva.img_link ? seletiva.img_link : '',
+      })
+
+      await fetchMutation(api.seletiva.updatetransferido, {
+        id: seletiva._id,
+        transferido_atleta: true,
+      })
+      // Atualiza a lista
+      fetchSeletivaPaginated(offset, limit)
+    } catch (error) {
+      console.error('Erro ao transferir para atletas:', error)
+    }
+  }
 
   const ImageCell = ({
     imageUrl,
@@ -485,6 +525,7 @@ export function TryoutList() {
                           key={seletiva._id}
                           className={cn(
                             seletiva.aprovado && 'bg-green-100',
+                            seletiva.transferido_atleta && 'bg-blue-500',
                             'cursor-pointer hover:bg-muted/50',
                           )}
                         >
@@ -600,6 +641,18 @@ export function TryoutList() {
                                 ) : (
                                   'Aprovar'
                                 )}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleTransferToAtleta(seletiva)}
+                                disabled={
+                                  !seletiva.aprovado ||
+                                  seletiva.transferido_atleta
+                                }
+                                className="w-full"
+                              >
+                                Transferir para Atletas
                               </Button>
                             </div>
                           </TableCell>

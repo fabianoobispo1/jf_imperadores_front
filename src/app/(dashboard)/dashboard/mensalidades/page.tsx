@@ -1,5 +1,6 @@
 import BreadCrumb from '@/components/breadcrumb'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { VerificaAdmin } from '@/components/VerificaAdmin'
 
 import { Mensalidades } from './mensalidades'
 
@@ -13,6 +14,7 @@ export default function Page() {
         <BreadCrumb items={breadcrumbItems} />
         <Mensalidades />
       </div>
+      <VerificaAdmin />
     </ScrollArea>
   )
 }

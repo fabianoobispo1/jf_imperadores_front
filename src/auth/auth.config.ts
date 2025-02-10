@@ -88,10 +88,10 @@ const authConfig = {
   callbacks: {
     async signIn({ account, profile, user }) {
       if (account?.provider === 'github' || account?.provider === 'google') {
-        console.log('account ✔')
-        console.log(account)
-        console.log('profile ✔')
-        console.log(profile)
+        // console.log('account ✔')
+        // console.log(account)
+        // console.log('profile ✔')
+        // console.log(profile)
         const provider = account?.provider
         const email = profile?.email
 
@@ -136,28 +136,28 @@ const authConfig = {
       return true
     },
     async jwt({ token, user }) {
-      console.log('JWT Callback - Token antes:', token)
-      console.log('JWT Callback - User:', user)
+      // console.log('JWT Callback - Token antes:', token)
+      // console.log('JWT Callback - User:', user)
       if (user) {
         token.id = user.id as string
         token.role = user.role
         token.image = user.image as string
         token.nome = user.nome as string
       }
-      console.log('JWT Callback - Token depois:', token)
+      // console.log('JWT Callback - Token depois:', token)
       return token
     },
 
     async session({ session, token }) {
-      console.log('Session Callback - Token:', token)
-      console.log('Session Callback - Session antes:', session)
+      // console.log('Session Callback - Token:', token)
+      // console.log('Session Callback - Session antes:', session)
       if (token.role) {
         session.user.id = token.id
         session.user.role = token.role
         session.user.image = token.image
         session.user.nome = token.nome
       }
-      console.log('Session Callback - Session depois:', session)
+      // console.log('Session Callback - Session depois:', session)
       return session
     },
   },

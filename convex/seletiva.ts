@@ -101,6 +101,20 @@ export const update = mutation({
   },
 })
 
+export const updatetransferido = mutation({
+  args: {
+    id: v.id('seletiva'),
+    transferido_atleta: v.boolean(),
+  },
+  handler: async ({ db }, { id, transferido_atleta }) => {
+    await db.patch(id, {
+      transferido_atleta,
+    })
+
+    return { success: true }
+  },
+})
+
 export const updateImg = mutation({
   args: {
     id: v.id('seletiva'),
@@ -140,7 +154,15 @@ export const getCountByAprovados = query({
   handler: async (ctx) => {
     const aprovados = await ctx.db
       .query('seletiva')
-      .filter((q) => q.eq(q.field('aprovado'), true))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field('aprovado'), true),
+          q.or(
+            q.eq(q.field('transferido_atleta'), false),
+            q.eq(q.field('transferido_atleta'), undefined),
+          ),
+        ),
+      )
       .collect()
 
     return aprovados.length

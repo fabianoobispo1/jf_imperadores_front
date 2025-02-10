@@ -1,5 +1,6 @@
 import BreadCrumb from '@/components/breadcrumb'
 import { Heading } from '@/components/ui/heading'
+import { VerificaAdmin } from '@/components/VerificaAdmin'
 
 import { Produtos } from './produtos'
 
@@ -14,6 +15,7 @@ export default function Page() {
         <Heading title={'Mensalidade'} description={'....'} />
       </div>
       <Produtos />
+      <VerificaAdmin />
     </div>
   )
 }
