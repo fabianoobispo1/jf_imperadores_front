@@ -30,6 +30,7 @@ import {
 import { useToast } from '@/hooks/use-toast'
 import type { Id } from '@/convex/_generated/dataModel'
 import { DatePickerWithDefaults } from '@/components/calendar/with-default'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 const formSchema = z.object({
   tipo: z.enum(['receita', 'despesa']),
@@ -156,75 +157,157 @@ export function TransacaoForm({ onSuccess, id }: TransacaoFormProps) {
     }
   }
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid gap-4 md:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="tipo"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tipo de Movimentação</FormLabel>
-                <Select
-                  disabled={loading}
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o tipo" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="receita">Receita</SelectItem>
-                    <SelectItem value="despesa">Despesa</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="categoria"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Categoria</FormLabel>
-                <Select
-                  disabled={loading}
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione a categoria" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="mensalidade">Mensalidade</SelectItem>
-                    <SelectItem value="equipamento">Equipamento</SelectItem>
-                    <SelectItem value="viagem">Viagem</SelectItem>
-                    <SelectItem value="patrocinio">Patrocínio</SelectItem>
-                    <SelectItem value="evento">Evento</SelectItem>
-                    <SelectItem value="outros">Outros</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="descricao"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Descrição</FormLabel>
-                <FormControl>
-                  <Input
+    <ScrollArea className="h-[calc(100vh-220px)] w-full overflow-x-auto ">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid gap-4 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="tipo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tipo de Movimentação</FormLabel>
+                  <Select
                     disabled={loading}
-                    placeholder="Digite a descrição"
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o tipo" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="receita">Receita</SelectItem>
+                      <SelectItem value="despesa">Despesa</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="categoria"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categoria</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione a categoria" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="mensalidade">Mensalidade</SelectItem>
+                      <SelectItem value="equipamento">Equipamento</SelectItem>
+                      <SelectItem value="viagem">Viagem</SelectItem>
+                      <SelectItem value="patrocinio">Patrocínio</SelectItem>
+                      <SelectItem value="evento">Evento</SelectItem>
+                      <SelectItem value="outros">Outros</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="descricao"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Descrição</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Digite a descrição"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="valor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Valor</FormLabel>
+                  <FormControl>
+                    <NumericFormat
+                      customInput={Input}
+                      value={field.value}
+                      onValueChange={(values) => {
+                        field.onChange(values.floatValue)
+                      }}
+                      prefix="R$ "
+                      decimalSeparator=","
+                      thousandSeparator="."
+                      decimalScale={2}
+                      fixedDecimalScale
+                      disabled={loading}
+                      className="w-full"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="data"
+              render={({ field }) => (
+                <DatePickerWithDefaults
+                  label="Data pagamento/recebimento"
+                  date={field.value || undefined}
+                  setDate={(date) => field.onChange(date || null)}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="pendente">Pendente</SelectItem>
+                      <SelectItem value="confirmado">Confirmado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormField
+            control={form.control}
+            name="observacao"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Observações</FormLabel>
+                <FormControl>
+                  <Textarea
+                    disabled={loading}
+                    placeholder="Observações adicionais"
                     {...field}
                   />
                 </FormControl>
@@ -232,101 +315,21 @@ export function TransacaoForm({ onSuccess, id }: TransacaoFormProps) {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="valor"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Valor</FormLabel>
-                <FormControl>
-                  <NumericFormat
-                    customInput={Input}
-                    value={field.value}
-                    onValueChange={(values) => {
-                      field.onChange(values.floatValue)
-                    }}
-                    prefix="R$ "
-                    decimalSeparator=","
-                    thousandSeparator="."
-                    decimalScale={2}
-                    fixedDecimalScale
-                    disabled={loading}
-                    className="w-full"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="data"
-            render={({ field }) => (
-              <DatePickerWithDefaults
-                label="Data pagamento/recebimento"
-                date={field.value || undefined}
-                setDate={(date) => field.onChange(date || null)}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  disabled={loading}
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="pendente">Pendente</SelectItem>
-                    <SelectItem value="confirmado">Confirmado</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
 
-        <FormField
-          control={form.control}
-          name="observacao"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Observações</FormLabel>
-              <FormControl>
-                <Textarea
-                  disabled={loading}
-                  placeholder="Observações adicionais"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex justify-end">
-          <Button type="submit" disabled={loading}>
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Salvando...
-              </>
-            ) : (
-              'Salvar Transação'
-            )}
-          </Button>
-        </div>
-      </form>
-    </Form>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Salvando...
+                </>
+              ) : (
+                'Salvar Transação'
+              )}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </ScrollArea>
   )
 }
