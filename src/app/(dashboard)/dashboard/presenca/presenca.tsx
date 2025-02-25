@@ -5,10 +5,13 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { Heading } from '@/components/ui/heading'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { DatePickerWithDropdown } from '@/components/calendar/with-dropdown'
+import { cn } from '@/lib/utils'
+import { useSidebar } from '@/components/ui/sidebar'
 
 import { ListaPresenca } from './lista-presenca'
 
 export const Presenca: React.FC = () => {
+  const { open } = useSidebar()
   const [dataSelecionada, setDataSelecionada] = useState<Date>(() => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -23,27 +26,31 @@ export const Presenca: React.FC = () => {
   }
 
   return (
-    <FormProvider {...methods}>
-      <div className="flex items-start justify-between gap-4">
+    <>
+      <div className="flexrow flex items-start justify-between gap-2 ">
         <Heading
           title="Controle de Presença"
-          description="Gerencie a presença dos atletas nos treinos"
+          description="Gerencie a presença dos atletas nos treinos."
         />
       </div>
+      <ScrollArea
+        className={cn(
+          'space-y-8 w-screen pr-8    h-[calc(100vh-220px)]',
+          open ? 'md:max-w-[calc(100%-16rem)] ' : 'md:max-w-[calc(100%-5rem)] ',
+        )}
+      >
+        <FormProvider {...methods}>
+          <div className="p-4 border rounded-lg flex flex-col gap-2">
+            <DatePickerWithDropdown
+              label="Data do treino"
+              date={dataSelecionada}
+              setDate={handleDateChange}
+            />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 border rounded-lg flex flex-col gap-2">
-          <DatePickerWithDropdown
-            label="Data do treino"
-            date={dataSelecionada}
-            setDate={handleDateChange}
-          />
-
-          <ScrollArea className="h-[600px] border rounded-lg p-4">
             <ListaPresenca data={dataSelecionada} />
-          </ScrollArea>
-        </div>
-      </div>
-    </FormProvider>
+          </div>
+        </FormProvider>
+      </ScrollArea>
+    </>
   )
 }

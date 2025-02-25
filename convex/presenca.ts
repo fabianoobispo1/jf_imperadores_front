@@ -1,50 +1,39 @@
 import { v } from 'convex/values'
 
 import { mutation, query } from './_generated/server'
-import type { Id } from './_generated/dataModel'
 
-export const addMultiplePresencas = mutation({
+export const salvarPresenca = mutation({
   args: {
-    presencas: v.array(
-      v.object({
-        atleta_id: v.id('atletas'),
-        data_treino: v.number(),
-        presente: v.boolean(),
-        observacao: v.optional(v.string()),
-      }),
-    ),
+    atleta_id: v.id('atletas'),
+    data_treino: v.number(),
+    presente: v.boolean(),
+    observacao: v.string(),
   },
-  handler: async (ctx, args) => {
-    for (const presenca of args.presencas) {
-      console.log(presenca.atleta_id)
+  handler: async ({ db }, { atleta_id, data_treino, presente, observacao }) => {
+    // Verificar se já existe uma presença para este atleta nesta data
+    const existingPresenca = await db
+      .query('presenca')
+      .withIndex('by_atleta_data', (q) =>
+        q.eq('atleta_id', atleta_id).eq('data_treino', data_treino),
+      )
+      .unique()
 
-      const existente = await ctx.db
-        .query('presenca')
-        .filter(
-          (q) =>
-            q.eq(q.field('atleta_id'), presenca.atleta_id as Id<'atletas'>) &&
-            q.eq(q.field('data_treino'), presenca.data_treino),
-        )
-        .unique()
-      console.log(existente)
-      if (existente) {
-        const updated = await ctx.db.patch(existente._id, {
-          presente: presenca.presente,
-        })
-        console.log(updated)
-      } else {
-        const novo = await ctx.db.insert('presenca', {
-          atleta_id: presenca.atleta_id as Id<'atletas'>,
-          data_treino: presenca.data_treino,
-          presente: presenca.presente,
-          observacao: presenca.observacao || '',
-          created_at: Date.now(),
-        })
-        console.log(novo)
-      }
+    if (existingPresenca) {
+      // Atualizar presença existente
+      return await db.patch(existingPresenca._id, {
+        presente,
+        observacao,
+      })
+    } else {
+      // Criar nova presença
+      return await db.insert('presenca', {
+        atleta_id,
+        data_treino,
+        presente,
+        observacao,
+        created_at: Date.now(),
+      })
     }
-
-    return 'ok'
   },
 })
 
@@ -56,22 +45,6 @@ export const getPresencasByData = query({
       .filter((q) => q.eq(q.field('data_treino'), args.data_treino))
       .collect()
     return presencas
-  },
-})
-
-export const addPresenca = mutation({
-  args: {
-    atleta_id: v.id('atletas'),
-    data_treino: v.number(),
-    presente: v.boolean(),
-    observacao: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    const presenca = await ctx.db.insert('presenca', {
-      ...args,
-      created_at: Date.now(),
-    })
-    return presenca
   },
 })
 

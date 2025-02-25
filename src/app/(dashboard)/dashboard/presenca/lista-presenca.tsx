@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import { api } from '@/convex/_generated/api'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Button } from '@/components/ui/button'
 import type { Id } from '@/convex/_generated/dataModel'
 import { Spinner } from '@/components/ui/spinner'
 
@@ -17,46 +16,49 @@ export const ListaPresenca: React.FC<ListaPresencaProps> = ({ data }) => {
   const presencas = useQuery(api.presenca.getPresencasByData, {
     data_treino: timestamp,
   })
-  // carrega atletas ativos, ordenados por nome
   const atletas = useQuery(api.atletas.getAllAtivos)
-  const addMultiplePresencas = useMutation(api.presenca.addMultiplePresencas)
+  const salvarPresenca = useMutation(api.presenca.salvarPresenca)
+  const [saving, setSaving] = useState(false)
 
-  const [pendingPresencas, setPendingPresencas] = useState<
-    Map<string, boolean>
-  >(new Map())
-
-  const atletasOrdenados = atletas?.sort((a, b) => a.nome.localeCompare(b.nome))
-
-  const handleCheckChange = (atletaId: Id<'atletas'>, checked: boolean) => {
-    setPendingPresencas(new Map(pendingPresencas.set(atletaId, checked)))
+  // Verifica se um atleta está presente
+  const isPresente = (atletaId: Id<'atletas'>) => {
+    return (
+      presencas?.some((p) => p.atleta_id === atletaId && p.presente) || false
+    )
   }
 
-  const handleSaveAll = async () => {
-    const presencasArray = Array.from(pendingPresencas.entries())
-      .filter(
-        ([atletaId, presente]) =>
-          atletaId !== undefined && presente !== undefined,
-      )
-      .map(([atletaId, presente]) => ({
-        atleta_id: atletaId as unknown as Id<'atletas'>, // Forçando a tipagem correta
-        data_treino: timestamp,
-        presente: Boolean(presente),
-        observacao: '',
-      }))
-    console.log(presencasArray)
+  // Manipula a alteração de presença
+  const handlePresenca = async (atletaId: Id<'atletas'>, presente: boolean) => {
+    try {
+      setSaving(true)
+      console.log(`Salvando presença para atleta ${atletaId}: ${presente}`)
 
-    if (presencasArray.length > 0) {
-      await addMultiplePresencas({ presencas: presencasArray })
-      setPendingPresencas(new Map())
+      await salvarPresenca({
+        atleta_id: atletaId,
+        data_treino: timestamp,
+        presente,
+        observacao: '',
+      })
+
+      console.log('Presença salva com sucesso')
+    } catch (error) {
+      console.error('Erro ao salvar presença:', error)
+    } finally {
+      setSaving(false)
     }
   }
+
   if (!atletas) {
     return (
-      <div className="flex items-center justify-center h-40">
+      <div className="flex justify-center my-4">
         <Spinner />
       </div>
     )
   }
+
+  const atletasOrdenados = [...atletas].sort((a, b) =>
+    a.nome.localeCompare(b.nome),
+  )
 
   return (
     <div className="space-y-4">
@@ -64,27 +66,19 @@ export const ListaPresenca: React.FC<ListaPresencaProps> = ({ data }) => {
         <h3 className="text-lg font-semibold">
           Lista de Presença - {data.toLocaleDateString()}
         </h3>
-        <Button onClick={handleSaveAll} disabled={pendingPresencas.size === 0}>
-          Salvar Presenças
-        </Button>
       </div>
 
       <div className="space-y-2">
-        {atletasOrdenados?.map((atleta) => (
+        {atletasOrdenados.map((atleta) => (
           <div
             key={atleta.id}
             className="flex items-center gap-2 p-2 border rounded"
           >
             <Checkbox
-              checked={
-                pendingPresencas.has(atleta.id)
-                  ? pendingPresencas.get(atleta.id)
-                  : presencas?.some(
-                      (p) => p.atleta_id === atleta.id && p.presente,
-                    )
-              }
+              checked={isPresente(atleta.id)}
+              disabled={saving}
               onCheckedChange={(checked) =>
-                handleCheckChange(atleta.id, !!checked)
+                handlePresenca(atleta.id, !!checked)
               }
             />
             <span>{atleta.nome}</span>

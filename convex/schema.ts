@@ -214,5 +214,6 @@ export default defineSchema({
   ),
   presenca: defineTable(presencaSchema)
     .index('by_data_treino', ['data_treino'])
-    .index('by_atleta_id', ['atleta_id']),
+    .index('by_atleta_id', ['atleta_id'])
+    .index('by_atleta_data', ['atleta_id', 'data_treino']),
 })
