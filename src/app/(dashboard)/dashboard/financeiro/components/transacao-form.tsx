@@ -29,7 +29,6 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import type { Id } from '@/convex/_generated/dataModel'
-import { DatePickerWithDefaults } from '@/components/calendar/with-default'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 const formSchema = z.object({
@@ -260,17 +259,38 @@ export function TransacaoForm({ onSuccess, id }: TransacaoFormProps) {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="data"
               render={({ field }) => (
-                <DatePickerWithDefaults
-                  label="Data pagamento/recebimento"
-                  date={field.value || undefined}
-                  setDate={(date) => field.onChange(date || null)}
-                />
+                <FormItem>
+                  <FormLabel>Data pagamento/recebimento</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="date"
+                      disabled={loading}
+                      {...field}
+                      value={
+                        field.value
+                          ? new Date(field.value).toISOString().split('T')[0]
+                          : ''
+                      }
+                      onChange={(e) => {
+                        // Converte a string da data para um objeto Date
+                        const date = new Date(e.target.value)
+                        // Corrige fuso horário para evitar problemas de data
+                        date.setHours(12, 0, 0, 0)
+                        // Atualiza o campo com o objeto Date
+                        field.onChange(date)
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="status"

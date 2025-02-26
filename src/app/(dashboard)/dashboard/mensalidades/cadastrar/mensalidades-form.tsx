@@ -58,6 +58,7 @@ cancelado: v.boolean(),
 const formSchema = z.object({
   _id: z.string().optional(),
   email: z.string().email(),
+  nome: z.string(),
   valor: z.number(),
   data_pagamento: z.preprocess(
     (val) => (val === null ? undefined : val), // Transforma null em undefined
@@ -139,6 +140,7 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
       : {
           _id: undefined,
           email: '',
+          nome: '',
           data_pagamento: new Date(),
           valor: 0,
           mes_referencia: getMesAtual(),
@@ -170,7 +172,7 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
 
           await createTransacao({
             tipo: 'receita',
-            descricao: 'mensalidade',
+            descricao: 'mensalidade de ' + values.nome,
             valor: values.valor / 100,
             data: values.data_pagamento.getTime(),
             categoria: 'mensalidade',
@@ -236,7 +238,7 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
                           ? options.find(
                               (option) => option.value === field.value,
                             )?.label
-                          : 'Selecione o email'}
+                          : 'Selecione o atleta'}
                         <ChevronsUpDown className="opacity-50" />
                       </Button>
                     </FormControl>
@@ -253,6 +255,7 @@ export const MensalidadeForm: React.FC<MensalidadesFormProps> = ({
                               key={option.value}
                               onSelect={() => {
                                 form.setValue('email', option.value)
+                                form.setValue('nome', option.label)
                                 setOpen(false)
                               }}
                             >

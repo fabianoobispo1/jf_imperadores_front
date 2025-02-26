@@ -44,18 +44,10 @@ export const remove = mutation({
 })
 
 export const getBalancoMensal = query({
-  args: {
-    userId: v.string(),
-  },
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const transacoes = await ctx.db
       .query('financas')
-      .filter((q) =>
-        q.and(
-          q.eq(q.field('status'), 'confirmado'),
-          q.eq(q.field('userId'), args.userId),
-        ),
-      )
+      .filter((q) => q.and(q.eq(q.field('status'), 'confirmado')))
       .collect()
 
     return {
@@ -71,14 +63,11 @@ export const getBalancoMensal = query({
 
 export const getTransacoes = query({
   args: {
-    userId: v.string(),
     startDate: v.optional(v.number()),
     endDate: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db
-      .query('financas')
-      .filter((q) => q.eq(q.field('userId'), args.userId))
+    let query = ctx.db.query('financas')
 
     if (args.startDate && args.endDate) {
       query = query.filter((q) =>
@@ -95,7 +84,6 @@ export const getTransacoes = query({
 
 export const getTransacoesPorCategoria = query({
   args: {
-    userId: v.string(),
     startDate: v.optional(v.number()),
     endDate: v.optional(v.number()),
   },
@@ -103,7 +91,7 @@ export const getTransacoesPorCategoria = query({
     // Busca todas as transações do período
     let transacoes = await ctx.db
       .query('financas')
-      .filter((q) => q.eq(q.field('userId'), args.userId))
+
       .collect()
 
     // Aplica filtro de data se fornecido
@@ -125,10 +113,8 @@ export const getTransacoesPorCategoria = query({
           }
         }
 
-        // Soma apenas despesas
-        if (transacao.tipo === 'despesa') {
-          acc[categoria].total += transacao.valor
-        }
+        // Soma todos os valores, independente do tipo
+        acc[categoria].total += transacao.valor
         acc[categoria].quantidade++
 
         return acc
@@ -145,7 +131,6 @@ export const getTransacoesPorCategoria = query({
 
 export const getHistoricoMensal = query({
   args: {
-    userId: v.string(),
     meses: v.optional(v.number()), // número de meses para buscar
   },
   handler: async (ctx, args) => {
@@ -159,10 +144,7 @@ export const getHistoricoMensal = query({
     const historicoMensal = []
 
     // Busca todas as transações do período
-    const transacoes = await ctx.db
-      .query('financas')
-      .filter((q) => q.eq(q.field('userId'), args.userId))
-      .collect()
+    const transacoes = await ctx.db.query('financas').collect()
 
     // Processa os últimos N meses
     for (let i = 0; i < numeroMeses; i++) {

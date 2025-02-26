@@ -1,6 +1,5 @@
 'use client'
 import { useQuery } from 'convex/react'
-import { useSession } from 'next-auth/react'
 import { BarChart, DollarSign, TrendingDown, TrendingUp } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -42,22 +41,14 @@ const options = {
 }
 
 export function DashboardFinanceiro() {
-  const { data: session } = useSession()
-
-  const balancoMensal = useQuery(api.financas.getBalancoMensal, {
-    userId: session?.user?.id as string,
-  })
+  const balancoMensal = useQuery(api.financas.getBalancoMensal, {})
 
   const transacoesPorCategoria = useQuery(
     api.financas.getTransacoesPorCategoria,
-    {
-      userId: session?.user?.id as string,
-    },
+    {},
   )
 
-  const historicoMensal = useQuery(api.financas.getHistoricoMensal, {
-    userId: session?.user?.id as string,
-  })
+  const historicoMensal = useQuery(api.financas.getHistoricoMensal, {})
 
   const saldoTotal =
     (balancoMensal?.receitas || 0) - (balancoMensal?.despesas || 0)
@@ -172,7 +163,7 @@ export function DashboardFinanceiro() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Despesas por Categoria</CardTitle>
+            <CardTitle>Categorias</CardTitle>
           </CardHeader>
           <CardContent className="h-[300px]">
             <Bar
@@ -182,7 +173,7 @@ export function DashboardFinanceiro() {
                   transacoesPorCategoria?.categorias.map((c) => c.nome) || [],
                 datasets: [
                   {
-                    label: 'Total por Categoria',
+                    label: 'Total de Transações por Categoria',
                     data:
                       transacoesPorCategoria?.categorias.map((c) => c.total) ||
                       [],

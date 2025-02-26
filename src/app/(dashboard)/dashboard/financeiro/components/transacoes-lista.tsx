@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useQuery } from 'convex/react'
-import { useSession } from 'next-auth/react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
@@ -61,8 +60,6 @@ interface TransacaoType {
 }
 
 export function TransacoesLista() {
-  const { data: session } = useSession()
-
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [sorting, setSorting] = useState<SortingState>([])
@@ -74,9 +71,7 @@ export function TransacoesLista() {
     string | undefined
   >(undefined)
 
-  const transacoes = useQuery(api.financas.getTransacoes, {
-    userId: session?.user?.id as string,
-  })
+  const transacoes = useQuery(api.financas.getTransacoes, {})
 
   const columns: ColumnDef<TransacaoType>[] = [
     {
