@@ -18,7 +18,7 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 import { Button } from '@/components/ui/button'
 import { useSidebar } from '@/components/ui/sidebar'
-import { cn, formatPhoneNumber } from '@/lib/utils'
+import { cn, formatCPF, formatPhoneNumber } from '@/lib/utils'
 import {
   Dialog,
   DialogContent,
@@ -86,7 +86,7 @@ export const AtletasList = () => {
   const [atletas, setAtletas] = useState<Atletas[]>([])
   const [offset, setOffset] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const limit = 20
+  const limit = 100
   const { open } = useSidebar()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedAtleta, setSelectedAtleta] = useState<Atletas | null>(null)
@@ -203,13 +203,15 @@ export const AtletasList = () => {
                   <TableHead className="text-center min-w-[300px]">
                     Nome
                   </TableHead>
-                  {/* <TableHead className="text-center">CPF</TableHead> */}
                   <TableHead className="text-center min-w-[150px]">
                     Data Nascimento
                   </TableHead>
                   <TableHead className="text-center">Email</TableHead>
                   <TableHead className="text-center min-w-[150px]">
                     Celular
+                  </TableHead>
+                  <TableHead className="text-center min-w-[150px]">
+                    CPF
                   </TableHead>
                   <TableHead className="text-center">Altura</TableHead>
                   <TableHead className="text-center">Peso</TableHead>
@@ -230,13 +232,14 @@ export const AtletasList = () => {
                   </TableHead>
                   <TableHead className="text-center">UF</TableHead>
                   <TableHead className="text-center">Complemento</TableHead>
+
+                  {/*         <TableHead className="text-center">Gênero</TableHead> */}
+                  <TableHead className="text-center">RG</TableHead>
+                  <TableHead className="text-center">Emissor</TableHead>
+                  <TableHead className="text-center">UF Emissor</TableHead>
                   <TableHead className="text-center min-w-[150px]">
                     Data Registro
                   </TableHead>
-                  {/*         <TableHead className="text-center">Gênero</TableHead> */}
-                  {/*                <TableHead className="text-center">RG</TableHead>
-                  <TableHead className="text-center">Emissor</TableHead>
-                  <TableHead className="text-center">UF Emissor</TableHead> */}
                   {/* <TableHead className="text-center">Imagem</TableHead> */}
                   <TableHead className="text-center">Opções</TableHead>
                 </TableRow>
@@ -260,7 +263,6 @@ export const AtletasList = () => {
                         }
                       </TableCell> */}
                       <TableCell>{atleta.nome}</TableCell>
-                      {/* <TableCell>{atleta.cpf}</TableCell> */}
                       <TableCell className="text-center">
                         {atleta.data_nascimento
                           ? new Date(
@@ -273,6 +275,9 @@ export const AtletasList = () => {
                         {atleta.celular === ''
                           ? '-'
                           : formatPhoneNumber(atleta.celular)}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {formatCPF(atleta.cpf)}
                       </TableCell>
                       <TableCell>{atleta.altura}m</TableCell>
                       <TableCell>{atleta.peso}kg</TableCell>
@@ -295,9 +300,9 @@ export const AtletasList = () => {
                       <TableCell>{atleta.uf}</TableCell>
                       <TableCell>{atleta.complemento}</TableCell>
                       {/*  <TableCell>{atleta.genero}</TableCell> */}
-                      {/*     <TableCell>{atleta.rg}</TableCell>
+                      <TableCell>{atleta.rg}</TableCell>
                       <TableCell>{atleta.emisor}</TableCell>
-                      <TableCell>{atleta.uf_emisor}</TableCell> */}
+                      <TableCell>{atleta.uf_emisor}</TableCell>
                       {/*        <TableCell>{atleta.img_link}</TableCell> */}
                       <TableCell className="text-center">
                         {atleta.data_registro
