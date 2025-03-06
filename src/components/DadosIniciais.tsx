@@ -27,7 +27,7 @@ export default function DadosIniciais() {
     status: 1,
   })
   /*   const totalSeletiva = useQuery(api.seletiva.getCount) */
-  const totalAprovados = useQuery(api.seletiva.getCountByAprovados)
+  // const totalAprovados = useQuery(api.seletiva.getCountByAprovados)
   const ultimasPresencas = useQuery(api.presenca.getUltimasPresencas)
 
   // Agrupa presenças por data e conta total de presentes
@@ -107,7 +107,7 @@ export default function DadosIniciais() {
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Atletas Ativos + Aprovados
+              Atletas Ativos{/*  + Aprovados */}
             </CardTitle>
             <UserCheckIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -118,20 +118,20 @@ export default function DadosIniciais() {
               ) : (
                 totalAtletasAtivos || 0
               )}
-              {' + '}
-              {totalAprovados === undefined ? (
+              {/*  {' + '} */}
+              {/*  {totalAprovados === undefined ? (
                 <Skeleton className="h-8 w-20" />
               ) : (
                 totalAprovados || 0
-              )}
+              )} */}
             </div>
-            {' Total '}
-            {totalAtletasAtivos === undefined ||
+            {/*  {' Total '} */}
+            {/*    {totalAtletasAtivos === undefined ||
             totalAprovados === undefined ? (
               <Skeleton className="h-8 w-20" />
             ) : (
               (totalAtletasAtivos || 0) + (totalAprovados || 0)
-            )}
+            )} */}
           </CardContent>
         </Card>
         {/* 
