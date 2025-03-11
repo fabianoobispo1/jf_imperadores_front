@@ -54,7 +54,7 @@ export function DashboardFinanceiro() {
     (balancoMensal?.receitas || 0) - (balancoMensal?.despesas || 0)
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 mr-4">
       {/* Cards principais */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
