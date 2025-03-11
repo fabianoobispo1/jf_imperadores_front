@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 import { DashboardFinanceiro } from './dashboard-financeiro'
 import { TransacoesLista } from './transacoes-lista'
@@ -24,6 +24,7 @@ export function FinanceiroTabs() {
           {/*   <RelatoriosFinanceiro /> */}
         </TabsContent>
       </Tabs>
+      <ScrollBar orientation="horizontal" />
     </ScrollArea>
   )
 }
