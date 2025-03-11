@@ -17,6 +17,7 @@ import {
 } from '@tanstack/react-table'
 import { MoreHorizontal, Pencil, Plus, Trash } from 'lucide-react'
 import { fetchMutation } from 'convex/nextjs'
+import { useSession } from 'next-auth/react'
 
 import { api } from '@/convex/_generated/api'
 import { Badge } from '@/components/ui/badge'
@@ -66,10 +67,17 @@ export function TransacoesLista() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
+  const { data: session } = useSession()
+  const emailsPermitidos = ['mh.oliveira.85@gmail.com', 'fbc623@gmail.com']
 
   const [selectedTransaction, setSelectedTransaction] = useState<
     string | undefined
   >(undefined)
+
+  const temPermissaoAdicionar = () => {
+    const emailUsuario = session?.user?.email
+    return emailUsuario ? emailsPermitidos.includes(emailUsuario) : false
+  }
 
   const transacoes = useQuery(api.financas.getTransacoes, {})
 
@@ -207,7 +215,7 @@ export function TransacoesLista() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mr-4">
       <div className="flex items-center justify-between">
         <Input
           placeholder="Filtrar por descrição..."
@@ -219,10 +227,14 @@ export function TransacoesLista() {
           }
           className="max-w-sm"
         />
-        <Button onClick={() => setOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nova Transação
-        </Button>
+        {temPermissaoAdicionar() ? (
+          <Button onClick={() => setOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nova Transação
+          </Button>
+        ) : (
+          <></>
+        )}
       </div>
 
       <div className="rounded-md border">

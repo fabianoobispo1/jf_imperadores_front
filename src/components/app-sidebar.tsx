@@ -59,6 +59,11 @@ const items = [
     icon: NotebookPenIcon,
   },
   {
+    title: 'Finanças',
+    url: '/dashboard/financeiro',
+    icon: CircleDollarSign,
+  },
+  {
     title: 'Perfil',
     url: '/dashboard/perfil',
     icon: UserPen,
@@ -79,11 +84,6 @@ const itemsAdm = [
     title: 'Configurar WhatsApp',
     url: '/dashboard/configwhatsapp',
     icon: ChevronsLeftRightEllipsisIcon,
-  },
-  {
-    title: 'Finanças',
-    url: '/dashboard/financeiro',
-    icon: CircleDollarSign,
   },
   {
     title: 'Mensagens',
