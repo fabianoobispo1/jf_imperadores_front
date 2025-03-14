@@ -67,6 +67,7 @@ export default function DadosIniciais() {
           <CardContent>
             <p>cnpj: 27.871.530/0001-61</p>
             <Image
+              className="bg-white rounded-lg"
               src="/qr-code.png"
               alt="QR Code para pagamento"
               width={200}
